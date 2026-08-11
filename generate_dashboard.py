@@ -52,7 +52,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.9.4"
+VERSION = "1.9.5"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -1172,13 +1172,16 @@ def render_html(info, page_info):
   /* ===== STICKY NAV ===== */
   .nav {{
     position: sticky;
-    top: calc(env(safe-area-inset-top, 0) + 78px);   /* ticker(32) + topbar(~46) 之后吸顶 */
+    top: calc(env(safe-area-inset-top, 0) + 78px);   /* 报告页：ticker + topbar 之后吸顶 */
     z-index: 50;
-    background: rgba(10, 14, 26, 0.82);
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    border-bottom: 1px solid var(--line-faint);
+    /* 用胶囊底色完全遮住背后内容，不再镂空 */
+    background: var(--ink-card);
+    border-bottom: 1px solid rgba(131, 126, 101, 0.45);  /* 浅浅细细的金色分割线 */
     transition: transform .3s ease;
+  }}
+  [data-theme="light"] .nav {{
+    background: var(--ink-card);
+    border-bottom-color: rgba(131, 126, 101, 0.35);
   }}
   /* 移动端滚动时自动隐藏顶栏/导航，上滑时恢复（由 JS 切换 .hide）；鼠标悬停时临时显示 */
   .nav.hide, .topbar.hide {{ transform: translateY(-160%); }}
@@ -1186,7 +1189,7 @@ def render_html(info, page_info):
   .nav-inner {{
     max-width: 1280px;
     margin: 0 auto;
-    padding: 14px 28px;
+    padding: 10px 28px;          /* 更紧凑，缩短与顶部的视觉距离 */
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;  /* 左侧分类与右侧工具胶囊分居两端 */
@@ -1204,7 +1207,8 @@ def render_html(info, page_info):
   }}
   /* 首页：隐藏固定 topbar，工具胶囊已合并进 nav，8 胶囊在同一行 sticky 对齐 */
   [data-page-period] .topbar {{ display: none; }}
-  [data-page-period] .nav {{ top: calc(env(safe-area-inset-top, 0) + 32px); }}
+  /* 首页 ticker 随页面滚走后，nav 直接贴顶，不再留 32px 镂空间隙 */
+  [data-page-period] .nav {{ top: env(safe-area-inset-top, 0); }}
   .nav-inner::-webkit-scrollbar {{ display: none; }}
   .nav-chip {{
     display: inline-flex;
