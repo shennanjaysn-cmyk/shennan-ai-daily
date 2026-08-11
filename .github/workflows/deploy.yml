@@ -1,0 +1,40 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # 北京时间 08:10 / 12:10 / 18:10 自动拉取并部署（UTC+8 → UTC 00:10 / 04:10 / 10:10）
+    - cron: "10 0,4,10 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Generate dashboard (fetches AIHOT data, writes releases/)
+        run: python generate_dashboard.py
+
+      - name: Deploy releases/ to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./releases
+          publish_branch: gh-pages
+          enable_jekyll: false
+          force_orphan: true
