@@ -52,7 +52,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.9.6"
+VERSION = "1.9.7"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -1597,7 +1597,7 @@ def render_html(info, page_info):
   }}
   .fab-icon {{ width: 18px; height: 18px; }}
 
-  /* 留言/反馈 FAB（v1.8.7 从 footer 提到右下 FAB 区）— 跟 FAB 同样视觉，hover 展开显示文字 */
+  /* 留言/反馈 FAB（v1.9.7 改为圆形居中图标，hover 展开显示文字）— 图标来自 lucide message-circle */
   .fab-contact {{
     position: fixed;
     right: 24px;
@@ -1605,18 +1605,18 @@ def render_html(info, page_info):
     z-index: 180;
     width: 40px;
     height: 40px;
-    border-radius: 999px;
-    border: 1px solid transparent;
-    background: rgba(13, 18, 36, 0.32);
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(13, 18, 36, 0.50);
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
-    color: var(--mist-body);
+    color: var(--text-primary);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 8px;
-    padding: 0 14px;
+    padding: 0 11px;
     overflow: hidden;
     white-space: nowrap;
     font-family: var(--font-base);
@@ -1625,6 +1625,7 @@ def render_html(info, page_info):
     box-shadow: 0 6px 18px -8px rgba(0,0,0,.45);
     transition:
       width .35s cubic-bezier(.34, 1.2, .64, 1),
+      border-radius .35s cubic-bezier(.34, 1.2, .64, 1),
       background .35s ease,
       border-color .35s ease,
       backdrop-filter .35s ease,
@@ -1633,24 +1634,28 @@ def render_html(info, page_info):
       padding .35s ease;
   }}
   [data-theme="light"] .fab-contact {{
-    background: rgba(255, 255, 255, 0.42);
+    background: rgba(255, 255, 255, 0.60);
+    border-color: rgba(0,0,0,0.08);
     box-shadow: 0 6px 18px -8px rgba(46, 58, 124, 0.18);
   }}
   .fab-contact:hover {{
-    width: 168px;
+    width: 156px;
+    border-radius: 999px;
+    justify-content: flex-start;
     background: rgba(79, 92, 199, 0.28);
     border-color: rgba(79, 92, 199, 0.55);
     backdrop-filter: blur(14px) saturate(180%);
     -webkit-backdrop-filter: blur(14px) saturate(180%);
     transform: translateY(-2px);
     box-shadow: 0 10px 26px -8px rgba(0,0,0,.55);
-    padding: 0 18px;
+    padding: 0 14px;
   }}
   [data-theme="light"] .fab-contact:hover {{
     background: rgba(74, 91, 196, 0.18);
     border-color: rgba(74, 91, 196, 0.55);
     box-shadow: 0 10px 26px -8px rgba(46, 58, 124, 0.25);
   }}
+  .fab-contact .fab-icon {{ flex-shrink: 0; }}
   .fab-contact .fab-label {{
     opacity: 0;
     transform: translateX(-6px);
@@ -1658,12 +1663,11 @@ def render_html(info, page_info):
       opacity .25s ease .08s,
       transform .25s cubic-bezier(.34, 1.2, .64, 1) .08s,
       color .2s ease;
-    color: var(--mist-body);
+    color: var(--text-primary);
   }}
   .fab-contact:hover .fab-label {{
     opacity: 1;
     transform: translateX(0);
-    color: var(--text-primary);
   }}
 
   /* 触屏设备（无 hover）：新闻卡片直接全部展开 */
@@ -2135,9 +2139,9 @@ def render_html(info, page_info):
   </button>
 </div>
 
-<!-- 留言 / 反馈 FAB（v1.8.7 从 footer 提到右下）— 跟 FAB 同样视觉，hover 展开显示文字 -->
+<!-- 留言 / 反馈 FAB（v1.9.7 改为圆形居中图标，hover 展开显示文字）— 图标来自 lucide message-circle -->
 <button type="button" class="fab-contact" id="contactBtn" onclick="window.snOpenContact()" aria-label="留言 / 反馈" title="留言 / 反馈">
-  <svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
   <span class="fab-label">💬 留言 / 反馈</span>
 </button>
 
