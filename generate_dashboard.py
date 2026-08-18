@@ -52,7 +52,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.9.5"
+VERSION = "1.9.6"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -1384,11 +1384,14 @@ def render_html(info, page_info):
     line-height: 1;
   }}
 
-  /* 触屏设备（无 hover）：新闻卡片默认全部展开 */
+  /* 触屏设备（无 hover）：新闻卡片默认全部展开；报告胶囊直接显示周报/月报 */
   @media (hover: none) {{
     .card {{ max-height: none; }}
     .card-title {{ -webkit-line-clamp: unset; display: block; overflow: visible; }}
     .card-summary {{ -webkit-line-clamp: unset; display: block; overflow: visible; }}
+    .report-morph {{ min-width: 120px; }}
+    .report-face {{ opacity: 0; transform: translateY(-12px); pointer-events: none; }}
+    .report-choices {{ opacity: 1; transform: translateY(0); pointer-events: auto; }}
   }}
 
   /* ===== FOOTER ===== */
@@ -1692,8 +1695,12 @@ def render_html(info, page_info):
     .wrap {{ padding: 0 20px; }}
     .brand-logo {{ padding: 12px 0 6px; }}
     .brand-logo .sn-logo {{ width: 38px; height: 38px; object-fit: contain; }}
-    /* 分类导航允许换行（web/窄屏/移动统一） */
-    .nav-inner {{ flex-wrap: wrap; padding: 10px 20px; }}
+    /* 移动端：导航条横向滚动，避免 8 胶囊换行错位 */
+    .nav-inner {{ flex-wrap: nowrap; overflow-x: auto; padding: 10px 14px; gap: 6px; }}
+    .nav-chip {{ flex-shrink: 0; }}
+    .nav-actions {{ flex-shrink: 0; margin-left: 0; }}
+    /* 移动端：新闻模块直接显示，不依赖 IntersectionObserver 入场动画 */
+    .reveal-sec {{ opacity: 1 !important; animation: none !important; transform: none !important; }}
     .footer-bottom {{ padding: 32px 20px; }}
     /* 底部文档链排：保持一排，窄屏可横向滚动 */
     .footer-docs {{ flex-wrap: nowrap; overflow-x: auto; gap: 12px; }}
@@ -1945,6 +1952,10 @@ def render_html(info, page_info):
       }});
     }}, {{ rootMargin: '0px 0px -8% 0px', threshold: 0.05 }});
     document.querySelectorAll('.reveal-sec').forEach(s => io.observe(s));
+    // 兜底：3 秒后仍未入场的 section 直接显示，避免移动端 observer 偶发失效导致空白
+    setTimeout(() => {{
+      document.querySelectorAll('.reveal-sec:not(.in-view)').forEach(s => s.classList.add('in-view'));
+    }}, 3000);
   }})();
 
   // 移动端滚动时隐藏顶栏/导航（向下滑隐藏，向上滑恢复），避免与内容争空间
