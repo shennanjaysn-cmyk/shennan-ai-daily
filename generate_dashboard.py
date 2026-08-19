@@ -52,7 +52,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.1"
+VERSION = "1.10.2"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -1259,11 +1259,16 @@ def render_html(info, page_info):
   .hero-stats {{
     display: grid;
     gap: 1px;
-    background: var(--line-faint);
-    border: 1px solid var(--line-faint);
+    background: #313C7D;
+    border: 1px solid #313C7D;
     border-radius: 4px;
     overflow: hidden;
     opacity: 0.88;
+  }}
+  /* 浅色模式保持原有柔和描边，不被深色模式覆盖 */
+  [data-theme="light"] .hero-stats {{
+    background: var(--line-faint);
+    border-color: var(--line-faint);
   }}
   .hero-stats.cols-2 {{ grid-template-columns: repeat(2, 1fr); }}
   .hero-stats.cols-3 {{ grid-template-columns: repeat(3, 1fr); }}
@@ -1318,9 +1323,9 @@ def render_html(info, page_info):
   }}
   .nav-actions {{
     position: fixed;
-    top: 14px;
+    top: 16px;
     right: 24px;
-    z-index: 200;
+    z-index: 210;              /* 高于 topbar(200) / ticker(195)，避免被遮挡 */
     display: flex;
     align-items: center;
     gap: 10px;
@@ -1652,7 +1657,7 @@ def render_html(info, page_info):
   .ticker:focus-within .ticker-track {{ animation-play-state: paused; }}
   .ticker-item {{
     flex-shrink: 0;
-    padding: 0 48px;
+    padding: 0 28px;
     font-size: 11px;
     letter-spacing: 0.06em;
     color: var(--mist-dim);
@@ -1865,7 +1870,14 @@ def render_html(info, page_info):
     <span class="ticker-item">📡 数据来源：AIHOT (aihot.virxact.com)</span>
     <span class="ticker-item">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
     <span class="ticker-item">本站为个人非盈利 AI 资讯索引</span>
-    <!-- 复制一份做无缝循环（动画 translateX(-50%) 时第一份完全滑出、第二份顶上） -->
+    <!-- 复制多份做无缝循环：translateX(-50%) 时第一份完全滑出、下一份顶上；
+         复制 3 份确保轨道总宽始终大于常见视口，消除中间空白期 -->
+    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.virxact.com)</span>
+    <span class="ticker-item" aria-hidden="true">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
+    <span class="ticker-item" aria-hidden="true">本站为个人非盈利 AI 资讯索引</span>
+    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.virxact.com)</span>
+    <span class="ticker-item" aria-hidden="true">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
+    <span class="ticker-item" aria-hidden="true">本站为个人非盈利 AI 资讯索引</span>
     <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.virxact.com)</span>
     <span class="ticker-item" aria-hidden="true">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
     <span class="ticker-item" aria-hidden="true">本站为个人非盈利 AI 资讯索引</span>
