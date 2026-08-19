@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>深南AI日报 Daily AI Brief · 2026-08-18</title>
+<title>深南AI日报 Daily AI Brief · 2026-08-19</title>
 <script>
   // 早期初始化 + 全局 FAB 主题切换函数（必须最先定义，inline onclick 直接调用）
   (function(){
@@ -140,9 +140,8 @@
     --font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', 'PingFang SC', Consolas, monospace;
   }
 
-  /* 浅色模式：早报专属「晨光读报」配色（独立设计，非暗色反转）
-     灵感：晨光 / 米白纸张 / 暖墨 / 暖金。
-     —— 暗 → 亮变量重映射，文字底色全部重定义。 */
+  /* 浅色模式：v1.10.1 重新基于深色原样，仅改浅色变量与 light-only 覆盖规则。
+     深色模式视觉保持 v1.9.7 不变。 */
   [data-theme="light"] {
     --ink-void: #F5F1E6;          /* 暖米白纸张 */
     --ink-deep: #2A2520;          /* 暖墨主字 */
@@ -151,36 +150,36 @@
     --ultra: #4A5BC4;
     --ultra-bright: #2E3A7C;
     --ultra-glow: rgba(74, 91, 196, 0.10);
-    --gold: #A87E2A;              /* 暖金（晨光） */
-    --gold-bright: #C19440;
-    --gold-soft: #856020;
-    --gold-glow: rgba(168, 126, 42, 0.10);
-    --brand-brief: #A87E2A;       /* 「深南AI视界」金 */
-    --brand-cn: #4A5BC4;          /* 「深南AI日报」薰衣草保留 */
-    --btn: #3B4AA8;               /* 沉静的靛蓝按钮 */
-    --btn-hi: #5466D2;
+    --gold: #1600ff;              /* 靛蓝主色 */
+    --gold-bright: #4A5BC4;
+    --gold-soft: #232387;
+    --gold-glow: rgba(22, 0, 255, 0.10);
+    --brand-brief: #1600ff;       /* 标题 brief 部分 */
+    --brand-cn: #cdc8ff;          /* 浅薰衣草 */
+    --btn: #1600ff;               /* 靛蓝按钮 */
+    --btn-hi: #4A5BC4;
     --mist: #2A2520;
     --mist-body: #4A4540;         /* 正文暖灰 */
     --mist-dim: #7A7268;
     --mist-faint: #A89F8E;
-    --line: rgba(168, 126, 42, 0.20);
-    --line-faint: rgba(168, 126, 42, 0.12);
-    --line-gold: rgba(168, 126, 42, 0.32);
-    --line-gold-fine: rgba(168, 126, 42, 0.50);
-    --card-edge-hover: #A87E2A;
-    --card-shadow-hover: rgba(46, 58, 124, 0.18);
+    --line: rgba(22, 0, 255, 0.20);
+    --line-faint: rgba(22, 0, 255, 0.12);
+    --line-gold: rgba(205, 200, 255, 0.45);
+    --line-gold-fine: rgba(205, 200, 255, 0.65);
+    --card-edge-hover: #1600ff;
+    --card-shadow-hover: rgba(22, 0, 255, 0.18);
     /* 语义化文字/表面色 */
     --text-title: #2A2520;
     --text-primary: #2A2520;
     --text-body: #4A4540;
     --text-secondary: #7A7268;
     --text-tertiary: #A89F8E;
-    --text-accent: #A87E2A;
-    --text-link: #3B4AA8;
+    --text-accent: #1600ff;
+    --text-link: #1600ff;
     --text-code: #4A4540;
     --surface-float: rgba(255, 252, 245, 0.82);
     --surface-modal: rgba(255, 252, 245, 0.98);
-    --surface-chip: rgba(232, 226, 208, 0.85);
+    --surface-chip: rgba(205, 200, 255, 0.55);
     --surface-code: rgba(232, 226, 208, 0.95);
     --shadow: rgba(46, 58, 124, 0.15);
     --font-base: 'Poppins', 'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', 'Noto Sans CJK SC', system-ui, -apple-system, sans-serif;
@@ -188,6 +187,125 @@
     --font-en-display: 'Space Grotesk', 'Poppins', 'PingFang SC', system-ui, sans-serif;
     --font-num: 'Space Grotesk', 'Poppins', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
     --font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', 'PingFang SC', Consolas, monospace;
+  }
+
+  /* ===== LIGHT MODE ONLY OVERRIDES (v1.10.1) =====
+     以下规则仅影响浅色模式，深色模式视觉保持 v1.9.7 原样。 */
+
+  /* 背景光晕：改用靛蓝/浅紫 */
+  [data-theme="light"] body::before {
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(22, 0, 255, 0.10), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 85% 15%, rgba(205, 200, 255, 0.10), transparent 55%);
+  }
+  [data-theme="light"] .brand-logo { padding-top: 28px; }
+  [data-theme="light"] body::after {
+    background:
+      radial-gradient(ellipse 50% 35% at 70% 85%, rgba(74, 91, 196, 0.08), transparent 60%);
+  }
+
+  /* 统计卡：浅紫底 + 靛蓝数字 */
+  [data-theme="light"] .stat-cell { background: #cdc8ff; }
+  [data-theme="light"] .stat-num { color: #1600ff; }
+  [data-theme="light"] .stat-total {
+    background: linear-gradient(135deg, #cdc8ff 0%, #e6e3ff 100%);
+  }
+  [data-theme="light"] .stat-total .num { color: #1600ff; }
+  [data-theme="light"] .stat-lab,
+  [data-theme="light"] .stat-total .lab { color: #232387; }
+
+  /* 导航：去掉外围白底，胶囊玻璃浅紫 */
+  [data-theme="light"] .nav { background: transparent; border-bottom: none; }
+  [data-theme="light"] .nav-inner {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(205, 200, 255, 0.55);
+    border-radius: 999px;
+  }
+  [data-theme="light"] .nav-chip {
+    background: rgba(205, 200, 255, 0.35);
+    border-color: rgba(205, 200, 255, 0.55);
+    color: #232387;
+  }
+  [data-theme="light"] .nav-chip:hover {
+    background: #cdc8ff;
+    border-color: #cdc8ff;
+    color: #1600ff;
+  }
+  [data-theme="light"] .nav-chip:hover .nav-roman,
+  [data-theme="light"] .nav-chip:hover .nav-n {
+    color: #1600ff;
+    border-left-color: rgba(22, 0, 255, 0.25);
+  }
+  [data-theme="light"] .nav-chip.active,
+  [data-theme="light"] .nav-chip.is-active-by-io {
+    background: #1600ff;
+    border-color: #1600ff;
+    color: #fff;
+  }
+  [data-theme="light"] .nav-chip.active .nav-roman,
+  [data-theme="light"] .nav-chip.active .nav-n,
+  [data-theme="light"] .nav-chip.is-active-by-io .nav-roman,
+  [data-theme="light"] .nav-chip.is-active-by-io .nav-n {
+    color: #fff;
+    border-left-color: rgba(255, 255, 255, 0.35);
+  }
+
+  /* 新闻卡片：静态/hover 配色 */
+  [data-theme="light"] .card { border-color: rgba(131, 126, 101, 0.45); }
+  [data-theme="light"] .card:hover {
+    background: #fff;
+    border-color: #1600ff;
+    box-shadow:
+      0 0 0 2px rgba(22, 0, 255, 0.15),
+      0 18px 36px -8px rgba(46, 58, 124, 0.14);
+  }
+  [data-theme="light"] .card::before {
+    background: radial-gradient(circle at 0% 0%, rgba(22, 0, 255, 0.08), transparent 50%);
+  }
+  [data-theme="light"] .card-num { color: #1600ff; }
+  [data-theme="light"] .chip {
+    background: rgba(205, 200, 255, 0.45);
+    border-color: rgba(205, 200, 255, 0.65);
+    color: #232387;
+  }
+  [data-theme="light"] .card-summary { border-left-color: rgba(205, 200, 255, 0.85); }
+  [data-theme="light"] .card-cta {
+    background: #F1F0FF;
+    color: #1600ff;
+  }
+  [data-theme="light"] .card:hover .card-cta {
+    background: linear-gradient(90deg, #DDD090 0%, #817F67 100%);
+    color: #fff;
+  }
+
+  /* 页脚 */
+  [data-theme="light"] .footer-source a {
+    color: var(--mist-dim);
+    border-bottom-color: var(--mist-faint);
+  }
+  [data-theme="light"] .footer-docs { gap: 50px; }
+  [data-theme="light"] .footer-bottom {
+    background: linear-gradient(180deg, rgba(245, 241, 230, 0) 0%, rgba(205, 200, 255, 0.25) 45%, rgba(205, 200, 255, 0.35) 100%);
+  }
+  [data-theme="light"] .footer-line-bold {
+    background: linear-gradient(90deg, transparent, rgba(205, 200, 255, 0.55) 18%, rgba(205, 200, 255, 0.55) 82%, transparent);
+  }
+
+  /* 弹窗/导出卡片 */
+  [data-theme="light"] .contact-card {
+    background: var(--surface-modal);
+    border-color: rgba(205, 200, 255, 0.55);
+  }
+  [data-theme="light"] .contact-actions .send {
+    background: #1600ff;
+    color: #fff;
+  }
+  [data-theme="light"] .contact-actions .cancel {
+    background: transparent;
+    color: var(--text-primary);
+    border-color: rgba(205, 200, 255, 0.55);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -662,17 +780,20 @@
     padding: 10px 28px;          /* 更紧凑，缩短与顶部的视觉距离 */
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;  /* 左侧分类与右侧工具胶囊分居两端 */
+    justify-content: center;     /* 工具按钮已 fixed 到右上，这里居中 */
     align-items: center;
     gap: 8px;
     overflow-x: visible;
     scrollbar-width: none;
   }
   .nav-actions {
+    position: fixed;
+    top: 14px;
+    right: 24px;
+    z-index: 200;
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-left: auto;       /* 确保靠右 */
     flex-shrink: 0;
   }
   /* 首页：隐藏固定 topbar，工具胶囊已合并进 nav，8 胶囊在同一行 sticky 对齐 */
@@ -1067,11 +1188,11 @@
   }
   .fab-icon { width: 18px; height: 18px; }
 
-  /* 留言/反馈 FAB（v1.9.7 改为圆形居中图标，hover 展开显示文字）— 图标来自 lucide message-circle */
+  /* 留言/反馈 FAB（v1.10.1 上移，换 chat-circle-dots 图标） */
   .fab-contact {
     position: fixed;
     right: 24px;
-    bottom: 14px;            /* FAB group 在上方 ~38px（= 1 个 icon 高），这里紧贴底部 */
+    bottom: 42px;            /* 上移，与 .fab-group 间距 = 10px */
     z-index: 180;
     width: 40px;
     height: 40px;
@@ -1086,7 +1207,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 0 11px;
+    padding: 0;
     overflow: hidden;
     white-space: nowrap;
     font-family: var(--font-base);
@@ -1109,7 +1230,7 @@
     box-shadow: 0 6px 18px -8px rgba(46, 58, 124, 0.18);
   }
   .fab-contact:hover {
-    width: 156px;
+    width: 132px;
     border-radius: 999px;
     justify-content: flex-start;
     background: rgba(79, 92, 199, 0.28);
@@ -1118,7 +1239,7 @@
     -webkit-backdrop-filter: blur(14px) saturate(180%);
     transform: translateY(-2px);
     box-shadow: 0 10px 26px -8px rgba(0,0,0,.55);
-    padding: 0 14px;
+    padding: 0 14px 0 12px;
   }
   [data-theme="light"] .fab-contact:hover {
     background: rgba(74, 91, 196, 0.18);
@@ -1128,15 +1249,18 @@
   .fab-contact .fab-icon { flex-shrink: 0; }
   .fab-contact .fab-label {
     opacity: 0;
+    max-width: 0;
     transform: translateX(-6px);
     transition:
       opacity .25s ease .08s,
+      max-width .35s cubic-bezier(.34, 1.2, .64, 1),
       transform .25s cubic-bezier(.34, 1.2, .64, 1) .08s,
       color .2s ease;
     color: var(--text-primary);
   }
   .fab-contact:hover .fab-label {
     opacity: 1;
+    max-width: 90px;
     transform: translateX(0);
   }
 
@@ -1170,9 +1294,9 @@
     .brand-logo { padding: 12px 0 6px; }
     .brand-logo .sn-logo { width: 38px; height: 38px; object-fit: contain; }
     /* 移动端：导航条横向滚动，避免 8 胶囊换行错位 */
-    .nav-inner { flex-wrap: nowrap; overflow-x: auto; padding: 10px 14px; gap: 6px; }
+    .nav-inner { flex-wrap: nowrap; overflow-x: auto; padding: 10px 14px; gap: 6px; position: relative; }
     .nav-chip { flex-shrink: 0; }
-    .nav-actions { flex-shrink: 0; margin-left: 0; }
+    .nav-actions { position: static; flex-shrink: 0; margin-left: 0; order: 99; }
     /* 移动端：新闻模块直接显示，不依赖 IntersectionObserver 入场动画 */
     .reveal-sec { opacity: 1 !important; animation: none !important; transform: none !important; }
     .footer-bottom { padding: 32px 20px; }
@@ -1203,7 +1327,7 @@
   }
 </style>
 </head>
-<body data-page-period="morning" data-page-date="2026-08-18">
+<body data-page-period="morning" data-page-date="2026-08-19">
 
 <!-- 顶部 ticker：随页面滚动上移；topbar 保持固定 -->
 <div class="ticker" aria-label="站点说明">
@@ -1241,23 +1365,23 @@
         <div class="hero-date">
           <span class="big">08</span>
           <span class="dot">/</span>
-          <span class="big">18</span>
+          <span class="big">19</span>
           <span class="small">/ 2026</span>
         </div>
         <div class="hero-meta">
-          送达时间：<span class="accent">2026年8月18日 周二 08:00</span>
+          送达时间：<span class="accent">2026年8月19日 周三 08:00</span>
         </div>
         <div class="hero-lead">
-          覆盖窗口 <span class="lead-strong">8月17日 08:00 — 8月18日 08:00</span>（北京时间，UTC+8）。以下 <span class="lead-strong">18</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>
+          覆盖窗口 <span class="lead-strong">8月18日 08:00 — 8月19日 08:00</span>（北京时间，UTC+8）。以下 <span class="lead-strong">16</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>
         </div>
       </div>
       <div class="hero-stats cols-2">
-        <div class="stat-cell"><div class="stat-num">5</div><div class="stat-lab">产品发布/更新</div></div>
-<div class="stat-cell"><div class="stat-num">4</div><div class="stat-lab">行业动态</div></div>
-<div class="stat-cell"><div class="stat-num">1</div><div class="stat-lab">论文研究</div></div>
-<div class="stat-cell"><div class="stat-num">8</div><div class="stat-lab">技巧与观点</div></div>
+        <div class="stat-cell"><div class="stat-num">6</div><div class="stat-lab">产品发布/更新</div></div>
+<div class="stat-cell"><div class="stat-num">1</div><div class="stat-lab">行业动态</div></div>
+<div class="stat-cell"><div class="stat-num">4</div><div class="stat-lab">论文研究</div></div>
+<div class="stat-cell"><div class="stat-num">5</div><div class="stat-lab">技巧与观点</div></div>
         <div class="stat-total">
-          <span class="num">18</span>
+          <span class="num">16</span>
           <span class="lab">Total · 总条数</span>
         </div>
       </div>
@@ -1268,10 +1392,10 @@
 <!-- STICKY NAV：首页右侧合并报告/历史日报/导出，8 个胶囊同一行对齐 -->
 <nav class="nav">
   <div class="nav-inner">
-    <a class="nav-chip active" href="#products"><span class="nav-roman">Ⅰ</span><span class="nav-label">产品</span><span class="nav-n">5<span class="count-unit">条</span></span></a>
-<a class="nav-chip" href="#industry"><span class="nav-roman">Ⅱ</span><span class="nav-label">动态</span><span class="nav-n">4<span class="count-unit">条</span></span></a>
-<a class="nav-chip" href="#papers"><span class="nav-roman">Ⅲ</span><span class="nav-label">研究</span><span class="nav-n">1<span class="count-unit">条</span></span></a>
-<a class="nav-chip" href="#tips"><span class="nav-roman">Ⅳ</span><span class="nav-label">观点</span><span class="nav-n">8<span class="count-unit">条</span></span></a>
+    <a class="nav-chip active" href="#products"><span class="nav-roman">Ⅰ</span><span class="nav-label">产品</span><span class="nav-n">6<span class="count-unit">条</span></span></a>
+<a class="nav-chip" href="#industry"><span class="nav-roman">Ⅱ</span><span class="nav-label">动态</span><span class="nav-n">1<span class="count-unit">条</span></span></a>
+<a class="nav-chip" href="#papers"><span class="nav-roman">Ⅲ</span><span class="nav-label">研究</span><span class="nav-n">4<span class="count-unit">条</span></span></a>
+<a class="nav-chip" href="#tips"><span class="nav-roman">Ⅳ</span><span class="nav-label">观点</span><span class="nav-n">5<span class="count-unit">条</span></span></a>
     <div class="nav-actions">
   <div class="report-morph" id="reportDropdown" aria-label="报告范围">
   <div class="report-face" aria-hidden="true">
@@ -1290,7 +1414,8 @@
       历史日报
     </button>
     <div class="dropdown-menu" role="menu">
-      <a class="dropdown-item selected" href="./daily/2026-08-18.html">2026-08-18</a>
+      <a class="dropdown-item selected" href="./daily/2026-08-19.html">2026-08-19</a>
+<a class="dropdown-item" href="./daily/2026-08-18.html">2026-08-18</a>
 <a class="dropdown-item" href="./daily/2026-08-17.html">2026-08-17</a>
 <a class="dropdown-item" href="./daily/2026-08-16.html">2026-08-16</a>
 <a class="dropdown-item" href="./daily/2026-08-15.html">2026-08-15</a>
@@ -1319,7 +1444,6 @@
 <a class="dropdown-item" href="./daily/2026-07-23.html">2026-07-23</a>
 <a class="dropdown-item" href="./daily/2026-07-22.html">2026-07-22</a>
 <a class="dropdown-item" href="./daily/2026-07-21.html">2026-07-21</a>
-<a class="dropdown-item" href="./daily/2026-07-20.html">2026-07-20</a>
     </div>
   </div>
   <div class="dropdown" id="exportDropdown">
@@ -1352,51 +1476,60 @@
     <div class="sec-mark">Ⅰ</div>
     <h2 class="sec-title">产品</h2>
     <div class="sec-line"></div>
-    <div class="sec-count">5<span class="count-unit">条</span></div>
+    <div class="sec-count">6<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://cursor.com/changelog/origin-code-hosting" target="_blank" rel="noopener noreferrer" style="--d:0">
+<a class="card" href="https://huggingface.co/blog/multi-vector-encoder" target="_blank" rel="noopener noreferrer" style="--d:0">
   <div class="card-num">01</div>
   <div class="card-body">
-    <span class="chip">Hacker News 热门（buzzing.cc 中文翻译）</span>
-    <h3 class="card-title">Cursor 推出 Origin 代码托管服务，作为 GitHub 的替代方案</h3>
-    <p class="card-summary">Cursor 今日起向所有付费计划用户开放 Origin 代码托管的早期测试版，提供仓库、拉取请求、代码浏览及 GitHub 同步功能。用户可创建以 cursor.com/codebase/ 为前缀的仓库，或将 GitHub 仓库同步至 Origin，双向同步评论与审查。Vercel、Depot 和 Buildkite 集成已可用，智能体功能即将推出。</p>
+    <span class="chip">Hugging Face：Blog（RSS）</span>
+    <h3 class="card-title">Sentence Transformers v6.0 新增 MultiVectorEncoder，支持 ColBERT 风格多向量模型</h3>
+    <p class="card-summary">Sentence Transformers v6.0 新增第四种模型类型 MultiVectorEncoder，可直接加载 PyLate、Stanford-NLP ColBERT 及 colpali-engine 检查点，用于 ColBERT 式晚期交互检索。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://openrouter.ai/blog/announcements/activity-dashboard" target="_blank" rel="noopener noreferrer" style="--d:1">
+<a class="card" href="https://www.modular.com/blog/mojo-open-source" target="_blank" rel="noopener noreferrer" style="--d:1">
   <div class="card-num">02</div>
   <div class="card-body">
-    <span class="chip">OpenRouter：Announcements（RSS）</span>
-    <h3 class="card-title">OpenRouter 推出 Activity 仪表盘与 Analytics API：按智能体、模型、请求追踪 AI 使用成本</h3>
-    <p class="card-summary">OpenRouter 发布 Activity 仪表盘和 beta Analytics API，可按智能体、模型、请求维度查看支出、token 量、缓存命中率等指标，并支持下钻至单条请求日志。</p>
+    <span class="chip">Hacker News 热门（buzzing.cc 中文翻译）</span>
+    <h3 class="card-title">Mojo 语言正式开源，编译器与工具链全面开放</h3>
+    <p class="card-summary">Mojo🔥 语言现已正式开源，采用 Apache 2.0 许可证（含 LLVM 例外），编译器、工具链及全部源码已发布至 modular GitHub 仓库。Mojo 上周刚达成 1.0 版本（源码稳定），此次开源涵盖整个编译器与工具链。目前暂不接受编译器相关贡献，计划年底前开放，标准库自 2024 年起已接受社区贡献。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://openrouter.ai/blog/tutorials/image-generation" target="_blank" rel="noopener noreferrer" style="--d:2">
+<a class="card" href="https://x.com/claudeai/status/2089806039088517356" target="_blank" rel="noopener noreferrer" style="--d:2">
   <div class="card-num">03</div>
   <div class="card-body">
-    <span class="chip">OpenRouter：Announcements（RSS）</span>
-    <h3 class="card-title">OpenRouter 图像生成 API：代码优先的接入教程</h3>
-    <p class="card-summary">OpenRouter 推出专用图像生成 API，通过统一请求格式和单一密钥即可调用多个提供商的图像模型。开发者向 POST /api/v1/images 发送请求，响应中的 data[0].b64_json 包含 base64 编码的图像数据，解码后即可保存为本地文件。教程演示了 Python 和 JavaScript 两种实现，并支持通过 input_references 传入参考图像生成变体。</p>
+    <span class="chip">X：Claude (@claudeai)</span>
+    <h3 class="card-title">Claude 现已支持 Gmail 邮件与 Google Drive 文件管理</h3>
+    <p class="card-summary">Claude 现在可以在 Gmail 中发送邮件，并管理 Google Drive 中的文件。 让 Claude 回复某个邮件线程，它会起草并发送回复。你可以控制何时需要你的批准。 从连接器菜单中选择连接 Gmail 或 Google Drive 即可试用。所有付费套餐均可用。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.langchain.com/blog/langchain-agentcore-payments" target="_blank" rel="noopener noreferrer" style="--d:3">
+<a class="card" href="https://openai.com/index/chatgpt-for-teens" target="_blank" rel="noopener noreferrer" style="--d:3">
   <div class="card-num">04</div>
   <div class="card-body">
-    <span class="chip">LangChain：Blog（RSS）</span>
-    <h3 class="card-title">AgentCore Payments 中间件为 LangChain 智能体提供 API 支付能力</h3>
-    <p class="card-summary">AgentCore Payments 中间件让 LangChain 智能体以确定性会话预算支付 API 费用。该中间件为 x402 支付签名，LangSmith 可追踪每一笔支付记录。</p>
+    <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
+    <h3 class="card-title">OpenAI 推出 ChatGPT for Teens：面向青少年的学习体验与更强安全保护</h3>
+    <p class="card-summary">OpenAI 发布 ChatGPT for Teens，为 13-17 岁用户自动启用，内置更强安全保护与家长控制。新增 Study Mode、负责任作业提醒、测验与学习可视化，以及可设定默认开启时段的 Study Hours，引导青少年分步解题而非直接给答案。OpenAI 同时宣布与 CodeAI 合作，帮助青少年理解、质疑并创造性地使用 AI。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://github.com/anthropics/claude-code/releases/tag/v2.1.234" target="_blank" rel="noopener noreferrer" style="--d:4">
+<a class="card" href="https://cursor.com/blog/git-at-any-scale" target="_blank" rel="noopener noreferrer" style="--d:4">
   <div class="card-num">05</div>
   <div class="card-body">
-    <span class="chip">Claude Code：GitHub Releases（RSS）</span>
-    <h3 class="card-title">Claude Code v2.1.234 发布：新增项目目录名变量与 GitLab MR 徽章，修复多项安全与稳定性问题</h3>
-    <p class="card-summary">Claude Code v2.1.234 新增可选 CLAUDE_CODE_PROJECT_DIR_NAME 环境变量、selection:clear 键绑定及 GitLab MR 徽章，并在用量限制重置后自动继续会话。</p>
+    <span class="chip">Cursor Blog</span>
+    <h3 class="card-title">Git 大规模托管为何如此困难</h3>
+    <p class="card-summary">Git 的分布式设计使其大规模托管面临固有挑战：packfile 作为存储和网络传输的基础单元，在服务器端成为可用性与扩展性的瓶颈。业界曾尝试三种方案——分布式文件系统、分布式 packfile、分布式 Git 本身，其中对象级分布式存储因 Git 协议要求网络传输 packfile 导致 clone 性能不佳而被放弃。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://claude.com/blog/the-claude-science-product-guide" target="_blank" rel="noopener noreferrer" style="--d:5">
+  <div class="card-num">06</div>
+  <div class="card-body">
+    <span class="chip">Claude：Blog（网页）</span>
+    <h3 class="card-title">Claude Science 产品指南：面向生命科学研究的 AI 工作台</h3>
+    <p class="card-summary">Anthropic 发布 Claude Science（测试版），一个覆盖生命科学数字化流程的 AI 工作台，支持数据分析、图表生成与结果产出，并可通过本地守护进程将重任务调度至自有 GPU、SLURM 集群或云账户。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
@@ -1407,42 +1540,15 @@
     <div class="sec-mark">Ⅱ</div>
     <h2 class="sec-title">动态</h2>
     <div class="sec-line"></div>
-    <div class="sec-count">4<span class="count-unit">条</span></div>
+    <div class="sec-count">1<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://blogs.nvidia.com/blog/securing-the-infrastructure-of-intelligence" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">06</div>
-  <div class="card-body">
-    <span class="chip">NVIDIA Blog（RSS）</span>
-    <h3 class="card-title">NVIDIA 与 SB Energy 合作锁定俄亥俄州 PORTS-Pike 园区电力容量，OpenAI 将入驻</h3>
-    <p class="card-summary">NVIDIA 宣布与 SB Energy 合作，锁定俄亥俄州 PORTS-Pike 科技园区的电力容量（LPS）以独家部署 NVIDIA 算力，OpenAI 将成为租户。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://www.ithome.com/0/990/812.htm" target="_blank" rel="noopener noreferrer" style="--d:1">
+<a class="card" href="https://openai.com/index/strengthening-democratic-oversight-in-national-security" target="_blank" rel="noopener noreferrer" style="--d:0">
   <div class="card-num">07</div>
   <div class="card-body">
-    <span class="chip">IT之家（RSS）</span>
-    <h3 class="card-title">A 股迎来“人形机器人第一股”，宇树科技官宣 8 月 19 日科创板上市</h3>
-    <p class="card-summary">宇树科技宣布股票将于 2026 年 8 月 19 日在科创板上市，发行价 150.80 元/股，对应市值约 609.93 亿元，预计募资约 60.99 亿元。该公司 2023 至 2025 年营收分别为 1.59 亿元、3.93 亿元和 16.99 亿元，净利润分别为-1114.51 万元、9547.47 万元和 2.78 亿元，是全球少数实现盈利的高性能通用机器人公司。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://www.404media.co/we-tracked-a-shipment-of-rare-books-it-ended-at-an-amazon-ai-training-facility" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">08</div>
-  <div class="card-body">
-    <span class="chip">Hacker News 热门（buzzing.cc 中文翻译）</span>
-    <h3 class="card-title">404 Media 追踪珍本图书流向：亚马逊批量购书扫描用于 AI 训练后销毁</h3>
-    <p class="card-summary">404 Media 通过在一本珍本图书中放置追踪设备，首次揭露亚马逊未公开的购书行动：批量购入大量书籍，扫描用于 AI 训练数据，随后销毁。追踪显示这些书最终被送往亚马逊的一处人工智能训练中心。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://openai.com/index/new-policy-ideas-for-the-intelligence-age" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">09</div>
-  <div class="card-body">
     <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
-    <h3 class="card-title">OpenAI 为 14 个独立项目提供资助，推动智能时代经济机遇与韧性研究</h3>
-    <p class="card-summary">OpenAI 宣布向 14 个由独立组织主导的项目提供总计 100 万美元资金及最高 100 万美元 API 额度，以推动 AI 进步下的经济机遇与社会韧性研究。</p>
+    <h3 class="card-title">OpenAI 启动新计划，强化国家安全领域 AI 的民主监督</h3>
+    <p class="card-summary">OpenAI 启动新计划，帮助民主监督机构发展专业能力与工具，以理解和监督政府将 AI 用于国家安全。未来一年，OpenAI 将提供 500 万美元用于培训、技术支持和 OpenAI 积分，并与监督机构试点工具，帮助授权审查员检查 AI 辅助政府决策的相关记录。OpenAI 强调 AI 应增强而非取代人类判断，且不承担对政府的监督角色。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
@@ -1453,15 +1559,42 @@
     <div class="sec-mark">Ⅲ</div>
     <h2 class="sec-title">研究</h2>
     <div class="sec-line"></div>
-    <div class="sec-count">1<span class="count-unit">条</span></div>
+    <div class="sec-count">4<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://research.google/blog/seeing-beyond-bmi-estimating-cardiometabolic-risk-with-smartphone-imagery" target="_blank" rel="noopener noreferrer" style="--d:0">
+<a class="card" href="https://www.anthropic.com/research/Claude-accelerates-protein-design" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">08</div>
+  <div class="card-body">
+    <span class="chip">Anthropic：Research（发表成果 · 网页）</span>
+    <h3 class="card-title">Claude 如何加速蛋白质设计与分析化学研究</h3>
+    <p class="card-summary">Anthropic 公布两项实验：Claude（Mythos Preview 和 Opus 4.8）针对 15 个靶点设计蛋白质结合剂，成功 14 个，命中率达 22.6%-35.1%。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://huggingface.co/blog/ibm-research/altk-evolve-hmm" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">09</div>
+  <div class="card-body">
+    <span class="chip">Hugging Face：Blog（RSS）</span>
+    <h3 class="card-title">智能体记忆并非越多越好：八款模型评测显示剂量需按能力校准</h3>
+    <p class="card-summary">智能体记忆并非可随意开启的功能，而是需按模型能力校准的剂量。强模型适合注入完整指南集，DeepSeek-V3.2（671B MoE）任务完成率提升+9.5个百分点；较弱模型采用精选检索效果最佳，gpt-oss-120b（117B MoE）提升+16.1pp且仅增加+5% token。该方法无需更新权重或人工标注，通过从智能体过往轨迹中蒸馏指南并在推理时注入实现。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://machinelearning.apple.com/research/grpo-beyond-english" target="_blank" rel="noopener noreferrer" style="--d:2">
   <div class="card-num">10</div>
   <div class="card-body">
-    <span class="chip">Google Research：Blog（网页）</span>
-    <h3 class="card-title">PhotoScan：用智能手机照片估算胰岛素抵抗，精度接近DXA</h3>
-    <p class="card-summary">Google Research 推出 PhotoScan，一种从智能手机 2D 照片直接估算三维身体成分的深度学习框架，可预测胰岛素抵抗，在临床研究中精度接近 DXA 扫描。</p>
+    <span class="chip">Apple Machine Learning Research（RSS）</span>
+    <h3 class="card-title">GRPO 超越英语：多语言与非英语环境下的大规模研究</h3>
+    <p class="card-summary">一项大规模实证研究考察了 GRPO 在多语言和非英语环境下的表现，覆盖多种基础模型、训练语言及推理语言奖励设置。研究发现，以母语进行推理训练与英语推理训练之间的性能差距很小，表明 RLVR 在非英语场景下同样有效。该研究为多语言推理模型的强化学习训练提供了重要参考。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://machinelearning.apple.com/research/mvicad2-delays-dilations" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">11</div>
+  <div class="card-body">
+    <span class="chip">Apple Machine Learning Research（RSS）</span>
+    <h3 class="card-title">MVICAD2：引入延迟与膨胀的多视图独立成分分析</h3>
+    <p class="card-summary">巴黎-萨克雷大学等机构提出MVICAD2，允许不同被试的脑源在时间延迟和膨胀两方面存在差异，以解决MVICA假设过于严格、仅估计延迟不足以刻画听觉刺激等脑动态的问题。该模型源可识别，似然有闭式近似，并通过正则化与优化提升性能。模拟显示其优于现有方法，Cam-CAN数据集验证了延迟和膨胀与衰老相关。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
@@ -1472,78 +1605,51 @@
     <div class="sec-mark">Ⅳ</div>
     <h2 class="sec-title">观点</h2>
     <div class="sec-line"></div>
-    <div class="sec-count">8<span class="count-unit">条</span></div>
+    <div class="sec-count">5<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://openai.com/index/the-defenders-window" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">11</div>
-  <div class="card-body">
-    <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
-    <h3 class="card-title">OpenAI 如何用前沿智能加固自身防御：The Defender’s Window</h3>
-    <p class="card-summary">OpenAI 在 OpenAI-Hugging Face 事件后反思低估了模型真实网络攻击能力，正通过四大支柱强化自身安全：用 Codex 验证代码漏洞、用智能体优先分流安全告警、持续枚举攻击路径，并仅向可信防御者开放网络能力。文中演示 ChatGPT Work（基于 GPT-5.6 Sol）15 分钟发现个人网站 13 个问题并在一小时内完成修复。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://www.librarian.net/notoai" target="_blank" rel="noopener noreferrer" style="--d:1">
+<a class="card" href="https://dev.to/googleai/designing-ai-evals-clarity-now-and-visualization-next-4eii" target="_blank" rel="noopener noreferrer" style="--d:0">
   <div class="card-num">12</div>
   <div class="card-body">
-    <span class="chip">Hacker News 热门（buzzing.cc 中文翻译）</span>
-    <h3 class="card-title">如何禁用或避免侵入式 AI：一份覆盖 Windows、Chrome、Edge、Firefox 及主流应用的实用指南</h3>
-    <p class="card-summary">一份面向希望减少技术环境中侵入式 AI 的用户的操作指南，涵盖 Adobe Acrobat、Android/Gemini、Apple Intelligence、Chrome、Edge、Firefox、DuckDuckGo、Google Workspace、Slack、WhatsApp 及 Windows 11/Copilot 等平台。</p>
+    <span class="chip">Google AI：DEV 作者专属（RSS）</span>
+    <h3 class="card-title">设计 AI 评测：先求清晰，再谈可视化</h3>
+    <p class="card-summary">本文演示如何用开源评测框架 Inspect AI 和 Harbor 评估 agent 技能，并借助 Google Sheets 和 Data Studio 进行可视化分析。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://developers.googleblog.com/build-zero-trust-ai-agents-with-googles-agent-development-kit" target="_blank" rel="noopener noreferrer" style="--d:2">
+<a class="card" href="https://openai.com/index/pacing-model-development-cyber-capabilities" target="_blank" rel="noopener noreferrer" style="--d:1">
   <div class="card-num">13</div>
   <div class="card-body">
-    <span class="chip">Google Developers Blog（RSS）</span>
-    <h3 class="card-title">用 Google 的 Agent Development Kit 构建零信任 AI 智能体</h3>
-    <p class="card-summary">Google 开源了基于 ADK 和 Gemini 的零信任客服与退货智能体示例，演示如何防御提示注入等攻击。该架构在 LLM 上下文之外通过三层硬性安全机制保障：硬件支持的加密签名确保数据库写入不可抵赖、gVisor 沙箱隔离动态代码执行、确定性语义网关校验业务逻辑。系统提示词只是软约束，无法作为安全边界。</p>
+    <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
+    <h3 class="card-title">OpenAI 在“关键网络能力”时代放缓模型开发节奏</h3>
+    <p class="card-summary">OpenAI 因 OpenAI-Hugging Face 事件及即将推出的 Astra 模型可能达到《预备框架》下的“关键网络安全能力”阈值，暂时放缓了模型扩展速度，包括暂停最新部署模型的强化学习训练两周，并搁置最大规模前沿 RL 运行。公司已加强研究环境安全，要求对 Astra 及网络相关负载实施最严格防护，并扩展思维链监控，采用多阶段激活分类器检测机制。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.interconnects.ai/p/teaching-everyone-to-fish-for-tokens" target="_blank" rel="noopener noreferrer" style="--d:3">
+<a class="card" href="https://claude.com/blog/ai-ci-cd-on-call" target="_blank" rel="noopener noreferrer" style="--d:2">
   <div class="card-num">14</div>
   <div class="card-body">
-    <span class="chip">Nathan Lambert：Interconnects（RSS）</span>
-    <h3 class="card-title">开源模型生态的未来：Nvidia 押注“教所有人炼 token”</h3>
-    <p class="card-summary">开源模型生态正日益依赖 Nvidia 的资助，其已投入 260 亿美元推动近乎开源的模型开发，以扩大推理芯片需求。若此路径不奏效，开源模型将转向效率、可修改性等长尾场景，与闭源模型分化。同时，基础模型训练门槛升高，开源社区兴趣正从全量训练转向对 DeepSeek V4 Flash、GLM 5.X 等模型的微调。</p>
+    <span class="chip">Claude：Blog（网页）</span>
+    <h3 class="card-title">Claude Tag 如何担任 Anthropic CI/CD 故障的一线响应者</h3>
+    <p class="card-summary">Anthropic 的 CI 工程师用 Claude Tag 构建了值班智能体，作为 CI/CD 故障的一线响应者。Claude 在事故发生后中位 14 分钟发布首份基于证据的分析，最快案例中 3 分钟内验证修复并确认错误率恢复基线。该方案通过 Slack 频道、Datadog 或 Grafana 工具访问及 GitHub 技能文件实现，Anthropic 已发布通用设置套件供其他团队部署。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://huggingface.co/blog/Dharma-AI/gpu-management-pt2" target="_blank" rel="noopener noreferrer" style="--d:4">
+<a class="card" href="https://www.tomtunguz.com/birds-dont-fly-like-planes-neither-does-ai" target="_blank" rel="noopener noreferrer" style="--d:3">
   <div class="card-num">15</div>
   <div class="card-body">
-    <span class="chip">Hugging Face：Blog（RSS）</span>
-    <h3 class="card-title">同一集群利用率提升 33 个百分点：改变的是分配顺序</h3>
-    <p class="card-summary">Hugging Face 构建了一个约束感知的 GPU 分配器，并在七个基准场景中与 FIFO 调度器对比。在相同硬件和负载下，GPU 利用率最高提升 33 个百分点，优先级加权输出在全部场景中均上升，最高达 105%。分配器将实时推理需求按曲线而非峰值处理，批量任务按优先级跨整个调度周期排序，从而回收了预留闲置容量。</p>
+    <span class="chip">Tomer Tunguz 博客（VC 分析）</span>
+    <h3 class="card-title">笔记本模型也能媲美云端前沿模型：Qwen3.8-27B 登顶智能指数</h3>
+    <p class="card-summary">作者将 Qwen3.8-27B 装入智能体后表现优异，该模型在 Artificial Analysis 智能指数中排名 135 款模型之首，得分 52，超过 Z.ai 的 753B 参数开源模型 GLM-5.2（51 分）。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://claude.com/blog/how-abc-legal-turned-every-employee-into-a-builder-with-claude-managed-agents" target="_blank" rel="noopener noreferrer" style="--d:5">
+<a class="card" href="https://runwayml.com/news/customers/populous" target="_blank" rel="noopener noreferrer" style="--d:4">
   <div class="card-num">16</div>
   <div class="card-body">
-    <span class="chip">Claude：Blog（网页）</span>
-    <h3 class="card-title">ABC Legal 如何借助 Claude Managed Agents 让每位员工成为构建者</h3>
-    <p class="card-summary">ABC Legal 为 1,100 名员工部署 Claude Enterprise 后，通过 Claude Managed Agents 将零散实验转变为受治理的智能体体系，截至 2026 年 7 月已上线 50 多个生产级智能体，部分覆盖的人工任务成本降低约 50%，约 310 名员工日常使用 Claude。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://www.tomtunguz.com/test-time-training-impact" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">17</div>
-  <div class="card-body">
-    <span class="chip">Tomer Tunguz 博客（VC 分析）</span>
-    <h3 class="card-title">当模型持续学习：测试时训练如何改变 AI 的记忆与成本</h3>
-    <p class="card-summary">测试时训练（Test-time training）让模型在使用中持续更新权重，而非训练结束后冻结。相比标准 Transformer，其内存需求从随上下文线性增长变为恒定，斯坦福研究显示推理速度最高可提升 2.7 倍，且 In-Place TTT 无需重训即可将 4B 模型提升至 128k 上下文性能。但代价是每个用户需独立模型副本，服务成本转向算力与芯片，更适合编码助手等个性化场景。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://www.lmsys.org/blog/2026-08-17-advanced-cuda-graph" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">18</div>
-  <div class="card-body">
-    <span class="chip">LMSYS：Blog（Chatbot Arena 团队）</span>
-    <h3 class="card-title">SGLang 重构 CUDA Graph 支持，Breakable CUDA Graph 成 prefill 默认方案</h3>
-    <p class="card-summary">SGLang 重构 CUDA Graph 支持，通过 runner/backend 接口拆分使不同捕获策略可复用。其社区首创的 Breakable CUDA Graph（BCG）现为 prefill 默认方案，代码量仅为 torch.compile 方案的约四分之一（521 行对比 1,771 行），构建速度快 3.8–5.2 倍。</p>
+    <span class="chip">Runway：News（网页）</span>
+    <h3 class="card-title">Populous 如何用 Runway 呈现全球标志性场馆设计</h3>
+    <p class="card-summary">全球设计公司 Populous 高级建筑师 Georgina Myers 介绍团队用 Runway 辅助体育场馆概念设计：过去完整视频需外部渲染团队至少三周，且提交前两周须冻结设计模型；如今 Runway 能生成传达尺度感的完整渲染和航拍图，将视觉制作时间缩短，让设计师把时间还给设计本身。该工具已用于利雅得 MBS 体育场等中东项目，支持 9 种不同活动模式的场景迭代。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
@@ -1555,7 +1661,7 @@
   <footer class="footer">
     <!-- 1 本期共 -->
     <div class="footer-meta">
-      本期共 <span class="num">18</span> 条 · 4 个版块 · 2026-08-18
+      本期共 <span class="num">16</span> 条 · 4 个版块 · 2026-08-19
     </div>
     <!-- 2 数据源 -->
     <div class="footer-source">
@@ -1677,22 +1783,25 @@
     });
   })();
 
-  // 2) 锚点导航高亮当前版块
+  // 2) 锚点导航高亮当前版块（v1.10.1 修复：点击立即切换，IO 不再延迟覆盖）
   (function() {
     const chips = Array.from(document.querySelectorAll('.nav-chip'));
     const sections = chips.map(c => document.querySelector(c.getAttribute('href')));
+    function setActive(href) {
+      chips.forEach(c => {
+        const isActive = c.getAttribute('href') === href;
+        c.classList.toggle('active', isActive);
+        c.classList.remove('is-active-by-io');
+      });
+    }
+    chips.forEach(c => {
+      c.addEventListener('click', () => setActive(c.getAttribute('href')));
+    });
     if (!('IntersectionObserver' in window)) return;
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
-          if (chips.some(c => c.classList.contains('active'))) {
-            chips.forEach(c => c.classList.remove('active'));
-          }
-          const id = e.target.id;
-          chips.forEach(c => {
-            const active = c.getAttribute('href') === '#' + id;
-            c.classList.toggle('is-active-by-io', active);
-          });
+          setActive('#' + e.target.id);
         }
       });
     }, { rootMargin: '-30% 0px -60% 0px' });
@@ -1897,10 +2006,10 @@
   </button>
 </div>
 
-<!-- 留言 / 反馈 FAB（v1.9.7 改为圆形居中图标，hover 展开显示文字）— 图标来自 lucide message-circle -->
+<!-- 留言 / 反馈 FAB（v1.10.1 换 chat-circle-dots 图标） -->
 <button type="button" class="fab-contact" id="contactBtn" onclick="window.snOpenContact()" aria-label="留言 / 反馈" title="留言 / 反馈">
-  <svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
-  <span class="fab-label">💬 留言 / 反馈</span>
+  <svg class="fab-icon" viewBox="0 0 256 256" fill="currentColor" width="20" height="20"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"/></svg>
+  <span class="fab-label">留言 / 反馈</span>
 </button>
 
 </body>

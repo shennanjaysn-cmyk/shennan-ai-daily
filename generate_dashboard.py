@@ -52,7 +52,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.9.7"
+VERSION = "1.10.1"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -670,9 +670,8 @@ def render_html(info, page_info):
     --font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', 'PingFang SC', Consolas, monospace;
   }}
 
-  /* 浅色模式：早报专属「晨光读报」配色（独立设计，非暗色反转）
-     灵感：晨光 / 米白纸张 / 暖墨 / 暖金。
-     —— 暗 → 亮变量重映射，文字底色全部重定义。 */
+  /* 浅色模式：v1.10.1 重新基于深色原样，仅改浅色变量与 light-only 覆盖规则。
+     深色模式视觉保持 v1.9.7 不变。 */
   [data-theme="light"] {{
     --ink-void: #F5F1E6;          /* 暖米白纸张 */
     --ink-deep: #2A2520;          /* 暖墨主字 */
@@ -681,36 +680,36 @@ def render_html(info, page_info):
     --ultra: #4A5BC4;
     --ultra-bright: #2E3A7C;
     --ultra-glow: rgba(74, 91, 196, 0.10);
-    --gold: #A87E2A;              /* 暖金（晨光） */
-    --gold-bright: #C19440;
-    --gold-soft: #856020;
-    --gold-glow: rgba(168, 126, 42, 0.10);
-    --brand-brief: #A87E2A;       /* 「深南AI视界」金 */
-    --brand-cn: #4A5BC4;          /* 「深南AI日报」薰衣草保留 */
-    --btn: #3B4AA8;               /* 沉静的靛蓝按钮 */
-    --btn-hi: #5466D2;
+    --gold: #1600ff;              /* 靛蓝主色 */
+    --gold-bright: #4A5BC4;
+    --gold-soft: #232387;
+    --gold-glow: rgba(22, 0, 255, 0.10);
+    --brand-brief: #1600ff;       /* 标题 brief 部分 */
+    --brand-cn: #cdc8ff;          /* 浅薰衣草 */
+    --btn: #1600ff;               /* 靛蓝按钮 */
+    --btn-hi: #4A5BC4;
     --mist: #2A2520;
     --mist-body: #4A4540;         /* 正文暖灰 */
     --mist-dim: #7A7268;
     --mist-faint: #A89F8E;
-    --line: rgba(168, 126, 42, 0.20);
-    --line-faint: rgba(168, 126, 42, 0.12);
-    --line-gold: rgba(168, 126, 42, 0.32);
-    --line-gold-fine: rgba(168, 126, 42, 0.50);
-    --card-edge-hover: #A87E2A;
-    --card-shadow-hover: rgba(46, 58, 124, 0.18);
+    --line: rgba(22, 0, 255, 0.20);
+    --line-faint: rgba(22, 0, 255, 0.12);
+    --line-gold: rgba(205, 200, 255, 0.45);
+    --line-gold-fine: rgba(205, 200, 255, 0.65);
+    --card-edge-hover: #1600ff;
+    --card-shadow-hover: rgba(22, 0, 255, 0.18);
     /* 语义化文字/表面色 */
     --text-title: #2A2520;
     --text-primary: #2A2520;
     --text-body: #4A4540;
     --text-secondary: #7A7268;
     --text-tertiary: #A89F8E;
-    --text-accent: #A87E2A;
-    --text-link: #3B4AA8;
+    --text-accent: #1600ff;
+    --text-link: #1600ff;
     --text-code: #4A4540;
     --surface-float: rgba(255, 252, 245, 0.82);
     --surface-modal: rgba(255, 252, 245, 0.98);
-    --surface-chip: rgba(232, 226, 208, 0.85);
+    --surface-chip: rgba(205, 200, 255, 0.55);
     --surface-code: rgba(232, 226, 208, 0.95);
     --shadow: rgba(46, 58, 124, 0.15);
     --font-base: 'Poppins', 'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', 'Noto Sans CJK SC', system-ui, -apple-system, sans-serif;
@@ -718,6 +717,125 @@ def render_html(info, page_info):
     --font-en-display: 'Space Grotesk', 'Poppins', 'PingFang SC', system-ui, sans-serif;
     --font-num: 'Space Grotesk', 'Poppins', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
     --font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', 'PingFang SC', Consolas, monospace;
+  }}
+
+  /* ===== LIGHT MODE ONLY OVERRIDES (v1.10.1) =====
+     以下规则仅影响浅色模式，深色模式视觉保持 v1.9.7 原样。 */
+
+  /* 背景光晕：改用靛蓝/浅紫 */
+  [data-theme="light"] body::before {{
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(22, 0, 255, 0.10), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 85% 15%, rgba(205, 200, 255, 0.10), transparent 55%);
+  }}
+  [data-theme="light"] .brand-logo {{ padding-top: 28px; }}
+  [data-theme="light"] body::after {{
+    background:
+      radial-gradient(ellipse 50% 35% at 70% 85%, rgba(74, 91, 196, 0.08), transparent 60%);
+  }}
+
+  /* 统计卡：浅紫底 + 靛蓝数字 */
+  [data-theme="light"] .stat-cell {{ background: #cdc8ff; }}
+  [data-theme="light"] .stat-num {{ color: #1600ff; }}
+  [data-theme="light"] .stat-total {{
+    background: linear-gradient(135deg, #cdc8ff 0%, #e6e3ff 100%);
+  }}
+  [data-theme="light"] .stat-total .num {{ color: #1600ff; }}
+  [data-theme="light"] .stat-lab,
+  [data-theme="light"] .stat-total .lab {{ color: #232387; }}
+
+  /* 导航：去掉外围白底，胶囊玻璃浅紫 */
+  [data-theme="light"] .nav {{ background: transparent; border-bottom: none; }}
+  [data-theme="light"] .nav-inner {{
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(205, 200, 255, 0.55);
+    border-radius: 999px;
+  }}
+  [data-theme="light"] .nav-chip {{
+    background: rgba(205, 200, 255, 0.35);
+    border-color: rgba(205, 200, 255, 0.55);
+    color: #232387;
+  }}
+  [data-theme="light"] .nav-chip:hover {{
+    background: #cdc8ff;
+    border-color: #cdc8ff;
+    color: #1600ff;
+  }}
+  [data-theme="light"] .nav-chip:hover .nav-roman,
+  [data-theme="light"] .nav-chip:hover .nav-n {{
+    color: #1600ff;
+    border-left-color: rgba(22, 0, 255, 0.25);
+  }}
+  [data-theme="light"] .nav-chip.active,
+  [data-theme="light"] .nav-chip.is-active-by-io {{
+    background: #1600ff;
+    border-color: #1600ff;
+    color: #fff;
+  }}
+  [data-theme="light"] .nav-chip.active .nav-roman,
+  [data-theme="light"] .nav-chip.active .nav-n,
+  [data-theme="light"] .nav-chip.is-active-by-io .nav-roman,
+  [data-theme="light"] .nav-chip.is-active-by-io .nav-n {{
+    color: #fff;
+    border-left-color: rgba(255, 255, 255, 0.35);
+  }}
+
+  /* 新闻卡片：静态/hover 配色 */
+  [data-theme="light"] .card {{ border-color: rgba(131, 126, 101, 0.45); }}
+  [data-theme="light"] .card:hover {{
+    background: #fff;
+    border-color: #1600ff;
+    box-shadow:
+      0 0 0 2px rgba(22, 0, 255, 0.15),
+      0 18px 36px -8px rgba(46, 58, 124, 0.14);
+  }}
+  [data-theme="light"] .card::before {{
+    background: radial-gradient(circle at 0% 0%, rgba(22, 0, 255, 0.08), transparent 50%);
+  }}
+  [data-theme="light"] .card-num {{ color: #1600ff; }}
+  [data-theme="light"] .chip {{
+    background: rgba(205, 200, 255, 0.45);
+    border-color: rgba(205, 200, 255, 0.65);
+    color: #232387;
+  }}
+  [data-theme="light"] .card-summary {{ border-left-color: rgba(205, 200, 255, 0.85); }}
+  [data-theme="light"] .card-cta {{
+    background: #F1F0FF;
+    color: #1600ff;
+  }}
+  [data-theme="light"] .card:hover .card-cta {{
+    background: linear-gradient(90deg, #DDD090 0%, #817F67 100%);
+    color: #fff;
+  }}
+
+  /* 页脚 */
+  [data-theme="light"] .footer-source a {{
+    color: var(--mist-dim);
+    border-bottom-color: var(--mist-faint);
+  }}
+  [data-theme="light"] .footer-docs {{ gap: 50px; }}
+  [data-theme="light"] .footer-bottom {{
+    background: linear-gradient(180deg, rgba(245, 241, 230, 0) 0%, rgba(205, 200, 255, 0.25) 45%, rgba(205, 200, 255, 0.35) 100%);
+  }}
+  [data-theme="light"] .footer-line-bold {{
+    background: linear-gradient(90deg, transparent, rgba(205, 200, 255, 0.55) 18%, rgba(205, 200, 255, 0.55) 82%, transparent);
+  }}
+
+  /* 弹窗/导出卡片 */
+  [data-theme="light"] .contact-card {{
+    background: var(--surface-modal);
+    border-color: rgba(205, 200, 255, 0.55);
+  }}
+  [data-theme="light"] .contact-actions .send {{
+    background: #1600ff;
+    color: #fff;
+  }}
+  [data-theme="light"] .contact-actions .cancel {{
+    background: transparent;
+    color: var(--text-primary);
+    border-color: rgba(205, 200, 255, 0.55);
   }}
 
   * {{ margin: 0; padding: 0; box-sizing: border-box; }}
@@ -1192,17 +1310,20 @@ def render_html(info, page_info):
     padding: 10px 28px;          /* 更紧凑，缩短与顶部的视觉距离 */
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;  /* 左侧分类与右侧工具胶囊分居两端 */
+    justify-content: center;     /* 工具按钮已 fixed 到右上，这里居中 */
     align-items: center;
     gap: 8px;
     overflow-x: visible;
     scrollbar-width: none;
   }}
   .nav-actions {{
+    position: fixed;
+    top: 14px;
+    right: 24px;
+    z-index: 200;
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-left: auto;       /* 确保靠右 */
     flex-shrink: 0;
   }}
   /* 首页：隐藏固定 topbar，工具胶囊已合并进 nav，8 胶囊在同一行 sticky 对齐 */
@@ -1597,11 +1718,11 @@ def render_html(info, page_info):
   }}
   .fab-icon {{ width: 18px; height: 18px; }}
 
-  /* 留言/反馈 FAB（v1.9.7 改为圆形居中图标，hover 展开显示文字）— 图标来自 lucide message-circle */
+  /* 留言/反馈 FAB（v1.10.1 上移，换 chat-circle-dots 图标） */
   .fab-contact {{
     position: fixed;
     right: 24px;
-    bottom: 14px;            /* FAB group 在上方 ~38px（= 1 个 icon 高），这里紧贴底部 */
+    bottom: 42px;            /* 上移，与 .fab-group 间距 = 10px */
     z-index: 180;
     width: 40px;
     height: 40px;
@@ -1616,7 +1737,7 @@ def render_html(info, page_info):
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 0 11px;
+    padding: 0;
     overflow: hidden;
     white-space: nowrap;
     font-family: var(--font-base);
@@ -1639,7 +1760,7 @@ def render_html(info, page_info):
     box-shadow: 0 6px 18px -8px rgba(46, 58, 124, 0.18);
   }}
   .fab-contact:hover {{
-    width: 156px;
+    width: 132px;
     border-radius: 999px;
     justify-content: flex-start;
     background: rgba(79, 92, 199, 0.28);
@@ -1648,7 +1769,7 @@ def render_html(info, page_info):
     -webkit-backdrop-filter: blur(14px) saturate(180%);
     transform: translateY(-2px);
     box-shadow: 0 10px 26px -8px rgba(0,0,0,.55);
-    padding: 0 14px;
+    padding: 0 14px 0 12px;
   }}
   [data-theme="light"] .fab-contact:hover {{
     background: rgba(74, 91, 196, 0.18);
@@ -1658,15 +1779,18 @@ def render_html(info, page_info):
   .fab-contact .fab-icon {{ flex-shrink: 0; }}
   .fab-contact .fab-label {{
     opacity: 0;
+    max-width: 0;
     transform: translateX(-6px);
     transition:
       opacity .25s ease .08s,
+      max-width .35s cubic-bezier(.34, 1.2, .64, 1),
       transform .25s cubic-bezier(.34, 1.2, .64, 1) .08s,
       color .2s ease;
     color: var(--text-primary);
   }}
   .fab-contact:hover .fab-label {{
     opacity: 1;
+    max-width: 90px;
     transform: translateX(0);
   }}
 
@@ -1700,9 +1824,9 @@ def render_html(info, page_info):
     .brand-logo {{ padding: 12px 0 6px; }}
     .brand-logo .sn-logo {{ width: 38px; height: 38px; object-fit: contain; }}
     /* 移动端：导航条横向滚动，避免 8 胶囊换行错位 */
-    .nav-inner {{ flex-wrap: nowrap; overflow-x: auto; padding: 10px 14px; gap: 6px; }}
+    .nav-inner {{ flex-wrap: nowrap; overflow-x: auto; padding: 10px 14px; gap: 6px; position: relative; }}
     .nav-chip {{ flex-shrink: 0; }}
-    .nav-actions {{ flex-shrink: 0; margin-left: 0; }}
+    .nav-actions {{ position: static; flex-shrink: 0; margin-left: 0; order: 99; }}
     /* 移动端：新闻模块直接显示，不依赖 IntersectionObserver 入场动画 */
     .reveal-sec {{ opacity: 1 !important; animation: none !important; transform: none !important; }}
     .footer-bottom {{ padding: 32px 20px; }}
@@ -1919,22 +2043,25 @@ def render_html(info, page_info):
     }});
   }})();
 
-  // 2) 锚点导航高亮当前版块
+  // 2) 锚点导航高亮当前版块（v1.10.1 修复：点击立即切换，IO 不再延迟覆盖）
   (function() {{
     const chips = Array.from(document.querySelectorAll('.nav-chip'));
     const sections = chips.map(c => document.querySelector(c.getAttribute('href')));
+    function setActive(href) {{
+      chips.forEach(c => {{
+        const isActive = c.getAttribute('href') === href;
+        c.classList.toggle('active', isActive);
+        c.classList.remove('is-active-by-io');
+      }});
+    }}
+    chips.forEach(c => {{
+      c.addEventListener('click', () => setActive(c.getAttribute('href')));
+    }});
     if (!('IntersectionObserver' in window)) return;
     const io = new IntersectionObserver((entries) => {{
       entries.forEach(e => {{
         if (e.isIntersecting) {{
-          if (chips.some(c => c.classList.contains('active'))) {{
-            chips.forEach(c => c.classList.remove('active'));
-          }}
-          const id = e.target.id;
-          chips.forEach(c => {{
-            const active = c.getAttribute('href') === '#' + id;
-            c.classList.toggle('is-active-by-io', active);
-          }});
+          setActive('#' + e.target.id);
         }}
       }});
     }}, {{ rootMargin: '-30% 0px -60% 0px' }});
@@ -2139,10 +2266,10 @@ def render_html(info, page_info):
   </button>
 </div>
 
-<!-- 留言 / 反馈 FAB（v1.9.7 改为圆形居中图标，hover 展开显示文字）— 图标来自 lucide message-circle -->
+<!-- 留言 / 反馈 FAB（v1.10.1 换 chat-circle-dots 图标） -->
 <button type="button" class="fab-contact" id="contactBtn" onclick="window.snOpenContact()" aria-label="留言 / 反馈" title="留言 / 反馈">
-  <svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
-  <span class="fab-label">💬 留言 / 反馈</span>
+  <svg class="fab-icon" viewBox="0 0 256 256" fill="currentColor" width="20" height="20"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"/></svg>
+  <span class="fab-label">留言 / 反馈</span>
 </button>
 
 </body>
