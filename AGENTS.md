@@ -13,7 +13,7 @@
 ~/.workbuddy/binaries/python/envs/default/Scripts/python.exe build_fonts_css.py
 # 生成（managed venv python）
 ~/.workbuddy/binaries/python/envs/default/Scripts/python.exe generate_dashboard.py
-# 本地验证门禁：先本地构建 + 校验 dist/index.html（卡片为整卡<a>、早中晚已隐藏、报告页正常），确认无误再 push
+# 本地验证门禁：先本地构建 + 校验 releases/index.html（卡片为整卡<a>、早中晚已隐藏、报告页正常），确认无误再 push
 ~/.workbuddy/binaries/python/envs/default/Scripts/python.exe generate_dashboard.py
 # 部署：推送 main 即由 GitHub Actions 自动生成 + 部署 gh-pages
 git push origin main
@@ -27,15 +27,15 @@ git push origin main
 ## 技术栈
 
 - Python 3.13（managed）。字体子集化依赖 `fonttools`+`brotli` 装在 venv `~/.workbuddy/binaries/python/envs/default`
-- 产物：单页 HTML（**外链 woff2**，不要内嵌）+ `dist/fonts/` + `dist/fonts.css`
-- 部署：**GitHub Pages**，源为 `dist/`（`index.html` 文件名恒定保证链接稳定）；CloudStudio 仅本地预览
+- 产物：单页 HTML（**外链 woff2**，不要内嵌）；字体源在 `dist/fonts/` + `dist/fonts.css`，构建时由生成器复制到 `releases/fonts/`
+- 部署：**GitHub Pages**，源为 `releases/`（`publish_dir: ./releases`，`index.html` 文件名恒定保证链接稳定）；CloudStudio 仅本地预览
 
 ## 目录与约定
 
 - `generate_dashboard.py`：唯一真相源，含 `VERSION`、`SECTION_PRIORITY`/`SECTION_DISPLAY`/`SECTION_SLUG`、数据拉取与 HTML 构建
 - `build_fonts_css.py`：字体子集化 → woff2
 - `build_logo.py`：从品牌主 PNG 生成压缩版 `dist/logo.png`
-- `dist/`：GitHub Pages 部署源（推到 `gh-pages` 分支）；`dist/daily/` 为历史日报；`dist/license.html` `dist/disclaimer.html` `dist/about.html` 为站内文档子页；`.nojekyll` 禁用 Jekyll；字体/`logo.png`/`fonts.css` 已入库（供 CI 构建）
+- `dist/`：字体构建源（`fonts.css` + `fonts/*.woff2` + `logo.png`），由 `generate_dashboard.py` 在构建时复制到 `releases/fonts/`，**本身不参与部署**；`releases/`：GitHub Pages 部署源（`publish_dir: ./releases` → `gh-pages` 分支）；`releases/daily/` 为历史日报；`releases/` 下含 `about.html` / `disclaimer.html` / `license` 等站内文档子页与 `.nojekyll` / `robots.txt`
 - `.github/workflows/deploy.yml`：推送 `main` 自动生成并部署 `gh-pages`
 - `archive/`：历史归档，仅回溯，不参与构建/部署
 
@@ -62,10 +62,10 @@ git push origin main
 
 ## 当前状态与下一步
 
-- 当前版本 **v1.8.7**（「留言/反馈」从 footer 提到右下 FAB 区，做成与 FAB 同风格的悬浮按钮 `fab-contact`，默认 40px 圆只显示聊天气泡 icon，hover 展开到 168px 显示「💬 留言 / 反馈」文字；inline onclick 兜底；之前版本：v1.8.6 ticker 顶部 marquee / v1.8.5 nav 与 topbar 错开 / v1.8.4 FAB 兜底 / v1.8.3 卡片金边顶部线 / v1.8.2 修 FAB+UTC / v1.8.1 浅色模式 / v1.8.0 OFL；本地版本归档 `release/`）。
-- 主线部署：**GitHub Pages**（源 `dist/`）。**本地验证门禁**：每次先本地 `generate_dashboard.py` 构建并校验 `dist/index.html`，确认无误再 `git push`。
+- 当前版本 **v1.10.2**（近期：v1.10.1 浅色模式视觉重置为 light-only 覆盖、保留深色原样；v1.10.0 新闻卡片香槟金外框 + CTA #F1F0FF + 箭头→；v1.9.7 留言按钮改为 lucide message-circle 图标；更早版本演进见 CHANGELOG.md；本地版本归档 `releases/`）。
+- 主线部署：**GitHub Pages**（源 `releases/`）。**本地验证门禁**：每次先本地 `generate_dashboard.py` 构建并校验 `releases/index.html`，确认无误再 `git push`。
 - 已完成：A 视觉入口 / B 早中晚时段体系（胶囊已隐藏，逻辑保留）/ C 深浅模式+悬浮按钮（FAB inline onclick 终极兜底 + 留言/反馈 FAB 化）/ D 导出增强 / E 数据源滚动条 / 分类多元化（具身·大会 派生桶）/ F 聚合报告页（周报+月报）/ 新闻卡片整卡链接（v1.3.0 样式）/ 开源合规（GitHub Issue 留言 + robots.txt）/ 字体合规（全面切换 SIL OFL）/ 浅色模式重设计（语义色补齐+独立配色）/ ticker 移到顶部 + marquee 滚动 + 紧凑 + 深色品牌 / 卡片 hover 节奏差 + 高度封顶 / UTC 时区 bug 修复 / 阅读原文箭头放大 / 卡片金边改为顶部线 / nav 与 topbar 错开不重叠 / 留言/反馈 FAB 化与 hover 展开。
 - **DOMContentLoaded 教训**：当 JS 用 `getElementById` 拿页面元素时，要么把元素放在 script 之前，要么把 JS 包进 `DOMContentLoaded`。FAB bug 是教科书反面案例。**终极兜底：关键交互按钮直接用 inline `onclick`，彻底绕开 JS 监听链**。
 - 待办：① 早中晚真增量（暂搁置，模块已隐藏，依赖第二数据源或 AIHOT 分时段接口；`/api/public/daily` item 无时间戳）；② 历史版本补全（v1.0–v1.4.0 由用户放入 `release/` 后统一评估上传 GitHub）。
 - 早中晚真增量：暂搁置（模块已隐藏）。依赖第二数据源或 AIHOT v1 分时段接口；当前 `/api/public/daily` item 无时间戳。详见 v1.6.0 分析。
-- 版本归档 `releases/`：每版构建后把 `dist/ai-daily-vX.Y.Z_YYMMDD.html` 复制一份入库（`.gitignore` 已放行），作为本地验证与历史追溯；缺失的早期版本（v1.0–v1.4.0）由用户提供后补入。
+- 版本归档 `releases/`：每版构建后生成器直接写出 `releases/ai-daily-vX.Y.Z_YYMMDD.html` 入库（`.gitignore` 已放行），作为本地验证与历史追溯；缺失的早期版本（v1.0–v1.4.0）由用户提供后补入。

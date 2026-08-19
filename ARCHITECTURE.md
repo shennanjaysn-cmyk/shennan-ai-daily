@@ -14,14 +14,14 @@ AIHOT API (aihot.virxact.com/api/public/daily)
 generate_dashboard.py  ── 读 fonts.css ──┐
         │  (版本号 / 版块映射 / 编号 / HTML 模板)
         ▼                                 │
-dist/index.html  +  dist/ai-daily-vX.Y.Z_YYMMDD.html
-        │  + dist/daily/YYYY-MM-DD.html   │
-        │  + dist/report-week.html        │
-        │  + dist/report-month.html       │
-        │                                 │
-        │  dist/fonts/*.woff2  ◄──────────┘  (外部 @font-face 引用)
+releases/index.html  +  releases/ai-daily-vX.Y.Z_YYMMDD.html
+        │  + releases/daily/YYYY-MM-DD.html   │
+        │  + releases/report-week.html        │
+        │  + releases/report-month.html       │
+        │                                     │
+        │  releases/fonts/*.woff2  ◄──────────┘  (外部 @font-face 引用，由 dist/fonts 复制)
         ▼
-GitHub Pages  (主线部署，源 = dist/)
+GitHub Pages  (主线部署，源 = releases/)
 ```
 
 ## 2. 数据层
@@ -44,7 +44,7 @@ GitHub Pages  (主线部署，源 = dist/)
 
 ## 4. 生成流水线
 
-1. 拉数据 → 2. 按 priority 排序 sections → 3. 全局连续编号（跨版块累加）→ 4. 渲染 Hero / 导航 / 各 section 卡片 → 5. 注入 `fonts.css`（外部引用）→ 6. 写 `dist/index.html` + 版本化归档 + `dist/daily/*.html` + `dist/report-week.html` / `dist/report-month.html`
+1. 拉数据 → 2. 按 priority 排序 sections → 3. 全局连续编号（跨版块累加）→ 4. 渲染 Hero / 导航 / 各 section 卡片 → 5. 注入 `fonts.css`（外部引用）→ 6. 写 `releases/index.html` + 版本化归档 + `releases/daily/*.html` + `releases/report-week.html` / `releases/report-month.html`
 
 `aggregate_info(date_strs)`：把多日 `info` 按版块聚合，生成周报/月报数据对象，结构与单日一致（`date_str` 为范围字符串）。
 
@@ -67,10 +67,10 @@ GitHub Pages  (主线部署，源 = dist/)
 
 ## 5b. 部署拓扑（GitHub Pages 主线 · 已执行：分支法）
 
-- **已执行**：仓库 `main` 分支根放源码与文档；`dist/` 全部内容（含 `index.html` + `fonts/` + `fonts.css` + `daily/`）推到 `gh-pages` 分支，Pages 源选 `gh-pages` / `root`。
+- **已执行**：仓库 `main` 分支根放源码与文档；`releases/` 全部内容（含 `index.html` + `fonts/` + `fonts.css` + `daily/` + 报告页）由 `deploy.yml` 的 `publish_dir: ./releases` 推到 `gh-pages` 分支，Pages 源选 `gh-pages` / `root`。
 - 站点根路径：`https://<user>.github.io/<repo>/`（如 `https://shennanjaysn-cmyk.github.io/shennan-ai-daily/`）为**子路径**。
 - 子路径资源修正：`daily/` 嵌套页面（如 `.../daily/2026-07-27.html`）中的字体为相对 `url(fonts/...)`；生成器按页面层级注入资源前缀——索引页 `fonts/`、日报页 `../fonts/`——确保子路径下任意深度字体不 404。
-- `main` 分支 `.gitignore` 已排除 `dist/`、`archive/`、`.workbuddy/`，源码仓库保持轻量；站点产物只在 `gh-pages`。
+- `main` 分支 `.gitignore` 已排除 `dist/`（字体构建源）、`archive/`、`dist-preview/`、`.workbuddy/`；`releases/` 入库（版本归档 + 部署源），站点产物在 `gh-pages`（由 `releases/` 发布）。
 - CloudStudio 仅作本地预览，不进主线。
 
 ## 6. 运行态与已知问题
@@ -78,7 +78,7 @@ GitHub Pages  (主线部署，源 = dist/)
 | 项 | 状态 | 说明 |
 |---|---|---|
 | 部署（主线） | ✅ live | **GitHub Pages**（gh-pages 分支），`main` 仅源码；CloudStudio 仅预览 |
-| 历史日报浏览器 | ✅ done | `dist/daily/` 最近 30 天 + 下拉切换 + 30 天自动清理 |
+| 历史日报浏览器 | ✅ done | `releases/daily/` 最近 30 天 + 下拉切换 + 30 天自动清理 |
 | 多格式导出 | ✅ done | PNG / HTML / Markdown / CSV / PDF（PNG/PDF 走 CDN） |
 | 分类多元化 | ✅ done (v1.5.0) | 关键词派生桶：具身智能 / 大会发布会（KOL / 公众号内容按决策剔除，不做第二数据源） |
 | 聚合报告页 | ✅ done (v1.6.0) | `report-week.html` / `report-month.html`，入口在顶栏「报告」与页脚 docs |

@@ -413,7 +413,7 @@ def render_html(info, page_info):
     fonts_css = page_info["fonts_css"]
     asset_base = page_info.get("asset_base", "")
     doc_prefix = page_info.get("doc_prefix", "")
-    # GitHub Pages 部署在 /shennan-ai-daily/ 子路径下，daily 页面位于 dist/daily/，
+    # GitHub Pages 部署在 /shennan-ai-daily/ 子路径下，daily 页面位于 releases/daily/，
     # 字体用相对路径 url(fonts/...)，需要按页面层级补 ../ 前缀，否则字体 404。
     fonts_css_pp = fonts_css.replace("url(fonts/", f"url({asset_base}fonts/)")
     exports_js_url = f"{asset_base}exports.js"
@@ -2422,7 +2422,7 @@ def render_doc_page(title, body_html, logo_img, fonts_css):
 
 # ---------- archive management ----------
 def cleanup_old_archives(keep_days=30):
-    """Remove dist/daily/YYYY-MM-DD.html files older than keep_days."""
+    """Remove releases/daily/YYYY-MM-DD.html files older than keep_days."""
     cutoff = date.today() - timedelta(days=keep_days)
     removed = 0
     for fp in DAILY_DIR.glob("*.html"):

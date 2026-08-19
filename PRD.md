@@ -78,7 +78,7 @@ AI 圈信息密度高、来源分散，需要一份**每日可快速扫读、可
 ## 7. 交付物与部署
 
 - 单页 HTML（外链 woff2，~39KB）+ 字体目录 + logo 位图
-- 主线部署：**GitHub Pages**，源 = `dist/`（`index.html` 恒定）
+- 主线部署：**GitHub Pages**，源 = `releases/`（`index.html` 恒定；`deploy.yml` 的 `publish_dir: ./releases`）
 
 ## 8. 非功能需求
 

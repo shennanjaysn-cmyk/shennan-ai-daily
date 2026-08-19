@@ -20,23 +20,24 @@
 ├── generate_dashboard.py    # 主生成器（函数化：render_html / parse_data / load_daily / 导出 …）
 ├── build_fonts_css.py       # 字体子集化 → dist/fonts/*.woff2 + dist/fonts.css
 ├── build_logo.py            # 从品牌主 PNG 生成压缩版 dist/logo.png
-├── dist/                    # 部署产物 = GitHub Pages 源（HTML 为构建产物 gitignored；字体/logo 入库）
+├── releases/                # 部署产物 = GitHub Pages 源（生成器写入；HTML 入库作为版本归档）
 │   ├── index.html           # 部署入口（最新一期，文件名恒定）
 │   ├── daily/               # 历史日报（最近 30 天，YYYY-MM-DD.html）
 │   ├── license.html         # 站内文档子页（LICENSE）
 │   ├── disclaimer.html       # 站内文档子页（免责声明）
 │   ├── about.html           # 站内文档子页（关于项目）
 │   ├── .nojekyll            # 禁用 Jekyll 处理
-│   ├── logo.png             # 品牌 logo 位图（透明底，base64 内联）
-│   ├── fonts/               # 独立 woff2 字体（已入库，供 CI 构建）
+│   ├── robots.txt           # 抓取规则
+│   ├── fonts/               # 独立 woff2 字体（由 dist/fonts 构建时复制）
 │   └── fonts.css            # @font-face 外部引用
+├── dist/                    # 字体构建源（fonts.css + fonts/*.woff2 + logo.png），不参与部署
 ├── .github/workflows/deploy.yml  # 推送 main 自动生成并部署 gh-pages
 ├── archive/                 # 历史版本快照（gitignored，仅回溯）
-├── .gitignore               # 排除 dist/*.html 等构建产物；保留字体/logo
+├── .gitignore               # 排除 dist/ 构建产物（字体/logo 已入库供 CI）；releases/ 全部入库
 └── README / AGENTS / ARCHITECTURE / CHANGELOG / PRD / LICENSE / DISCLAIMER.md
 ```
 
-> 部署：源码在 `main` 分支；推送 `main` 后由 **GitHub Actions** 自动运行 `generate_dashboard.py` 并把 `dist/` 发布到 `gh-pages` 分支（GitHub Pages 源）。`dist/` 的 HTML 为构建产物不入库，但 `fonts/`、`logo.png`、`fonts.css` 已入库以支持 CI 构建。
+> 部署：源码在 `main` 分支；推送 `main` 后由 **GitHub Actions** 自动运行 `generate_dashboard.py` 并把 `releases/` 发布到 `gh-pages` 分支（GitHub Pages 源）。`releases/` 全部入库（含版本化 HTML 归档）；`dist/` 仅字体构建源不部署，`fonts/`、`logo.png`、`fonts.css` 已入库以支持 CI 构建。
 
 ## 3. 环境要求
 
@@ -64,8 +65,8 @@ git push origin main
 
 产物：
 
-- `dist/index.html`（部署入口，文件名恒定）
-- `dist/ai-daily-v{X.Y.Z}_{YYMMDD}.html` + 根目录同名归档
+- `releases/index.html`（部署入口，文件名恒定）
+- `releases/ai-daily-v{X.Y.Z}_{YYMMDD}.html`（版本化归档，入库供历史追溯）
 
 ## 5. 版本号规则（强制）
 
