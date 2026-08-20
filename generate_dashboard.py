@@ -52,7 +52,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.2"
+VERSION = "1.10.3"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -81,55 +81,7 @@ SECTION_SLUG = {
 }
 ROMAN_LIST = ["Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ", "Ⅴ", "Ⅵ", "Ⅶ", "Ⅷ", "Ⅸ", "Ⅹ"]
 
-# ===== 关键词派生版块（精简版：合并入主分类，避免过多胶囊） =====
-# 具身智能 / 大会发布 类的 item 不单独成桶，归入 AIHOT 主分类（按 AIHOT 原始 label 即可）
-# 这样最终展示就是 AIHOT 的 5 大桶：模型|产品|动态|研究|观点
-DERIVED_SECTIONS = []
-DERIVED_LABELS = {d["label"] for d in DERIVED_SECTIONS}
-DERIVED_DISPLAY = {d["label"]: d["display"] for d in DERIVED_SECTIONS}
-
-
-def classify_derived(title, summary):
-    """Return the first matching derived-bucket key, or None."""
-    text = (title + " " + summary).lower()
-    for d in DERIVED_SECTIONS:
-        for kw in d["keywords"]:
-            if kw.lower() in text:
-                return d["key"]
-    return None
-
-
-def apply_derived_sections(cards_by_section, all_items):
-    """Move keyword-matched items out of their AIHOT bucket into derived buckets."""
-    promoted = {d["key"]: [] for d in DERIVED_SECTIONS}
-    for sec in cards_by_section:
-        if sec["label"] in DERIVED_LABELS:
-            continue
-        kept = []
-        for it in sec["items"]:
-            dk = it.get("derived")
-            if dk and dk in promoted:
-                promoted[dk].append(it)
-            else:
-                kept.append(it)
-        sec["items"] = kept
-        sec["count"] = len(kept)
-    for d in DERIVED_SECTIONS:
-        items = promoted[d["key"]]
-        if items:
-            idx = len(cards_by_section)
-            cards_by_section.append({
-                "label": d["label"],
-                "display_label": d["display"],
-                "slug": d["slug"],
-                "roman": ROMAN_LIST[idx],
-                "count": len(items),
-                "items": items,
-            })
-    for e in all_items:
-        if e.get("derived") and e["derived"] in DERIVED_DISPLAY:
-            e["section"] = DERIVED_DISPLAY[e["derived"]]
-    return cards_by_section, all_items
+# 关键词派生版块已精简去除：所有 item 直接归入 AIHOT 5 大主桶，无派生逻辑。
 
 
 # ---------- helpers ----------
@@ -234,14 +186,12 @@ def parse_data(data):
             summary_esc = html.escape(summary_raw)
             source_esc = html.escape(it.get("sourceName") or "来源")
             url = it.get("sourceUrl") or "#"
-            dk = classify_derived(title_raw, summary_raw)
             items.append({
                 "num": total,
                 "title": title_esc,
                 "summary": summary_esc,
                 "source": source_esc,
                 "url": url,
-                "derived": dk,
             })
             all_items.append({
                 "num": total,
@@ -250,7 +200,6 @@ def parse_data(data):
                 "summary": summary_raw,
                 "source": it.get("sourceName") or "来源",
                 "url": url,
-                "derived": dk,
             })
         cards_by_section.append({
             "label": label,
@@ -260,8 +209,6 @@ def parse_data(data):
             "count": len(items),
             "items": items,
         })
-
-    cards_by_section, all_items = apply_derived_sections(cards_by_section, all_items)
 
     return {
         "date_str": date_str,
@@ -586,26 +533,38 @@ def render_html(info, page_info):
 <script>
   // 早期初始化 + 全局 FAB 主题切换函数（必须最先定义，inline onclick 直接调用）
   (function(){{
+    // 主题图标 SVG（浅色→显示月亮表示将切到深色；深色→显示太阳表示将切到浅色）
+    window.__SN_SUN_SVG = '<svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+    window.__SN_MOON_SVG = '<svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
     const h = (new Date().getUTCHours() + 8) % 24;
     const p = (h >= 6 && h < 12) ? 'morning' : (h >= 12 && h < 18) ? 'noon' : 'night';
     const t = (p === 'morning' || p === 'noon') ? 'light' : 'dark';
     const saved = (function(){{ try {{ return localStorage.getItem('sn-theme'); }} catch(e) {{ return null; }} }})();
     document.documentElement.setAttribute('data-theme', saved || t);
+
+    // 用户是否手动覆盖过主题（FAB / 时段胶囊点击会置 true），用于阻止时段逻辑自动回切
+    window.__snUserOverrode = (saved === 'light' || saved === 'dark');
+
+    // 依据当前 data-theme 同步 FAB 图标与无障碍文案（页面加载与各次切换后调用）
+    window.snSyncThemeIcon = function() {{
+      var btn = document.getElementById('themeToggle');
+      if (!btn) return;
+      var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      btn.innerHTML = (cur === 'light') ? window.__SN_MOON_SVG : window.__SN_SUN_SVG;
+      var tip = (cur === 'light') ? '当前：浅色，点击切到深色' : '当前：深色，点击切到浅色';
+      btn.setAttribute('title', tip);
+      btn.setAttribute('aria-label', tip);
+    }};
+
     // 暴露 FAB 主题切换的全局函数（inline onclick 调用，绕过 DOMContentLoaded 与 ID 查找）
     window.snToggleTheme = function() {{
-      const cur = document.documentElement.getAttribute('data-theme') || 'dark';
-      const next = cur === 'light' ? 'dark' : 'light';
+      var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = (cur === 'light') ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', next);
-      try {{ localStorage.setItem('sn-theme', next); }} catch(e) {{}}
-      // 即时反映 FAB 图标：暗色显示太阳（→light），浅色显示月亮（→dark）
-      var btn = document.getElementById('themeToggle');
-      if (btn) {{
-        btn.innerHTML = next === 'light'
-          ? '<svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
-          : '<svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
-        btn.setAttribute('title', next === 'light' ? '当前：浅色，点击切到深色' : '当前：深色，点击切到浅色');
-        btn.setAttribute('aria-label', btn.getAttribute('title'));
-      }}
+      window.__snUserOverrode = true;
+      try {{ localStorage.setItem('sn-theme', next); }} catch(e) {{ }}
+      window.snSyncThemeIcon();
     }};
     // 暴露留言/反馈全局函数（v1.8.7 FAB 化）
     window.snOpenContact = function() {{
@@ -728,7 +687,6 @@ def render_html(info, page_info):
       radial-gradient(ellipse 80% 50% at 20% 0%, rgba(22, 0, 255, 0.10), transparent 60%),
       radial-gradient(ellipse 60% 40% at 85% 15%, rgba(205, 200, 255, 0.10), transparent 55%);
   }}
-  [data-theme="light"] .brand-logo {{ padding-top: 28px; }}
   [data-theme="light"] body::after {{
     background:
       radial-gradient(ellipse 50% 35% at 70% 85%, rgba(74, 91, 196, 0.08), transparent 60%);
@@ -744,15 +702,6 @@ def render_html(info, page_info):
   [data-theme="light"] .stat-lab,
   [data-theme="light"] .stat-total .lab {{ color: #232387; }}
 
-  /* 导航：去掉外围白底，胶囊玻璃浅紫 */
-  [data-theme="light"] .nav {{ background: transparent; border-bottom: none; }}
-  [data-theme="light"] .nav-inner {{
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    border: 1px solid rgba(205, 200, 255, 0.55);
-    border-radius: 999px;
-  }}
   [data-theme="light"] .nav-chip {{
     background: rgba(205, 200, 255, 0.35);
     border-color: rgba(205, 200, 255, 0.55);
@@ -815,7 +764,6 @@ def render_html(info, page_info):
     color: var(--mist-dim);
     border-bottom-color: var(--mist-faint);
   }}
-  [data-theme="light"] .footer-docs {{ gap: 50px; }}
   [data-theme="light"] .footer-bottom {{
     background: linear-gradient(180deg, rgba(245, 241, 230, 0) 0%, rgba(205, 200, 255, 0.25) 45%, rgba(205, 200, 255, 0.35) 100%);
   }}
@@ -1303,7 +1251,6 @@ def render_html(info, page_info):
     transition: transform .3s ease;
   }}
   [data-theme="light"] .nav {{
-    background: var(--ink-card);
     border-bottom-color: rgba(131, 126, 101, 0.35);
   }}
   /* 移动端滚动时自动隐藏顶栏/导航，上滑时恢复（由 JS 切换 .hide）；鼠标悬停时临时显示 */
@@ -1799,13 +1746,6 @@ def render_html(info, page_info):
     transform: translateX(0);
   }}
 
-  /* 触屏设备（无 hover）：新闻卡片直接全部展开 */
-  @media (hover: none) {{
-    .card {{ max-height: none; }}
-    .card-title {{ -webkit-line-clamp: unset; display: block; overflow: visible; }}
-    .card-summary {{ -webkit-line-clamp: unset; display: block; overflow: visible; }}
-  }}
-
   /* ===== RESPONSIVE ===== */
   @media (max-width: 880px) {{
     .topbar {{ padding: 8px 14px; }}
@@ -2150,8 +2090,6 @@ def render_html(info, page_info):
 
     const chips = Array.from(document.querySelectorAll('.time-chip'));
     const body = document.body;
-    const savedTheme = localStorage.getItem('sn-theme');
-    let userOverrode = false;
 
     function applyTheme(theme) {{
       document.documentElement.setAttribute('data-theme', theme);
@@ -2171,17 +2109,13 @@ def render_html(info, page_info):
     function updatePeriod() {{
       const beijing = nowInBeijing();
       const period = getPeriod(beijing.getHours());
-      if (!userOverrode) applyTheme(periodTheme(period));
+      if (!window.__snUserOverrode) applyTheme(periodTheme(period));
       setChips(period);
       return period;
     }}
 
-    // 初始化
+    // 初始化（data-theme 与 override 标记已由 head 内联脚本设置）
     const initialPeriod = updatePeriod();
-    if (savedTheme === 'light' || savedTheme === 'dark') {{
-      applyTheme(savedTheme);
-      userOverrode = true;
-    }}
 
     // 点击切换时段（仅切换视觉/主题，不重新拉数据；未来时段不可点）
     chips.forEach(btn => {{
@@ -2190,22 +2124,13 @@ def render_html(info, page_info):
         const key = btn.dataset.period;
         setChips(key);
         applyTheme(periodTheme(key));
-        userOverrode = true;
+        window.__snUserOverrode = true;
         localStorage.setItem('sn-theme', periodTheme(key));
       }});
     }});
 
-    // 主题切换按钮
-    const themeBtn = document.getElementById('themeToggle');
-    if (themeBtn) {{
-      themeBtn.addEventListener('click', () => {{
-        const current = document.documentElement.getAttribute('data-theme') || 'dark';
-        const next = current === 'light' ? 'dark' : 'light';
-        applyTheme(next);
-        userOverrode = true;
-        localStorage.setItem('sn-theme', next);
-      }});
-    }}
+    // 主题切换由 FAB 的 inline onclick="window.snToggleTheme()" 统一处理（避免重复绑定导致两次切换相互抵消）
+    window.snSyncThemeIcon();
 
     // 到顶/到底
     const topBtn = document.getElementById('scrollTop');
@@ -2226,7 +2151,7 @@ def render_html(info, page_info):
         const nearUpdate = (m >= 490 && m <= 495) || (m >= 750 && m <= 755) || (m >= 1110 && m <= 1115) || todayStr !== pageDate;
         if (nearUpdate) window.location.reload();
       }}
-      if (!userOverrode) applyTheme(periodTheme(period));
+      if (!window.__snUserOverrode) applyTheme(periodTheme(period));
     }}, 60000);
   }})();
 

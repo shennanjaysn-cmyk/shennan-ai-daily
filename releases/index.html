@@ -3,30 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>深南AI日报 Daily AI Brief · 2026-08-19</title>
+<title>深南AI日报 Daily AI Brief · 2026-08-20</title>
 <script>
   // 早期初始化 + 全局 FAB 主题切换函数（必须最先定义，inline onclick 直接调用）
   (function(){
+    // 主题图标 SVG（浅色→显示月亮表示将切到深色；深色→显示太阳表示将切到浅色）
+    window.__SN_SUN_SVG = '<svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+    window.__SN_MOON_SVG = '<svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
     const h = (new Date().getUTCHours() + 8) % 24;
     const p = (h >= 6 && h < 12) ? 'morning' : (h >= 12 && h < 18) ? 'noon' : 'night';
     const t = (p === 'morning' || p === 'noon') ? 'light' : 'dark';
     const saved = (function(){ try { return localStorage.getItem('sn-theme'); } catch(e) { return null; } })();
     document.documentElement.setAttribute('data-theme', saved || t);
+
+    // 用户是否手动覆盖过主题（FAB / 时段胶囊点击会置 true），用于阻止时段逻辑自动回切
+    window.__snUserOverrode = (saved === 'light' || saved === 'dark');
+
+    // 依据当前 data-theme 同步 FAB 图标与无障碍文案（页面加载与各次切换后调用）
+    window.snSyncThemeIcon = function() {
+      var btn = document.getElementById('themeToggle');
+      if (!btn) return;
+      var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      btn.innerHTML = (cur === 'light') ? window.__SN_MOON_SVG : window.__SN_SUN_SVG;
+      var tip = (cur === 'light') ? '当前：浅色，点击切到深色' : '当前：深色，点击切到浅色';
+      btn.setAttribute('title', tip);
+      btn.setAttribute('aria-label', tip);
+    };
+
     // 暴露 FAB 主题切换的全局函数（inline onclick 调用，绕过 DOMContentLoaded 与 ID 查找）
     window.snToggleTheme = function() {
-      const cur = document.documentElement.getAttribute('data-theme') || 'dark';
-      const next = cur === 'light' ? 'dark' : 'light';
+      var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = (cur === 'light') ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', next);
-      try { localStorage.setItem('sn-theme', next); } catch(e) {}
-      // 即时反映 FAB 图标：暗色显示太阳（→light），浅色显示月亮（→dark）
-      var btn = document.getElementById('themeToggle');
-      if (btn) {
-        btn.innerHTML = next === 'light'
-          ? '<svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
-          : '<svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
-        btn.setAttribute('title', next === 'light' ? '当前：浅色，点击切到深色' : '当前：深色，点击切到浅色');
-        btn.setAttribute('aria-label', btn.getAttribute('title'));
-      }
+      window.__snUserOverrode = true;
+      try { localStorage.setItem('sn-theme', next); } catch(e) { }
+      window.snSyncThemeIcon();
     };
     // 暴露留言/反馈全局函数（v1.8.7 FAB 化）
     window.snOpenContact = function() {
@@ -198,7 +210,6 @@
       radial-gradient(ellipse 80% 50% at 20% 0%, rgba(22, 0, 255, 0.10), transparent 60%),
       radial-gradient(ellipse 60% 40% at 85% 15%, rgba(205, 200, 255, 0.10), transparent 55%);
   }
-  [data-theme="light"] .brand-logo { padding-top: 28px; }
   [data-theme="light"] body::after {
     background:
       radial-gradient(ellipse 50% 35% at 70% 85%, rgba(74, 91, 196, 0.08), transparent 60%);
@@ -214,15 +225,6 @@
   [data-theme="light"] .stat-lab,
   [data-theme="light"] .stat-total .lab { color: #232387; }
 
-  /* 导航：去掉外围白底，胶囊玻璃浅紫 */
-  [data-theme="light"] .nav { background: transparent; border-bottom: none; }
-  [data-theme="light"] .nav-inner {
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    border: 1px solid rgba(205, 200, 255, 0.55);
-    border-radius: 999px;
-  }
   [data-theme="light"] .nav-chip {
     background: rgba(205, 200, 255, 0.35);
     border-color: rgba(205, 200, 255, 0.55);
@@ -285,7 +287,6 @@
     color: var(--mist-dim);
     border-bottom-color: var(--mist-faint);
   }
-  [data-theme="light"] .footer-docs { gap: 50px; }
   [data-theme="light"] .footer-bottom {
     background: linear-gradient(180deg, rgba(245, 241, 230, 0) 0%, rgba(205, 200, 255, 0.25) 45%, rgba(205, 200, 255, 0.35) 100%);
   }
@@ -773,7 +774,6 @@
     transition: transform .3s ease;
   }
   [data-theme="light"] .nav {
-    background: var(--ink-card);
     border-bottom-color: rgba(131, 126, 101, 0.35);
   }
   /* 移动端滚动时自动隐藏顶栏/导航，上滑时恢复（由 JS 切换 .hide）；鼠标悬停时临时显示 */
@@ -1269,13 +1269,6 @@
     transform: translateX(0);
   }
 
-  /* 触屏设备（无 hover）：新闻卡片直接全部展开 */
-  @media (hover: none) {
-    .card { max-height: none; }
-    .card-title { -webkit-line-clamp: unset; display: block; overflow: visible; }
-    .card-summary { -webkit-line-clamp: unset; display: block; overflow: visible; }
-  }
-
   /* ===== RESPONSIVE ===== */
   @media (max-width: 880px) {
     .topbar { padding: 8px 14px; }
@@ -1332,7 +1325,7 @@
   }
 </style>
 </head>
-<body data-page-period="morning" data-page-date="2026-08-19">
+<body data-page-period="morning" data-page-date="2026-08-20">
 
 <!-- 顶部 ticker：随页面滚动上移；topbar 保持固定 -->
 <div class="ticker" aria-label="站点说明">
@@ -1377,23 +1370,24 @@
         <div class="hero-date">
           <span class="big">08</span>
           <span class="dot">/</span>
-          <span class="big">19</span>
+          <span class="big">20</span>
           <span class="small">/ 2026</span>
         </div>
         <div class="hero-meta">
-          送达时间：<span class="accent">2026年8月19日 周三 08:00</span>
+          送达时间：<span class="accent">2026年8月20日 周四 08:01</span>
         </div>
         <div class="hero-lead">
-          覆盖窗口 <span class="lead-strong">8月18日 08:00 — 8月19日 08:00</span>（北京时间，UTC+8）。以下 <span class="lead-strong">16</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>
+          覆盖窗口 <span class="lead-strong">8月19日 08:00 — 8月20日 08:00</span>（北京时间，UTC+8）。以下 <span class="lead-strong">14</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>
         </div>
       </div>
-      <div class="hero-stats cols-2">
-        <div class="stat-cell"><div class="stat-num">6</div><div class="stat-lab">产品发布/更新</div></div>
-<div class="stat-cell"><div class="stat-num">1</div><div class="stat-lab">行业动态</div></div>
-<div class="stat-cell"><div class="stat-num">4</div><div class="stat-lab">论文研究</div></div>
-<div class="stat-cell"><div class="stat-num">5</div><div class="stat-lab">技巧与观点</div></div>
+      <div class="hero-stats cols-3">
+        <div class="stat-cell"><div class="stat-num">1</div><div class="stat-lab">模型发布/更新</div></div>
+<div class="stat-cell"><div class="stat-num">5</div><div class="stat-lab">产品发布/更新</div></div>
+<div class="stat-cell"><div class="stat-num">2</div><div class="stat-lab">行业动态</div></div>
+<div class="stat-cell"><div class="stat-num">3</div><div class="stat-lab">论文研究</div></div>
+<div class="stat-cell"><div class="stat-num">3</div><div class="stat-lab">技巧与观点</div></div>
         <div class="stat-total">
-          <span class="num">16</span>
+          <span class="num">14</span>
           <span class="lab">Total · 总条数</span>
         </div>
       </div>
@@ -1404,10 +1398,11 @@
 <!-- STICKY NAV：首页右侧合并报告/历史日报/导出，8 个胶囊同一行对齐 -->
 <nav class="nav">
   <div class="nav-inner">
-    <a class="nav-chip active" href="#products"><span class="nav-roman">Ⅰ</span><span class="nav-label">产品</span><span class="nav-n">6<span class="count-unit">条</span></span></a>
-<a class="nav-chip" href="#industry"><span class="nav-roman">Ⅱ</span><span class="nav-label">动态</span><span class="nav-n">1<span class="count-unit">条</span></span></a>
-<a class="nav-chip" href="#papers"><span class="nav-roman">Ⅲ</span><span class="nav-label">研究</span><span class="nav-n">4<span class="count-unit">条</span></span></a>
-<a class="nav-chip" href="#tips"><span class="nav-roman">Ⅳ</span><span class="nav-label">观点</span><span class="nav-n">5<span class="count-unit">条</span></span></a>
+    <a class="nav-chip active" href="#models"><span class="nav-roman">Ⅰ</span><span class="nav-label">模型</span><span class="nav-n">1<span class="count-unit">条</span></span></a>
+<a class="nav-chip" href="#products"><span class="nav-roman">Ⅱ</span><span class="nav-label">产品</span><span class="nav-n">5<span class="count-unit">条</span></span></a>
+<a class="nav-chip" href="#industry"><span class="nav-roman">Ⅲ</span><span class="nav-label">动态</span><span class="nav-n">2<span class="count-unit">条</span></span></a>
+<a class="nav-chip" href="#papers"><span class="nav-roman">Ⅳ</span><span class="nav-label">研究</span><span class="nav-n">3<span class="count-unit">条</span></span></a>
+<a class="nav-chip" href="#tips"><span class="nav-roman">Ⅴ</span><span class="nav-label">观点</span><span class="nav-n">3<span class="count-unit">条</span></span></a>
     <div class="nav-actions">
   <div class="report-morph" id="reportDropdown" aria-label="报告范围">
   <div class="report-face" aria-hidden="true">
@@ -1426,7 +1421,8 @@
       历史日报
     </button>
     <div class="dropdown-menu" role="menu">
-      <a class="dropdown-item selected" href="./daily/2026-08-19.html">2026-08-19</a>
+      <a class="dropdown-item selected" href="./daily/2026-08-20.html">2026-08-20</a>
+<a class="dropdown-item" href="./daily/2026-08-19.html">2026-08-19</a>
 <a class="dropdown-item" href="./daily/2026-08-18.html">2026-08-18</a>
 <a class="dropdown-item" href="./daily/2026-08-17.html">2026-08-17</a>
 <a class="dropdown-item" href="./daily/2026-08-16.html">2026-08-16</a>
@@ -1455,7 +1451,6 @@
 <a class="dropdown-item" href="./daily/2026-07-24.html">2026-07-24</a>
 <a class="dropdown-item" href="./daily/2026-07-23.html">2026-07-23</a>
 <a class="dropdown-item" href="./daily/2026-07-22.html">2026-07-22</a>
-<a class="dropdown-item" href="./daily/2026-07-21.html">2026-07-21</a>
     </div>
   </div>
   <div class="dropdown" id="exportDropdown">
@@ -1483,185 +1478,177 @@
 
 <div class="wrap">
   <main class="main">
-    <section class="section reveal-sec" id="products" style="--d:0">
+    <section class="section reveal-sec" id="models" style="--d:0">
   <div class="sec-head">
     <div class="sec-mark">Ⅰ</div>
-    <h2 class="sec-title">产品</h2>
-    <div class="sec-line"></div>
-    <div class="sec-count">6<span class="count-unit">条</span></div>
-  </div>
-  <div class="card-grid">
-<a class="card" href="https://huggingface.co/blog/multi-vector-encoder" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">01</div>
-  <div class="card-body">
-    <span class="chip">Hugging Face：Blog（RSS）</span>
-    <h3 class="card-title">Sentence Transformers v6.0 新增 MultiVectorEncoder，支持 ColBERT 风格多向量模型</h3>
-    <p class="card-summary">Sentence Transformers v6.0 新增第四种模型类型 MultiVectorEncoder，可直接加载 PyLate、Stanford-NLP ColBERT 及 colpali-engine 检查点，用于 ColBERT 式晚期交互检索。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://www.modular.com/blog/mojo-open-source" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">02</div>
-  <div class="card-body">
-    <span class="chip">Hacker News 热门（buzzing.cc 中文翻译）</span>
-    <h3 class="card-title">Mojo 语言正式开源，编译器与工具链全面开放</h3>
-    <p class="card-summary">Mojo🔥 语言现已正式开源，采用 Apache 2.0 许可证（含 LLVM 例外），编译器、工具链及全部源码已发布至 modular GitHub 仓库。Mojo 上周刚达成 1.0 版本（源码稳定），此次开源涵盖整个编译器与工具链。目前暂不接受编译器相关贡献，计划年底前开放，标准库自 2024 年起已接受社区贡献。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://x.com/claudeai/status/2089806039088517356" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">03</div>
-  <div class="card-body">
-    <span class="chip">X：Claude (@claudeai)</span>
-    <h3 class="card-title">Claude 现已支持 Gmail 邮件与 Google Drive 文件管理</h3>
-    <p class="card-summary">Claude 现在可以在 Gmail 中发送邮件，并管理 Google Drive 中的文件。 让 Claude 回复某个邮件线程，它会起草并发送回复。你可以控制何时需要你的批准。 从连接器菜单中选择连接 Gmail 或 Google Drive 即可试用。所有付费套餐均可用。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://openai.com/index/chatgpt-for-teens" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">04</div>
-  <div class="card-body">
-    <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
-    <h3 class="card-title">OpenAI 推出 ChatGPT for Teens：面向青少年的学习体验与更强安全保护</h3>
-    <p class="card-summary">OpenAI 发布 ChatGPT for Teens，为 13-17 岁用户自动启用，内置更强安全保护与家长控制。新增 Study Mode、负责任作业提醒、测验与学习可视化，以及可设定默认开启时段的 Study Hours，引导青少年分步解题而非直接给答案。OpenAI 同时宣布与 CodeAI 合作，帮助青少年理解、质疑并创造性地使用 AI。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://cursor.com/blog/git-at-any-scale" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">05</div>
-  <div class="card-body">
-    <span class="chip">Cursor Blog</span>
-    <h3 class="card-title">Git 大规模托管为何如此困难</h3>
-    <p class="card-summary">Git 的分布式设计使其大规模托管面临固有挑战：packfile 作为存储和网络传输的基础单元，在服务器端成为可用性与扩展性的瓶颈。业界曾尝试三种方案——分布式文件系统、分布式 packfile、分布式 Git 本身，其中对象级分布式存储因 Git 协议要求网络传输 packfile 导致 clone 性能不佳而被放弃。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://claude.com/blog/the-claude-science-product-guide" target="_blank" rel="noopener noreferrer" style="--d:5">
-  <div class="card-num">06</div>
-  <div class="card-body">
-    <span class="chip">Claude：Blog（网页）</span>
-    <h3 class="card-title">Claude Science 产品指南：面向生命科学研究的 AI 工作台</h3>
-    <p class="card-summary">Anthropic 发布 Claude Science（测试版），一个覆盖生命科学数字化流程的 AI 工作台，支持数据分析、图表生成与结果产出，并可通过本地守护进程将重任务调度至自有 GPU、SLURM 集群或云账户。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-  </div>
-</section>
-<section class="section reveal-sec" id="industry" style="--d:1">
-  <div class="sec-head">
-    <div class="sec-mark">Ⅱ</div>
-    <h2 class="sec-title">动态</h2>
+    <h2 class="sec-title">模型</h2>
     <div class="sec-line"></div>
     <div class="sec-count">1<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://openai.com/index/strengthening-democratic-oversight-in-national-security" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">07</div>
-  <div class="card-body">
-    <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
-    <h3 class="card-title">OpenAI 启动新计划，强化国家安全领域 AI 的民主监督</h3>
-    <p class="card-summary">OpenAI 启动新计划，帮助民主监督机构发展专业能力与工具，以理解和监督政府将 AI 用于国家安全。未来一年，OpenAI 将提供 500 万美元用于培训、技术支持和 OpenAI 积分，并与监督机构试点工具，帮助授权审查员检查 AI 辅助政府决策的相关记录。OpenAI 强调 AI 应增强而非取代人类判断，且不承担对政府的监督角色。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-  </div>
-</section>
-<section class="section reveal-sec" id="papers" style="--d:2">
-  <div class="sec-head">
-    <div class="sec-mark">Ⅲ</div>
-    <h2 class="sec-title">研究</h2>
-    <div class="sec-line"></div>
-    <div class="sec-count">4<span class="count-unit">条</span></div>
-  </div>
-  <div class="card-grid">
-<a class="card" href="https://www.anthropic.com/research/Claude-accelerates-protein-design" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">08</div>
-  <div class="card-body">
-    <span class="chip">Anthropic：Research（发表成果 · 网页）</span>
-    <h3 class="card-title">Claude 如何加速蛋白质设计与分析化学研究</h3>
-    <p class="card-summary">Anthropic 公布两项实验：Claude（Mythos Preview 和 Opus 4.8）针对 15 个靶点设计蛋白质结合剂，成功 14 个，命中率达 22.6%-35.1%。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://huggingface.co/blog/ibm-research/altk-evolve-hmm" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">09</div>
+<a class="card" href="https://huggingface.co/blog/LiquidAI/qad" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">01</div>
   <div class="card-body">
     <span class="chip">Hugging Face：Blog（RSS）</span>
-    <h3 class="card-title">智能体记忆并非越多越好：八款模型评测显示剂量需按能力校准</h3>
-    <p class="card-summary">智能体记忆并非可随意开启的功能，而是需按模型能力校准的剂量。强模型适合注入完整指南集，DeepSeek-V3.2（671B MoE）任务完成率提升+9.5个百分点；较弱模型采用精选检索效果最佳，gpt-oss-120b（117B MoE）提升+16.1pp且仅增加+5% token。该方法无需更新权重或人工标注，通过从智能体过往轨迹中蒸馏指南并在推理时注入实现。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://machinelearning.apple.com/research/grpo-beyond-english" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">10</div>
-  <div class="card-body">
-    <span class="chip">Apple Machine Learning Research（RSS）</span>
-    <h3 class="card-title">GRPO 超越英语：多语言与非英语环境下的大规模研究</h3>
-    <p class="card-summary">一项大规模实证研究考察了 GRPO 在多语言和非英语环境下的表现，覆盖多种基础模型、训练语言及推理语言奖励设置。研究发现，以母语进行推理训练与英语推理训练之间的性能差距很小，表明 RLVR 在非英语场景下同样有效。该研究为多语言推理模型的强化学习训练提供了重要参考。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://machinelearning.apple.com/research/mvicad2-delays-dilations" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">11</div>
-  <div class="card-body">
-    <span class="chip">Apple Machine Learning Research（RSS）</span>
-    <h3 class="card-title">MVICAD2：引入延迟与膨胀的多视图独立成分分析</h3>
-    <p class="card-summary">巴黎-萨克雷大学等机构提出MVICAD2，允许不同被试的脑源在时间延迟和膨胀两方面存在差异，以解决MVICA假设过于严格、仅估计延迟不足以刻画听觉刺激等脑动态的问题。该模型源可识别，似然有闭式近似，并通过正则化与优化提升性能。模拟显示其优于现有方法，Cam-CAN数据集验证了延迟和膨胀与衰老相关。</p>
+    <h3 class="card-title">Liquid AI 发布 LFM2.5 系列 QAD Q4_0 量化检查点，恢复 97% 精度损失</h3>
+    <p class="card-summary">Liquid AI 发布基于量化感知蒸馏（QAD）训练的 LFM2.5-230M、350M、1.2B-Instruct 和 2.6B 四款 Q4_0 GGUF 检查点，在保持原生 Q4_0 内存与速度的同时，恢复 BF16 平均精度损失的 97%。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
   </div>
 </section>
-<section class="section reveal-sec" id="tips" style="--d:3">
+<section class="section reveal-sec" id="products" style="--d:1">
   <div class="sec-head">
-    <div class="sec-mark">Ⅳ</div>
-    <h2 class="sec-title">观点</h2>
+    <div class="sec-mark">Ⅱ</div>
+    <h2 class="sec-title">产品</h2>
     <div class="sec-line"></div>
     <div class="sec-count">5<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://dev.to/googleai/designing-ai-evals-clarity-now-and-visualization-next-4eii" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">12</div>
+<a class="card" href="https://mp.weixin.qq.com/s?__biz=MzkyMzI3NzQ0Mg%3D%3D&mid=2247494105&idx=1&sn=8d7409e0fb846a3c7803c142b5d1a8e7" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">02</div>
   <div class="card-body">
-    <span class="chip">Google AI：DEV 作者专属（RSS）</span>
-    <h3 class="card-title">设计 AI 评测：先求清晰，再谈可视化</h3>
-    <p class="card-summary">本文演示如何用开源评测框架 Inspect AI 和 Harbor 评估 agent 技能，并借助 Google Sheets 和 Data Studio 进行可视化分析。</p>
+    <span class="chip">公众号：智谱（GLM）</span>
+    <h3 class="card-title">GLM-5.3上线：AA智能指数60分并列开源第一，成本更低</h3>
+    <p class="card-summary">GLM-5.3 API即日上线，擅长复杂编码、防御性网络安全与长程任务，在AA综合智能指数中取得60分，与Claude Fable 5、GPT-5.6 Sol等闭源旗舰同级，并与Kimi K3并列开源模型第一。该模型以更小参数规模和更低调用成本降低前沿智能门槛，单任务成本为旗舰模型中最低。API定价与GLM-5.2持平，模型权重将于下周五开源。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://openai.com/index/pacing-model-development-cyber-capabilities" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">13</div>
+<a class="card" href="https://x.com/haoailab/status/2090177721913770407" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">03</div>
+  <div class="card-body">
+    <span class="chip">X：Sky Computing Lab (@haoailab)</span>
+    <h3 class="card-title">FastMetal 让 Mac 本地 30 秒生成视频</h3>
+    <p class="card-summary">一段 5 秒 480P 视频，完全在 Mac 上生成，耗时 30 秒。无需 CUDA，无需云端，仅占用 3.9 GiB 内存。 FastMetal 将 FastWan-QAD 系列带到 Apple Silicon。DiT、DMD 采样器和解码器均通过 MLX 在 Metal 上运行，默认 INT8。 三个模型：1.3B 支持 480P，5B 支持 720P，14B 追求画质。 📷 博客：http://haoailab.com/blogs/fastmetal 📷 代码：http://github.com/hao-ai-lab/FastVideo 📷 模型…</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://blog.google/products-and-platforms/products/search/back-to-school-study-tools" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">04</div>
+  <div class="card-body">
+    <span class="chip">Google Blog：AI（RSS）</span>
+    <h3 class="card-title">Google 搜索推出 5 项 AI 学习工具</h3>
+    <p class="card-summary">Google 在搜索中推出 5 项 AI 学习工具。AI Mode 的生成式 UI 已全球上线英文版，支持交互式可视化与自定义模拟；练习测验现已在 AI Overviews 和 AI Mode 中免费提供英文版，覆盖 ACT、SAT 等标准化考试。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://openai.com/index/replit" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">05</div>
   <div class="card-body">
     <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
-    <h3 class="card-title">OpenAI 在“关键网络能力”时代放缓模型开发节奏</h3>
-    <p class="card-summary">OpenAI 因 OpenAI-Hugging Face 事件及即将推出的 Astra 模型可能达到《预备框架》下的“关键网络安全能力”阈值，暂时放缓了模型扩展速度，包括暂停最新部署模型的强化学习训练两周，并搁置最大规模前沿 RL 运行。公司已加强研究环境安全，要求对 Astra 及网络相关负载实施最严格防护，并扩展思维链监控，采用多阶段激活分类器检测机制。</p>
+    <h3 class="card-title">Replit 推出由 GPT-5.6 Luna 驱动的 Free Mode，免费构建软件</h3>
+    <p class="card-summary">Replit 推出由 GPT-5.6 Luna 驱动的 Free Mode，让用户无需担心 token 成本即可将想法转化为可运行的软件。该模式借助 GPT-5.6 系列的价格性能优势及 OpenAI 近期降价，向数百万用户开放，提供快速解答、建议与项目分析，并可在需要更高级推理时切换至 GPT-5.6 Sol，同时保留项目上下文。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://claude.com/blog/ai-ci-cd-on-call" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">14</div>
+<a class="card" href="https://github.com/anthropics/claude-code/releases/tag/v2.1.236" target="_blank" rel="noopener noreferrer" style="--d:4">
+  <div class="card-num">06</div>
+  <div class="card-body">
+    <span class="chip">Claude Code：GitHub Releases（RSS）</span>
+    <h3 class="card-title">Claude Code v2.1.236 发布：新增默认模型环境变量与跨会话闲置通知</h3>
+    <p class="card-summary">Claude Code v2.1.236 新增 ANTHROPIC_DEFAULT_MODEL 环境变量，可设置新会话默认模型，且 /model 选择仍可覆盖并跨重启保留。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+  </div>
+</section>
+<section class="section reveal-sec" id="industry" style="--d:2">
+  <div class="sec-head">
+    <div class="sec-mark">Ⅲ</div>
+    <h2 class="sec-title">动态</h2>
+    <div class="sec-line"></div>
+    <div class="sec-count">2<span class="count-unit">条</span></div>
+  </div>
+  <div class="card-grid">
+<a class="card" href="https://openai.com/index/pacing-model-development-cyber-capabilities" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">07</div>
+  <div class="card-body">
+    <span class="chip">Hacker News 热门（buzzing.cc 中文翻译）</span>
+    <h3 class="card-title">Anthropic 在网络关键能力时代放缓模型开发：暂停 RL 训练并强化安全防护</h3>
+    <p class="card-summary">Anthropic 因 OpenAI-Hugging Face 事件及即将推出的 Astra 模型可能达到“关键网络安全能力阈值”，暂时放缓模型扩展速度，包括暂停最新模型两周的强化学习（RL）训练。公司已加强研究环境安全要求，包括工作负载隔离、网络隔离和持续安全测试，并扩大思维链监控范围。涉及 Astra 或网络模型的工作负载需满足最严格安全标准，部分训练和评估工作仍处于暂停状态。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://openrouter.ai/blog/announcements/openrouter-is-joining-stripe" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">08</div>
+  <div class="card-body">
+    <span class="chip">OpenRouter：Announcements（RSS）</span>
+    <h3 class="card-title">OpenRouter 宣布加入 Stripe</h3>
+    <p class="card-summary">OpenRouter 宣布与 Stripe 合并，以加速推动全球经济增长。OpenRouter 目前每日处理来自 400 多个 AI 模型的 10+ 万亿 token，服务超 1000 万开发者与公司，自成立以来推理量每年至少增长 10 倍。合并后 OpenRouter 将继续以原名、原使命独立运营，产品与路线图不变，路由决策仍以用户利益为先，交易预计在未来数周内完成。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+  </div>
+</section>
+<section class="section reveal-sec" id="papers" style="--d:3">
+  <div class="sec-head">
+    <div class="sec-mark">Ⅳ</div>
+    <h2 class="sec-title">研究</h2>
+    <div class="sec-line"></div>
+    <div class="sec-count">3<span class="count-unit">条</span></div>
+  </div>
+  <div class="card-grid">
+<a class="card" href="https://www.lmsys.org/blog/2026-08-19-deepseek-v4-pro-engine-optimization-h20" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">09</div>
+  <div class="card-body">
+    <span class="chip">LMSYS：Blog（Chatbot Arena 团队）</span>
+    <h3 class="card-title">突破 DeepSeek-V4-Pro 服务极限：H20 上的多场景优化方法</h3>
+    <p class="card-summary">LMSYS 团队针对 1.6 万亿参数的 MoE 模型 DeepSeek-V4-Pro，在 H20 GPU 上通过场景化服务配置逼近 B300 性能。单节点 H20-141GB 参考实现达 271 output tokens/s，与 B300 的 383.7 tokens/s 性能差距缩小至 1.42×。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://machinelearning.apple.com/research/human-like-behaviors-llms" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">10</div>
+  <div class="card-body">
+    <span class="chip">Apple Machine Learning Research（RSS）</span>
+    <h3 class="card-title">苹果研究：LLM 类人行为的多维度分析——模型行为、用户因素与系统提示词的影响</h3>
+    <p class="card-summary">苹果机器学习研究团队对 LLM 的类人行为（如表达想法与情绪、与用户建立关系、拒绝请求并保持边界）进行了多维度分析，涵盖其普遍性、潜在影响与可控性。研究采用 LLM-as-a-judge 与人工评估相结合的方法，样本规模超过 21,000 条数据，旨在为研究者与实践者提供关于何时及何种类型类人行为的决策依据。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://machinelearning.apple.com/research/the-p-completeness-of-inverted-index-traversal" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">11</div>
+  <div class="card-body">
+    <span class="chip">Apple Machine Learning Research（RSS）</span>
+    <h3 class="card-title">倒排索引遍历的 P-完全性：布尔查询 DAG 的复杂度评估</h3>
+    <p class="card-summary">现代 AI 智能体依赖搜索基础设施执行神经符号推理，常编译为深层嵌套的非单调布尔查询。标准倒排索引查询评估策略面临严重理论限制：有状态迭代器模型（Document-at-a-Time）受 NC^1 公式评估结构约束，展开重汇聚逻辑时最坏情况查询复杂度呈 O(2^|Q|) 指数级爆炸。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+  </div>
+</section>
+<section class="section reveal-sec" id="tips" style="--d:4">
+  <div class="sec-head">
+    <div class="sec-mark">Ⅴ</div>
+    <h2 class="sec-title">观点</h2>
+    <div class="sec-line"></div>
+    <div class="sec-count">3<span class="count-unit">条</span></div>
+  </div>
+  <div class="card-grid">
+<a class="card" href="https://github.blog/ai-and-ml/github-copilot/github-copilot-app-for-beginners-managing-your-work" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">12</div>
+  <div class="card-body">
+    <span class="chip">GitHub Blog</span>
+    <h3 class="card-title">GitHub Copilot app 初学者教程：用 My work 面板管理你的工作</h3>
+    <p class="card-summary">GitHub Copilot app 的 My work 面板将拉取请求和问题集中在一处管理，内置 All、Active、Review requests、Done 四个默认视图，并支持创建自定义视图与过滤器。用户可从问题或拉取请求直接启动新的智能体会话，也可批量选择多个条目创建会话，还能在列表视图和表格视图间切换，并调整仓库范围或新建问题。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://claude.com/blog/turning-conversation-into-knowledge-how-slack-builds-human-agent-teams" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">13</div>
   <div class="card-body">
     <span class="chip">Claude：Blog（网页）</span>
-    <h3 class="card-title">Claude Tag 如何担任 Anthropic CI/CD 故障的一线响应者</h3>
-    <p class="card-summary">Anthropic 的 CI 工程师用 Claude Tag 构建了值班智能体，作为 CI/CD 故障的一线响应者。Claude 在事故发生后中位 14 分钟发布首份基于证据的分析，最快案例中 3 分钟内验证修复并确认错误率恢复基线。该方案通过 Slack 频道、Datadog 或 Grafana 工具访问及 GitHub 技能文件实现，Anthropic 已发布通用设置套件供其他团队部署。</p>
+    <h3 class="card-title">Slack 如何构建人机智能体团队：对话即知识</h3>
+    <p class="card-summary">Slack 首席产品官 Jaime DeLanghe 分享了将对话转化为机构知识、构建人机智能体团队的最佳实践。她主张默认使用公开频道，让智能体从可见对话中学习，并建议将会议、邮件、日历等上下文连接起来以减少重复劳动。在 Slack 中由 Claude 驱动的智能体负责起草、总结、监控等生产工作，人类负责审查、决策与交接，形成循环协作。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.tomtunguz.com/birds-dont-fly-like-planes-neither-does-ai" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">15</div>
+<a class="card" href="https://www.databricks.com/blog/designing-effective-genie-agents-single-prompt" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">14</div>
   <div class="card-body">
-    <span class="chip">Tomer Tunguz 博客（VC 分析）</span>
-    <h3 class="card-title">笔记本模型也能媲美云端前沿模型：Qwen3.8-27B 登顶智能指数</h3>
-    <p class="card-summary">作者将 Qwen3.8-27B 装入智能体后表现优异，该模型在 Artificial Analysis 智能指数中排名 135 款模型之首，得分 52，超过 Z.ai 的 753B 参数开源模型 GLM-5.2（51 分）。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://runwayml.com/news/customers/populous" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">16</div>
-  <div class="card-body">
-    <span class="chip">Runway：News（网页）</span>
-    <h3 class="card-title">Populous 如何用 Runway 呈现全球标志性场馆设计</h3>
-    <p class="card-summary">全球设计公司 Populous 高级建筑师 Georgina Myers 介绍团队用 Runway 辅助体育场馆概念设计：过去完整视频需外部渲染团队至少三周，且提交前两周须冻结设计模型；如今 Runway 能生成传达尺度感的完整渲染和航拍图，将视觉制作时间缩短，让设计师把时间还给设计本身。该工具已用于利雅得 MBS 体育场等中东项目，支持 9 种不同活动模式的场景迭代。</p>
+    <span class="chip">Databricks：Blog（RSS）</span>
+    <h3 class="card-title">Databricks 如何从单一提示词设计高效的 Genie Agents</h3>
+    <p class="card-summary">Databricks 发布指南，探讨如何从单一提示词设计高效的 Genie Agents。文章指出，通用智能体在处理收入等查询时，往往只会抓取第一个相关数据表，而 Genie Agents 通过更精准的提示词设计，能更准确地定位和回答用户问题。该指南旨在帮助开发者优化智能体行为，提升查询结果的准确性和相关性。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
@@ -1673,7 +1660,7 @@
   <footer class="footer">
     <!-- 1 本期共 -->
     <div class="footer-meta">
-      本期共 <span class="num">16</span> 条 · 4 个版块 · 2026-08-19
+      本期共 <span class="num">14</span> 条 · 5 个版块 · 2026-08-20
     </div>
     <!-- 2 数据源 -->
     <div class="footer-source">
@@ -1890,8 +1877,6 @@
 
     const chips = Array.from(document.querySelectorAll('.time-chip'));
     const body = document.body;
-    const savedTheme = localStorage.getItem('sn-theme');
-    let userOverrode = false;
 
     function applyTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
@@ -1911,17 +1896,13 @@
     function updatePeriod() {
       const beijing = nowInBeijing();
       const period = getPeriod(beijing.getHours());
-      if (!userOverrode) applyTheme(periodTheme(period));
+      if (!window.__snUserOverrode) applyTheme(periodTheme(period));
       setChips(period);
       return period;
     }
 
-    // 初始化
+    // 初始化（data-theme 与 override 标记已由 head 内联脚本设置）
     const initialPeriod = updatePeriod();
-    if (savedTheme === 'light' || savedTheme === 'dark') {
-      applyTheme(savedTheme);
-      userOverrode = true;
-    }
 
     // 点击切换时段（仅切换视觉/主题，不重新拉数据；未来时段不可点）
     chips.forEach(btn => {
@@ -1930,22 +1911,13 @@
         const key = btn.dataset.period;
         setChips(key);
         applyTheme(periodTheme(key));
-        userOverrode = true;
+        window.__snUserOverrode = true;
         localStorage.setItem('sn-theme', periodTheme(key));
       });
     });
 
-    // 主题切换按钮
-    const themeBtn = document.getElementById('themeToggle');
-    if (themeBtn) {
-      themeBtn.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme') || 'dark';
-        const next = current === 'light' ? 'dark' : 'light';
-        applyTheme(next);
-        userOverrode = true;
-        localStorage.setItem('sn-theme', next);
-      });
-    }
+    // 主题切换由 FAB 的 inline onclick="window.snToggleTheme()" 统一处理（避免重复绑定导致两次切换相互抵消）
+    window.snSyncThemeIcon();
 
     // 到顶/到底
     const topBtn = document.getElementById('scrollTop');
@@ -1966,7 +1938,7 @@
         const nearUpdate = (m >= 490 && m <= 495) || (m >= 750 && m <= 755) || (m >= 1110 && m <= 1115) || todayStr !== pageDate;
         if (nearUpdate) window.location.reload();
       }
-      if (!userOverrode) applyTheme(periodTheme(period));
+      if (!window.__snUserOverrode) applyTheme(periodTheme(period));
     }, 60000);
   })();
 
