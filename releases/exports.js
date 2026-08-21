@@ -77,225 +77,276 @@ window.SN_EXPORT = {
 ` },
   week: { date: "2026-08-15 ~ 2026-08-21", markdown: `# 深南AI日报 Daily AI Brief · 2026-08-15 ~ 2026-08-21
 
-**送达时间：** 2026年8月20日 周四 08:01  
-**覆盖窗口：** 8月19日 08:00 — 8月15日 08:00（北京时间，UTC+8）  
-**共计：** 66 条
+**送达时间：** 2026年8月21日 周五 08:01  
+**覆盖窗口：** 8月20日 08:00 — 8月15日 08:00（北京时间，UTC+8）  
+**共计：** 83 条
 
-## Ⅰ 模型（5 条）
+## Ⅰ 模型（7 条）
 
-1. [Liquid AI 发布 LFM2.5 系列 QAD Q4_0 量化检查点，恢复 97% 精度损失](https://huggingface.co/blog/LiquidAI/qad) · Hugging Face：Blog（RSS）
+1. [阿里发布 Qwen-UI-Agent，主打让模型真正“会用”每一块屏幕](https://www.ithome.com/0/992/239.htm) · IT之家（RSS）
+   > 阿里巴巴正式推出 Qwen-UI-Agent，一个以真实世界为中心的 GUI 智能体基座模型，覆盖移动端、电脑端、网页端及深度搜索（DeepSearch）环境。
+2. [Hugging Face 发布 LFM2.5 系列 DSpark 草稿模型，推理速度最高提升 3.18 倍](https://huggingface.co/blog/LiquidAI/lfm25-dspark) · Hugging Face：Blog（RSS）
+   > Hugging Face 发布 LFM2.5 系列三款模型的 DSpark 草稿模型检查点，通过投机解码在不改变输出质量的前提下，GPU 吞吐最高提升 3.18 倍，端侧最高 2.87 倍。草稿模型约 300M 参数，LFM2.5-2.6B 函数调用延迟平均降低 57%，已开源支持 llama.cpp 和 SGLang。
+18. [Liquid AI 发布 LFM2.5 系列 QAD Q4_0 量化检查点，恢复 97% 精度损失](https://huggingface.co/blog/LiquidAI/qad) · Hugging Face：Blog（RSS）
    > Liquid AI 发布基于量化感知蒸馏（QAD）训练的 LFM2.5-230M、350M、1.2B-Instruct 和 2.6B 四款 Q4_0 GGUF 检查点，在保持原生 Q4_0 内存与速度的同时，恢复 BF16 平均精度损失的 97%。
-52. [dots3-note Preview 开源：280B 参数轻量模型，主打长程智能体与多模态推理](https://mp.weixin.qq.com/s?__biz=Mzg4OTc2MzczNg%3D%3D&mid=2247496140&idx=1&sn=5239a5fbb115c58d2ae0056bb32789ff) · 公众号：小红书技术（dots.llm）
+69. [dots3-note Preview 开源：280B 参数轻量模型，主打长程智能体与多模态推理](https://mp.weixin.qq.com/s?__biz=Mzg4OTc2MzczNg%3D%3D&mid=2247496140&idx=1&sn=5239a5fbb115c58d2ae0056bb32789ff) · 公众号：小红书技术（dots.llm）
    > 小红书技术开源 dots3-note Preview，这是 dots3 系列最轻量模型，总参数 280B、激活参数 16B，支持 512K 上下文及文本、视觉、语音多模态理解，并针对复杂推理和长程 Agent 任务优化。
-53. [GLM-5.3 发布：编程能力开源第一，并涌现网络安全能力](https://mp.weixin.qq.com/s?__biz=MzkyMzI3NzQ0Mg%3D%3D&mid=2247494084&idx=1&sn=a2e5cd9a534a4825feb3633ea1b6d492) · 公众号：智谱（GLM）
+70. [GLM-5.3 发布：编程能力开源第一，并涌现网络安全能力](https://mp.weixin.qq.com/s?__biz=MzkyMzI3NzQ0Mg%3D%3D&mid=2247494084&idx=1&sn=a2e5cd9a534a4825feb3633ea1b6d492) · 公众号：智谱（GLM）
    > 智谱发布GLM-5.3，基于与GLM-5.2相同的基座，通过极致的后训练Scaling提升智能上界，编程能力较前代提升50%，在Terminal Bench 3.0等公开基准中取得开源第一，并接近Claude Fable 5。模型在白盒代码审查等安全任务中表现持平Mythos 5，在CyberGym测试中得分84.5%。模型权重将在两周后开源，即日起上线ZCode、AutoClaw等工具。
-54. [Gemini 3.7 Flash 全面上线 Pro 与 Ultra 用户](https://x.com/GeminiApp/status/2088326407730692538) · X：Gemini (@GeminiApp)
+71. [Gemini 3.7 Flash 全面上线 Pro 与 Ultra 用户](https://x.com/GeminiApp/status/2088326407730692538) · X：Gemini (@GeminiApp)
    > Gemini 3.7 Flash 现已向 Gemini 聊天中的 Pro 和 Ultra 用户开放。该模型更新提升了多步骤任务的推理与准确性，如智能整合数十个文件和邮件为一份主文档。同时，Gemini Spark 也已运行于 3.7 Flash，通过改进对 Google Workspace 应用的工具调用，让个人 AI 智能体更精准。
-55. [DeepSeek V4 Pro 登陆硅基流动，1M 上下文](https://x.com/SiliconFlowAI/status/2088127458558271885) · X：硅基流动 SiliconFlow (@SiliconFlowAI)
+72. [DeepSeek V4 Pro 登陆硅基流动，1M 上下文](https://x.com/SiliconFlowAI/status/2088127458558271885) · X：硅基流动 SiliconFlow (@SiliconFlowAI)
    > DeepSeek-V4-Pro-0813 正式上线硅基流动 SiliconFlow，提供 Day-0 支持，具备 1M 上下文窗口及低/高/最大三档推理强度，更侧重编码、工具调用与智能体工作流，仍保持 MIT 开源协议。定价为输入 \$1.32/M、输出 \$3.96/M、缓存命中 \$0.44/M。同系列 DeepSeek-V4-Flash-0731 则面向追求速度与成本效益的日常生产场景。
 
-## Ⅱ 产品（17 条）
+## Ⅱ 产品（25 条）
 
-2. [GLM-5.3上线：AA智能指数60分并列开源第一，成本更低](https://mp.weixin.qq.com/s?__biz=MzkyMzI3NzQ0Mg%3D%3D&mid=2247494105&idx=1&sn=8d7409e0fb846a3c7803c142b5d1a8e7) · 公众号：智谱（GLM）
+3. [Mistral 推出 Agentic Search：多步检索提升 AI 系统复杂文档查询准确率](https://mistral.ai/news/agentic-search) · Mistral AI：News（网页）
+   > Mistral 发布 Agentic Search，通过 search、open、navigate、read、grep 五工具的多步检索循环，让模型在长文档与多来源中查找、定位并验证信息。
+4. [AlloyDB ScaNN 如何将向量搜索扩展到 100 亿向量](https://cloud.google.com/blog/products/databases/alloydb-scann-index-four-level-tree-improves-vector-search) · Google Cloud：Databases（RSS）
+   > AlloyDB 的 ScaNN 索引现已支持超过 100 亿向量的规模，通过全新的四层树架构（预览版）实现，将查询复杂度从 O(N^1/2) 降至 O(N^1/4)。内部测试中，该架构在 100 亿向量规模下可实现 p95 延迟不超过 51 毫秒、召回率达 95%。该功能可通过快速入门指南部署，新用户可享受 30 天免费试用。
+5. [Claude Platform 正式上线 Computer Use、Skills API 与 Files API，新增浏览器操作工具](https://claude.com/blog/computer-use-skills-api-files-api) · Claude：Blog（网页）
+   > Anthropic 宣布 Computer Use、Skills API 与 Files API 在 Claude Platform 全面可用，并新增浏览器操作工具，让智能体可操作软件、调用团队技能并返回成品文件。
+6. [Anthropic 如何开展 AI 教学](https://claude.com/blog/anthropics-approach-to-teaching-and-learning-ai) · Claude：Blog（网页）
+   > Anthropic 发布 Claude Academy，为全球数百万用户提供 AI 教学资源，帮助其安全、有效地使用 AI。该学院课程借鉴其内部员工培训方法，包括 4D AI Fluency Framework 及“ever-boarding”持续学习项目，并强调以问题为中心、培养持久思维模式而非特定操作行为。
+7. [Mooncake 如何为 Miles 强化学习系统实现高效批量 Rollout 数据传输](https://www.lmsys.org/blog/2026-08-20-miles-mooncake-rollout-data-transfer) · LMSYS：Blog（Chatbot Arena 团队）
+   > 大规模 LLM 强化学习采用解耦架构后，rollout 数据从推理侧到训练侧的传输成为瓶颈。Mooncake 针对 Miles 系统中异构、碎片化的 rollout 数据（如 list[np.ndarray] 形式的 tokens、loss_masks、rollout_log_probs），通过批量 I/O 优化实现高效传输，同时满足效率、正确性、可扩展性、灵活性和可预测的交接延迟等要求。
+8. [Claude Code v2.1.238 发布：新增 readline 键位、插件市场 headersHelper 与多项 Remote Control 修复](https://github.com/anthropics/claude-code/releases/tag/v2.1.238) · Claude Code：GitHub Releases（RSS）
+   > Claude Code v2.1.238 发布，新增 keybindingFlavor 设置（可设为 &quot;readline&quot; 使 Ctrl+W 删除至前一个空白符），并为插件市场引入 headersHelper 以生成 HTTP 头。
+9. [Claude Code v2.1.237 发布：修复 LLM 网关提示词缓存，新增“简洁”输出风格](https://github.com/anthropics/claude-code/releases/tag/v2.1.237) · Claude Code：GitHub Releases（RSS）
+   > Claude Code v2.1.237 修复了使用 LLM 网关或自定义 base URL 的会话中的提示词缓存问题，并新增内置“简洁”输出风格。该风格下 Claude 直接给出结果，跳过开场白和叙述，但工作完成度不变，可在 /config 的 Output style 下选择。
+10. [LangSmith 预览构建：如何在合并前测试智能体变更](https://www.langchain.com/blog/langsmith-preview-builds-test-agent-changes-before-production) · LangChain：Blog（RSS）
+   > LangSmith 预览构建让团队在合并智能体变更前，于临时的、类生产环境的部署中测试拉取请求分支。该功能旨在降低变更上线风险，使智能体改动验证更贴近真实运行条件。
+19. [GLM-5.3上线：AA智能指数60分并列开源第一，成本更低](https://mp.weixin.qq.com/s?__biz=MzkyMzI3NzQ0Mg%3D%3D&mid=2247494105&idx=1&sn=8d7409e0fb846a3c7803c142b5d1a8e7) · 公众号：智谱（GLM）
    > GLM-5.3 API即日上线，擅长复杂编码、防御性网络安全与长程任务，在AA综合智能指数中取得60分，与Claude Fable 5、GPT-5.6 Sol等闭源旗舰同级，并与Kimi K3并列开源模型第一。该模型以更小参数规模和更低调用成本降低前沿智能门槛，单任务成本为旗舰模型中最低。API定价与GLM-5.2持平，模型权重将于下周五开源。
-3. [FastMetal 让 Mac 本地 30 秒生成视频](https://x.com/haoailab/status/2090177721913770407) · X：Sky Computing Lab (@haoailab)
+20. [FastMetal 让 Mac 本地 30 秒生成视频](https://x.com/haoailab/status/2090177721913770407) · X：Sky Computing Lab (@haoailab)
    > 一段 5 秒 480P 视频，完全在 Mac 上生成，耗时 30 秒。无需 CUDA，无需云端，仅占用 3.9 GiB 内存。 FastMetal 将 FastWan-QAD 系列带到 Apple Silicon。DiT、DMD 采样器和解码器均通过 MLX 在 Metal 上运行，默认 INT8。 三个模型：1.3B 支持 480P，5B 支持 720P，14B 追求画质。 📷 博客：http://haoailab.com/blogs/fastmetal 📷 代码：http://github.com/hao-ai-lab/FastVideo 📷 模型…
-4. [Google 搜索推出 5 项 AI 学习工具](https://blog.google/products-and-platforms/products/search/back-to-school-study-tools) · Google Blog：AI（RSS）
+21. [Google 搜索推出 5 项 AI 学习工具](https://blog.google/products-and-platforms/products/search/back-to-school-study-tools) · Google Blog：AI（RSS）
    > Google 在搜索中推出 5 项 AI 学习工具。AI Mode 的生成式 UI 已全球上线英文版，支持交互式可视化与自定义模拟；练习测验现已在 AI Overviews 和 AI Mode 中免费提供英文版，覆盖 ACT、SAT 等标准化考试。
-5. [Replit 推出由 GPT-5.6 Luna 驱动的 Free Mode，免费构建软件](https://openai.com/index/replit) · OpenAI：官网动态（RSS · 排除企业/客户案例）
+22. [Replit 推出由 GPT-5.6 Luna 驱动的 Free Mode，免费构建软件](https://openai.com/index/replit) · OpenAI：官网动态（RSS · 排除企业/客户案例）
    > Replit 推出由 GPT-5.6 Luna 驱动的 Free Mode，让用户无需担心 token 成本即可将想法转化为可运行的软件。该模式借助 GPT-5.6 系列的价格性能优势及 OpenAI 近期降价，向数百万用户开放，提供快速解答、建议与项目分析，并可在需要更高级推理时切换至 GPT-5.6 Sol，同时保留项目上下文。
-6. [Claude Code v2.1.236 发布：新增默认模型环境变量与跨会话闲置通知](https://github.com/anthropics/claude-code/releases/tag/v2.1.236) · Claude Code：GitHub Releases（RSS）
+23. [Claude Code v2.1.236 发布：新增默认模型环境变量与跨会话闲置通知](https://github.com/anthropics/claude-code/releases/tag/v2.1.236) · Claude Code：GitHub Releases（RSS）
    > Claude Code v2.1.236 新增 ANTHROPIC_DEFAULT_MODEL 环境变量，可设置新会话默认模型，且 /model 选择仍可覆盖并跨重启保留。
-15. [Sentence Transformers v6.0 新增 MultiVectorEncoder，支持 ColBERT 风格多向量模型](https://huggingface.co/blog/multi-vector-encoder) · Hugging Face：Blog（RSS）
+32. [Sentence Transformers v6.0 新增 MultiVectorEncoder，支持 ColBERT 风格多向量模型](https://huggingface.co/blog/multi-vector-encoder) · Hugging Face：Blog（RSS）
    > Sentence Transformers v6.0 新增第四种模型类型 MultiVectorEncoder，可直接加载 PyLate、Stanford-NLP ColBERT 及 colpali-engine 检查点，用于 ColBERT 式晚期交互检索。
-16. [Mojo 语言正式开源，编译器与工具链全面开放](https://www.modular.com/blog/mojo-open-source) · Hacker News 热门（buzzing.cc 中文翻译）
+33. [Mojo 语言正式开源，编译器与工具链全面开放](https://www.modular.com/blog/mojo-open-source) · Hacker News 热门（buzzing.cc 中文翻译）
    > Mojo🔥 语言现已正式开源，采用 Apache 2.0 许可证（含 LLVM 例外），编译器、工具链及全部源码已发布至 modular GitHub 仓库。Mojo 上周刚达成 1.0 版本（源码稳定），此次开源涵盖整个编译器与工具链。目前暂不接受编译器相关贡献，计划年底前开放，标准库自 2024 年起已接受社区贡献。
-17. [Claude 现已支持 Gmail 邮件与 Google Drive 文件管理](https://x.com/claudeai/status/2089806039088517356) · X：Claude (@claudeai)
+34. [Claude 现已支持 Gmail 邮件与 Google Drive 文件管理](https://x.com/claudeai/status/2089806039088517356) · X：Claude (@claudeai)
    > Claude 现在可以在 Gmail 中发送邮件，并管理 Google Drive 中的文件。 让 Claude 回复某个邮件线程，它会起草并发送回复。你可以控制何时需要你的批准。 从连接器菜单中选择连接 Gmail 或 Google Drive 即可试用。所有付费套餐均可用。
-18. [OpenAI 推出 ChatGPT for Teens：面向青少年的学习体验与更强安全保护](https://openai.com/index/chatgpt-for-teens) · OpenAI：官网动态（RSS · 排除企业/客户案例）
+35. [OpenAI 推出 ChatGPT for Teens：面向青少年的学习体验与更强安全保护](https://openai.com/index/chatgpt-for-teens) · OpenAI：官网动态（RSS · 排除企业/客户案例）
    > OpenAI 发布 ChatGPT for Teens，为 13-17 岁用户自动启用，内置更强安全保护与家长控制。新增 Study Mode、负责任作业提醒、测验与学习可视化，以及可设定默认开启时段的 Study Hours，引导青少年分步解题而非直接给答案。OpenAI 同时宣布与 CodeAI 合作，帮助青少年理解、质疑并创造性地使用 AI。
-19. [Git 大规模托管为何如此困难](https://cursor.com/blog/git-at-any-scale) · Cursor Blog
+36. [Git 大规模托管为何如此困难](https://cursor.com/blog/git-at-any-scale) · Cursor Blog
    > Git 的分布式设计使其大规模托管面临固有挑战：packfile 作为存储和网络传输的基础单元，在服务器端成为可用性与扩展性的瓶颈。业界曾尝试三种方案——分布式文件系统、分布式 packfile、分布式 Git 本身，其中对象级分布式存储因 Git 协议要求网络传输 packfile 导致 clone 性能不佳而被放弃。
-20. [Claude Science 产品指南：面向生命科学研究的 AI 工作台](https://claude.com/blog/the-claude-science-product-guide) · Claude：Blog（网页）
+37. [Claude Science 产品指南：面向生命科学研究的 AI 工作台](https://claude.com/blog/the-claude-science-product-guide) · Claude：Blog（网页）
    > Anthropic 发布 Claude Science（测试版），一个覆盖生命科学数字化流程的 AI 工作台，支持数据分析、图表生成与结果产出，并可通过本地守护进程将重任务调度至自有 GPU、SLURM 集群或云账户。
-31. [Cursor 推出 Origin 代码托管服务，作为 GitHub 的替代方案](https://cursor.com/changelog/origin-code-hosting) · Hacker News 热门（buzzing.cc 中文翻译）
+48. [Cursor 推出 Origin 代码托管服务，作为 GitHub 的替代方案](https://cursor.com/changelog/origin-code-hosting) · Hacker News 热门（buzzing.cc 中文翻译）
    > Cursor 今日起向所有付费计划用户开放 Origin 代码托管的早期测试版，提供仓库、拉取请求、代码浏览及 GitHub 同步功能。用户可创建以 cursor.com/codebase/ 为前缀的仓库，或将 GitHub 仓库同步至 Origin，双向同步评论与审查。Vercel、Depot 和 Buildkite 集成已可用，智能体功能即将推出。
-32. [OpenRouter 推出 Activity 仪表盘与 Analytics API：按智能体、模型、请求追踪 AI 使用成本](https://openrouter.ai/blog/announcements/activity-dashboard) · OpenRouter：Announcements（RSS）
+49. [OpenRouter 推出 Activity 仪表盘与 Analytics API：按智能体、模型、请求追踪 AI 使用成本](https://openrouter.ai/blog/announcements/activity-dashboard) · OpenRouter：Announcements（RSS）
    > OpenRouter 发布 Activity 仪表盘和 beta Analytics API，可按智能体、模型、请求维度查看支出、token 量、缓存命中率等指标，并支持下钻至单条请求日志。
-33. [OpenRouter 图像生成 API：代码优先的接入教程](https://openrouter.ai/blog/tutorials/image-generation) · OpenRouter：Announcements（RSS）
+50. [OpenRouter 图像生成 API：代码优先的接入教程](https://openrouter.ai/blog/tutorials/image-generation) · OpenRouter：Announcements（RSS）
    > OpenRouter 推出专用图像生成 API，通过统一请求格式和单一密钥即可调用多个提供商的图像模型。开发者向 POST /api/v1/images 发送请求，响应中的 data[0].b64_json 包含 base64 编码的图像数据，解码后即可保存为本地文件。教程演示了 Python 和 JavaScript 两种实现，并支持通过 input_references 传入参考图像生成变体。
-34. [AgentCore Payments 中间件为 LangChain 智能体提供 API 支付能力](https://www.langchain.com/blog/langchain-agentcore-payments) · LangChain：Blog（RSS）
+51. [AgentCore Payments 中间件为 LangChain 智能体提供 API 支付能力](https://www.langchain.com/blog/langchain-agentcore-payments) · LangChain：Blog（RSS）
    > AgentCore Payments 中间件让 LangChain 智能体以确定性会话预算支付 API 费用。该中间件为 x402 支付签名，LangSmith 可追踪每一笔支付记录。
-35. [Claude Code v2.1.234 发布：新增项目目录名变量与 GitLab MR 徽章，修复多项安全与稳定性问题](https://github.com/anthropics/claude-code/releases/tag/v2.1.234) · Claude Code：GitHub Releases（RSS）
+52. [Claude Code v2.1.234 发布：新增项目目录名变量与 GitLab MR 徽章，修复多项安全与稳定性问题](https://github.com/anthropics/claude-code/releases/tag/v2.1.234) · Claude Code：GitHub Releases（RSS）
    > Claude Code v2.1.234 新增可选 CLAUDE_CODE_PROJECT_DIR_NAME 环境变量、selection:clear 键绑定及 GitLab MR 徽章，并在用量限制重置后自动继续会话。
-56. [Claude Code v2.1.233 发布：新增 GitLab MR 支持与内存 cgroup 限制](https://github.com/anthropics/claude-code/releases/tag/v2.1.233) · Claude Code：GitHub Releases（RSS）
+73. [Claude Code v2.1.233 发布：新增 GitLab MR 支持与内存 cgroup 限制](https://github.com/anthropics/claude-code/releases/tag/v2.1.233) · Claude Code：GitHub Releases（RSS）
    > Claude Code v2.1.233 发布，为 --worktree 标志和 agents 视图新增 GitLab 合并请求 URL 支持，并添加可选的 forward_user_identity 网关设置以按用户归因支出。
 
-## Ⅲ 动态（11 条）
+## Ⅲ 动态（12 条）
 
-7. [Anthropic 在网络关键能力时代放缓模型开发：暂停 RL 训练并强化安全防护](https://openai.com/index/pacing-model-development-cyber-capabilities) · Hacker News 热门（buzzing.cc 中文翻译）
+11. [消息称 OpenAI 首席财务官告知员工：公司最迟将于 2027 年上市](https://www.ithome.com/0/991/886.htm) · IT之家（RSS）
+   > OpenAI 首席财务官萨拉·弗里亚尔在全员大会上告知员工，公司最迟将于 2027 年完成上市，若业务持续向好也可能更早。OpenAI 已于 6 月秘密提交 IPO 招股书，本季度整体年化营收增长 35%，企业级业务年化营收增长 50%，AI 编程与办公产品周活跃用户突破 2000 万。
+24. [Anthropic 在网络关键能力时代放缓模型开发：暂停 RL 训练并强化安全防护](https://openai.com/index/pacing-model-development-cyber-capabilities) · Hacker News 热门（buzzing.cc 中文翻译）
    > Anthropic 因 OpenAI-Hugging Face 事件及即将推出的 Astra 模型可能达到“关键网络安全能力阈值”，暂时放缓模型扩展速度，包括暂停最新模型两周的强化学习（RL）训练。公司已加强研究环境安全要求，包括工作负载隔离、网络隔离和持续安全测试，并扩大思维链监控范围。涉及 Astra 或网络模型的工作负载需满足最严格安全标准，部分训练和评估工作仍处于暂停状态。
-8. [OpenRouter 宣布加入 Stripe](https://openrouter.ai/blog/announcements/openrouter-is-joining-stripe) · OpenRouter：Announcements（RSS）
+25. [OpenRouter 宣布加入 Stripe](https://openrouter.ai/blog/announcements/openrouter-is-joining-stripe) · OpenRouter：Announcements（RSS）
    > OpenRouter 宣布与 Stripe 合并，以加速推动全球经济增长。OpenRouter 目前每日处理来自 400 多个 AI 模型的 10+ 万亿 token，服务超 1000 万开发者与公司，自成立以来推理量每年至少增长 10 倍。合并后 OpenRouter 将继续以原名、原使命独立运营，产品与路线图不变，路由决策仍以用户利益为先，交易预计在未来数周内完成。
-21. [OpenAI 启动新计划，强化国家安全领域 AI 的民主监督](https://openai.com/index/strengthening-democratic-oversight-in-national-security) · OpenAI：官网动态（RSS · 排除企业/客户案例）
+38. [OpenAI 启动新计划，强化国家安全领域 AI 的民主监督](https://openai.com/index/strengthening-democratic-oversight-in-national-security) · OpenAI：官网动态（RSS · 排除企业/客户案例）
    > OpenAI 启动新计划，帮助民主监督机构发展专业能力与工具，以理解和监督政府将 AI 用于国家安全。未来一年，OpenAI 将提供 500 万美元用于培训、技术支持和 OpenAI 积分，并与监督机构试点工具，帮助授权审查员检查 AI 辅助政府决策的相关记录。OpenAI 强调 AI 应增强而非取代人类判断，且不承担对政府的监督角色。
-36. [NVIDIA 与 SB Energy 合作锁定俄亥俄州 PORTS-Pike 园区电力容量，OpenAI 将入驻](https://blogs.nvidia.com/blog/securing-the-infrastructure-of-intelligence) · NVIDIA Blog（RSS）
+53. [NVIDIA 与 SB Energy 合作锁定俄亥俄州 PORTS-Pike 园区电力容量，OpenAI 将入驻](https://blogs.nvidia.com/blog/securing-the-infrastructure-of-intelligence) · NVIDIA Blog（RSS）
    > NVIDIA 宣布与 SB Energy 合作，锁定俄亥俄州 PORTS-Pike 科技园区的电力容量（LPS）以独家部署 NVIDIA 算力，OpenAI 将成为租户。
-37. [A 股迎来“人形机器人第一股”，宇树科技官宣 8 月 19 日科创板上市](https://www.ithome.com/0/990/812.htm) · IT之家（RSS）
+54. [A 股迎来“人形机器人第一股”，宇树科技官宣 8 月 19 日科创板上市](https://www.ithome.com/0/990/812.htm) · IT之家（RSS）
    > 宇树科技宣布股票将于 2026 年 8 月 19 日在科创板上市，发行价 150.80 元/股，对应市值约 609.93 亿元，预计募资约 60.99 亿元。该公司 2023 至 2025 年营收分别为 1.59 亿元、3.93 亿元和 16.99 亿元，净利润分别为-1114.51 万元、9547.47 万元和 2.78 亿元，是全球少数实现盈利的高性能通用机器人公司。
-38. [404 Media 追踪珍本图书流向：亚马逊批量购书扫描用于 AI 训练后销毁](https://www.404media.co/we-tracked-a-shipment-of-rare-books-it-ended-at-an-amazon-ai-training-facility) · Hacker News 热门（buzzing.cc 中文翻译）
+55. [404 Media 追踪珍本图书流向：亚马逊批量购书扫描用于 AI 训练后销毁](https://www.404media.co/we-tracked-a-shipment-of-rare-books-it-ended-at-an-amazon-ai-training-facility) · Hacker News 热门（buzzing.cc 中文翻译）
    > 404 Media 通过在一本珍本图书中放置追踪设备，首次揭露亚马逊未公开的购书行动：批量购入大量书籍，扫描用于 AI 训练数据，随后销毁。追踪显示这些书最终被送往亚马逊的一处人工智能训练中心。
-39. [OpenAI 为 14 个独立项目提供资助，推动智能时代经济机遇与韧性研究](https://openai.com/index/new-policy-ideas-for-the-intelligence-age) · OpenAI：官网动态（RSS · 排除企业/客户案例）
+56. [OpenAI 为 14 个独立项目提供资助，推动智能时代经济机遇与韧性研究](https://openai.com/index/new-policy-ideas-for-the-intelligence-age) · OpenAI：官网动态（RSS · 排除企业/客户案例）
    > OpenAI 宣布向 14 个由独立组织主导的项目提供总计 100 万美元资金及最高 100 万美元 API 额度，以推动 AI 进步下的经济机遇与社会韧性研究。
-57. [OpenAI and Anthropic in price war as Chinese AI rivals gain ground](https://arstechnica.com/ai/2026/08/openai-and-anthropic-in-price-war-as-chinese-ai-rivals-gain-ground) · Ars Technica：AI（RSS）
+74. [OpenAI and Anthropic in price war as Chinese AI rivals gain ground](https://arstechnica.com/ai/2026/08/openai-and-anthropic-in-price-war-as-chinese-ai-rivals-gain-ground) · Ars Technica：AI（RSS）
    > 价格战让模型API的成本弹性成为现实，原先因账单压力转向中国厂商的用户，可能在OpenAI和Anthropic降价后重新比较能力与价格。
-58. [Cursor 正式被 SpaceX 收购](https://cursor.com/blog/joining-spacex) · Cursor Blog
+75. [Cursor 正式被 SpaceX 收购](https://cursor.com/blog/joining-spacex) · Cursor Blog
    > Cursor 已被 SpaceX 正式收购，完成自 4 月启动的收购流程。合并后 Cursor 将获得全球最大 GPU 集群，以构建更强且运行成本更低的模型，从而以更低价格向客户提供更强大的模型。本周三发布的 Grok 4.6 是双方合作成果的早期体现。
-59. [Claude 文本水印机制如何运作](https://www.anthropic.com/news/claude-text-watermark) · Anthropic：Newsroom（网页）
+76. [Claude 文本水印机制如何运作](https://www.anthropic.com/news/claude-text-watermark) · Anthropic：Newsroom（网页）
    > 未来 Claude 模型生成的文本将包含水印，用于判断文本由 Claude 撰写的可能性，这是 Anthropic 为遵守欧盟《AI 法案》而实施的变更。该方法基于 Google DeepMind 的 SynthID-Text 技术，对输出质量、创造力和可读性无实际影响，读者无法区分水印文本与普通文本，且不增加额外 token 或成本。
-60. [印尼首个大学AI中心落成：UGM、Indosat与NVIDIA合作培养本地AI人才](https://blogs.nvidia.com/blog/ugm-indosat-nvidia-ai-technology-center) · NVIDIA Blog（RSS）
+77. [印尼首个大学AI中心落成：UGM、Indosat与NVIDIA合作培养本地AI人才](https://blogs.nvidia.com/blog/ugm-indosat-nvidia-ai-technology-center) · NVIDIA Blog（RSS）
    > 印尼通信与数字事务部、Indosat、NVIDIA与加查马达大学（UGM）在日惹共同启动UGM Indosat NVIDIA AI技术中心（NVAITC），这是该国首个大学AI技术中心。
 
-## Ⅳ 研究（9 条）
+## Ⅳ 研究（11 条）
 
-9. [突破 DeepSeek-V4-Pro 服务极限：H20 上的多场景优化方法](https://www.lmsys.org/blog/2026-08-19-deepseek-v4-pro-engine-optimization-h20) · LMSYS：Blog（Chatbot Arena 团队）
+12. [数据受限下的多语言知识迁移：Apple 提出基于词汇干预的新方法](https://machinelearning.apple.com/research/multilingual-knowledge-transfer-lexical-interventions) · Apple Machine Learning Research（RSS）
+   > Apple 研究团队提出一种基于词汇干预的多语言知识迁移方法，旨在解决低资源语言训练数据不足时，模型难以从高资源语言获取科学推理、常识推断和世界知识的问题。该方法无需大量平行语料、翻译系统或辅助模型，为数据受限场景下的跨语言知识迁移提供了更高效的替代方案。
+13. [数据约束下的混合预训练缩放定律](https://machinelearning.apple.com/research/scaling-laws-mixture-pretraining) · Apple Machine Learning Research（RSS）
+   > 苹果机器学习研究团队通过2000余次语言模型训练实验，系统研究了稀缺目标数据与通用数据混合预训练中的权衡问题。研究发现，目标数据占比过低会导致模型对目标领域暴露不足，而占比过高则因重复样本过多引发收益递减乃至过拟合，为数据约束下的混合预训练策略提供了量化依据。
+26. [突破 DeepSeek-V4-Pro 服务极限：H20 上的多场景优化方法](https://www.lmsys.org/blog/2026-08-19-deepseek-v4-pro-engine-optimization-h20) · LMSYS：Blog（Chatbot Arena 团队）
    > LMSYS 团队针对 1.6 万亿参数的 MoE 模型 DeepSeek-V4-Pro，在 H20 GPU 上通过场景化服务配置逼近 B300 性能。单节点 H20-141GB 参考实现达 271 output tokens/s，与 B300 的 383.7 tokens/s 性能差距缩小至 1.42×。
-10. [苹果研究：LLM 类人行为的多维度分析——模型行为、用户因素与系统提示词的影响](https://machinelearning.apple.com/research/human-like-behaviors-llms) · Apple Machine Learning Research（RSS）
+27. [苹果研究：LLM 类人行为的多维度分析——模型行为、用户因素与系统提示词的影响](https://machinelearning.apple.com/research/human-like-behaviors-llms) · Apple Machine Learning Research（RSS）
    > 苹果机器学习研究团队对 LLM 的类人行为（如表达想法与情绪、与用户建立关系、拒绝请求并保持边界）进行了多维度分析，涵盖其普遍性、潜在影响与可控性。研究采用 LLM-as-a-judge 与人工评估相结合的方法，样本规模超过 21,000 条数据，旨在为研究者与实践者提供关于何时及何种类型类人行为的决策依据。
-11. [倒排索引遍历的 P-完全性：布尔查询 DAG 的复杂度评估](https://machinelearning.apple.com/research/the-p-completeness-of-inverted-index-traversal) · Apple Machine Learning Research（RSS）
+28. [倒排索引遍历的 P-完全性：布尔查询 DAG 的复杂度评估](https://machinelearning.apple.com/research/the-p-completeness-of-inverted-index-traversal) · Apple Machine Learning Research（RSS）
    > 现代 AI 智能体依赖搜索基础设施执行神经符号推理，常编译为深层嵌套的非单调布尔查询。标准倒排索引查询评估策略面临严重理论限制：有状态迭代器模型（Document-at-a-Time）受 NC^1 公式评估结构约束，展开重汇聚逻辑时最坏情况查询复杂度呈 O(2^|Q|) 指数级爆炸。
-22. [Claude 如何加速蛋白质设计与分析化学研究](https://www.anthropic.com/research/Claude-accelerates-protein-design) · Anthropic：Research（发表成果 · 网页）
+39. [Claude 如何加速蛋白质设计与分析化学研究](https://www.anthropic.com/research/Claude-accelerates-protein-design) · Anthropic：Research（发表成果 · 网页）
    > Anthropic 公布两项实验：Claude（Mythos Preview 和 Opus 4.8）针对 15 个靶点设计蛋白质结合剂，成功 14 个，命中率达 22.6%-35.1%。
-23. [智能体记忆并非越多越好：八款模型评测显示剂量需按能力校准](https://huggingface.co/blog/ibm-research/altk-evolve-hmm) · Hugging Face：Blog（RSS）
+40. [智能体记忆并非越多越好：八款模型评测显示剂量需按能力校准](https://huggingface.co/blog/ibm-research/altk-evolve-hmm) · Hugging Face：Blog（RSS）
    > 智能体记忆并非可随意开启的功能，而是需按模型能力校准的剂量。强模型适合注入完整指南集，DeepSeek-V3.2（671B MoE）任务完成率提升+9.5个百分点；较弱模型采用精选检索效果最佳，gpt-oss-120b（117B MoE）提升+16.1pp且仅增加+5% token。该方法无需更新权重或人工标注，通过从智能体过往轨迹中蒸馏指南并在推理时注入实现。
-24. [GRPO 超越英语：多语言与非英语环境下的大规模研究](https://machinelearning.apple.com/research/grpo-beyond-english) · Apple Machine Learning Research（RSS）
+41. [GRPO 超越英语：多语言与非英语环境下的大规模研究](https://machinelearning.apple.com/research/grpo-beyond-english) · Apple Machine Learning Research（RSS）
    > 一项大规模实证研究考察了 GRPO 在多语言和非英语环境下的表现，覆盖多种基础模型、训练语言及推理语言奖励设置。研究发现，以母语进行推理训练与英语推理训练之间的性能差距很小，表明 RLVR 在非英语场景下同样有效。该研究为多语言推理模型的强化学习训练提供了重要参考。
-25. [MVICAD2：引入延迟与膨胀的多视图独立成分分析](https://machinelearning.apple.com/research/mvicad2-delays-dilations) · Apple Machine Learning Research（RSS）
+42. [MVICAD2：引入延迟与膨胀的多视图独立成分分析](https://machinelearning.apple.com/research/mvicad2-delays-dilations) · Apple Machine Learning Research（RSS）
    > 巴黎-萨克雷大学等机构提出MVICAD2，允许不同被试的脑源在时间延迟和膨胀两方面存在差异，以解决MVICA假设过于严格、仅估计延迟不足以刻画听觉刺激等脑动态的问题。该模型源可识别，似然有闭式近似，并通过正则化与优化提升性能。模拟显示其优于现有方法，Cam-CAN数据集验证了延迟和膨胀与衰老相关。
-40. [PhotoScan：用智能手机照片估算胰岛素抵抗，精度接近DXA](https://research.google/blog/seeing-beyond-bmi-estimating-cardiometabolic-risk-with-smartphone-imagery) · Google Research：Blog（网页）
+57. [PhotoScan：用智能手机照片估算胰岛素抵抗，精度接近DXA](https://research.google/blog/seeing-beyond-bmi-estimating-cardiometabolic-risk-with-smartphone-imagery) · Google Research：Blog（网页）
    > Google Research 推出 PhotoScan，一种从智能手机 2D 照片直接估算三维身体成分的深度学习框架，可预测胰岛素抵抗，在临床研究中精度接近 DXA 扫描。
-51. [AI生成书籍正淹没亚马逊，并拉低人类作者的单书收入](https://the-decoder.com/ai-generated-books-are-flooding-amazon-and-tanking-sales-for-human-authors) · The Decoder：AI News（RSS）
+68. [AI生成书籍正淹没亚马逊，并拉低人类作者的单书收入](https://the-decoder.com/ai-generated-books-are-flooding-amazon-and-tanking-sales-for-human-authors) · The Decoder：AI News（RSS）
    > 一项对14,419本自出版电子书的分析显示，AI生成书籍正以数量而非质量挤占人类作者市场，即便未检测到AI文本的书籍，单书收入也在下滑。2023年Q1至2026年Q1，书目总量增长38.3倍，而季度收入仅增长8.9倍；在八个类型中，七个类型的无AI文本书籍单书收入下降。
 
-## Ⅴ 观点（24 条）
+## Ⅴ 观点（28 条）
 
-12. [GitHub Copilot app 初学者教程：用 My work 面板管理你的工作](https://github.blog/ai-and-ml/github-copilot/github-copilot-app-for-beginners-managing-your-work) · GitHub Blog
+14. [Claude Code 初创公司指南：五大规则与创始人洞见](https://claude.com/blog/claude-code-guide-for-startups) · Claude：Blog（网页）
+   > Anthropic 发布面向初创公司的 Claude Code 使用指南，基于对十余家高增长公司的调研，总结出“人人皆可交付、自动化繁琐工作、信任但验证、为重构而构建、原型-自用-产品化”五大规则。
+15. [OpenAI 推出 AI Futures 博客，探讨自由社会如何应对变革性 AI](https://openai.com/index/introducing-ai-futures) · OpenAI：官网动态（RSS · 排除企业/客户案例）
+   > OpenAI 新设 Strategic Futures 团队并推出博客 AI Futures，核心问题是自由社会应如何重构以在变革性 AI 出现时保障个人权利与自主权。团队认为，自主系统和机器智能的进步可能使国家无需依赖人力即可投射力量、征收税收并自动化官僚体系，从而削弱民众在谈判桌上的地位。文章主张借鉴美国开国元勋“以权力制衡权力”的思路，寻求建立并维持适当的权力平衡，而非彻底去中心化。
+16. [Leopold 的愚蠢：一个年轻人如何象征一个时代](https://garymarcus.substack.com/p/leopolds-folly) · Gary Marcus：The Road to AI We Can Trust（RSS）
+   > 作者以“空头支票”式骗局为类比，指出生成式 AI 行业存在类似循环融资的投机成分，如以 OpenAI 股份为抵押贷款再购入更多股份。文章认为这些债务能否偿付高度不确定，可能最终带来数万亿美元利润，也可能落空，并呼吁需要不同的分析框架。
+17. [共和党因与大型科技公司关系陷入恐慌](https://garymarcus.substack.com/p/breaking-the-republican-party-is) · Gary Marcus：The Road to AI We Can Trust（RSS）
+   > 共和党正因与大型科技公司的关系而陷入恐慌，原因是他们意识到大型AI议程在美国民众中极不受欢迎。特朗普已从反对AI监管转向强烈鼓励对前沿AI模型进行自愿预检测试。新成立的超级政治行动委员会Guardrails Alliance指出，共和党因早前向AI行业妥协而面临困境，正急于挽回局面。
+29. [GitHub Copilot app 初学者教程：用 My work 面板管理你的工作](https://github.blog/ai-and-ml/github-copilot/github-copilot-app-for-beginners-managing-your-work) · GitHub Blog
    > GitHub Copilot app 的 My work 面板将拉取请求和问题集中在一处管理，内置 All、Active、Review requests、Done 四个默认视图，并支持创建自定义视图与过滤器。用户可从问题或拉取请求直接启动新的智能体会话，也可批量选择多个条目创建会话，还能在列表视图和表格视图间切换，并调整仓库范围或新建问题。
-13. [Slack 如何构建人机智能体团队：对话即知识](https://claude.com/blog/turning-conversation-into-knowledge-how-slack-builds-human-agent-teams) · Claude：Blog（网页）
+30. [Slack 如何构建人机智能体团队：对话即知识](https://claude.com/blog/turning-conversation-into-knowledge-how-slack-builds-human-agent-teams) · Claude：Blog（网页）
    > Slack 首席产品官 Jaime DeLanghe 分享了将对话转化为机构知识、构建人机智能体团队的最佳实践。她主张默认使用公开频道，让智能体从可见对话中学习，并建议将会议、邮件、日历等上下文连接起来以减少重复劳动。在 Slack 中由 Claude 驱动的智能体负责起草、总结、监控等生产工作，人类负责审查、决策与交接，形成循环协作。
-14. [Databricks 如何从单一提示词设计高效的 Genie Agents](https://www.databricks.com/blog/designing-effective-genie-agents-single-prompt) · Databricks：Blog（RSS）
+31. [Databricks 如何从单一提示词设计高效的 Genie Agents](https://www.databricks.com/blog/designing-effective-genie-agents-single-prompt) · Databricks：Blog（RSS）
    > Databricks 发布指南，探讨如何从单一提示词设计高效的 Genie Agents。文章指出，通用智能体在处理收入等查询时，往往只会抓取第一个相关数据表，而 Genie Agents 通过更精准的提示词设计，能更准确地定位和回答用户问题。该指南旨在帮助开发者优化智能体行为，提升查询结果的准确性和相关性。
-26. [设计 AI 评测：先求清晰，再谈可视化](https://dev.to/googleai/designing-ai-evals-clarity-now-and-visualization-next-4eii) · Google AI：DEV 作者专属（RSS）
+43. [设计 AI 评测：先求清晰，再谈可视化](https://dev.to/googleai/designing-ai-evals-clarity-now-and-visualization-next-4eii) · Google AI：DEV 作者专属（RSS）
    > 本文演示如何用开源评测框架 Inspect AI 和 Harbor 评估 agent 技能，并借助 Google Sheets 和 Data Studio 进行可视化分析。
-27. [OpenAI 在“关键网络能力”时代放缓模型开发节奏](https://openai.com/index/pacing-model-development-cyber-capabilities) · OpenAI：官网动态（RSS · 排除企业/客户案例）
+44. [OpenAI 在“关键网络能力”时代放缓模型开发节奏](https://openai.com/index/pacing-model-development-cyber-capabilities) · OpenAI：官网动态（RSS · 排除企业/客户案例）
    > OpenAI 因 OpenAI-Hugging Face 事件及即将推出的 Astra 模型可能达到《预备框架》下的“关键网络安全能力”阈值，暂时放缓了模型扩展速度，包括暂停最新部署模型的强化学习训练两周，并搁置最大规模前沿 RL 运行。公司已加强研究环境安全，要求对 Astra 及网络相关负载实施最严格防护，并扩展思维链监控，采用多阶段激活分类器检测机制。
-28. [Claude Tag 如何担任 Anthropic CI/CD 故障的一线响应者](https://claude.com/blog/ai-ci-cd-on-call) · Claude：Blog（网页）
+45. [Claude Tag 如何担任 Anthropic CI/CD 故障的一线响应者](https://claude.com/blog/ai-ci-cd-on-call) · Claude：Blog（网页）
    > Anthropic 的 CI 工程师用 Claude Tag 构建了值班智能体，作为 CI/CD 故障的一线响应者。Claude 在事故发生后中位 14 分钟发布首份基于证据的分析，最快案例中 3 分钟内验证修复并确认错误率恢复基线。该方案通过 Slack 频道、Datadog 或 Grafana 工具访问及 GitHub 技能文件实现，Anthropic 已发布通用设置套件供其他团队部署。
-29. [笔记本模型也能媲美云端前沿模型：Qwen3.8-27B 登顶智能指数](https://www.tomtunguz.com/birds-dont-fly-like-planes-neither-does-ai) · Tomer Tunguz 博客（VC 分析）
+46. [笔记本模型也能媲美云端前沿模型：Qwen3.8-27B 登顶智能指数](https://www.tomtunguz.com/birds-dont-fly-like-planes-neither-does-ai) · Tomer Tunguz 博客（VC 分析）
    > 作者将 Qwen3.8-27B 装入智能体后表现优异，该模型在 Artificial Analysis 智能指数中排名 135 款模型之首，得分 52，超过 Z.ai 的 753B 参数开源模型 GLM-5.2（51 分）。
-30. [Populous 如何用 Runway 呈现全球标志性场馆设计](https://runwayml.com/news/customers/populous) · Runway：News（网页）
+47. [Populous 如何用 Runway 呈现全球标志性场馆设计](https://runwayml.com/news/customers/populous) · Runway：News（网页）
    > 全球设计公司 Populous 高级建筑师 Georgina Myers 介绍团队用 Runway 辅助体育场馆概念设计：过去完整视频需外部渲染团队至少三周，且提交前两周须冻结设计模型；如今 Runway 能生成传达尺度感的完整渲染和航拍图，将视觉制作时间缩短，让设计师把时间还给设计本身。该工具已用于利雅得 MBS 体育场等中东项目，支持 9 种不同活动模式的场景迭代。
-41. [OpenAI 如何用前沿智能加固自身防御：The Defender’s Window](https://openai.com/index/the-defenders-window) · OpenAI：官网动态（RSS · 排除企业/客户案例）
+58. [OpenAI 如何用前沿智能加固自身防御：The Defender’s Window](https://openai.com/index/the-defenders-window) · OpenAI：官网动态（RSS · 排除企业/客户案例）
    > OpenAI 在 OpenAI-Hugging Face 事件后反思低估了模型真实网络攻击能力，正通过四大支柱强化自身安全：用 Codex 验证代码漏洞、用智能体优先分流安全告警、持续枚举攻击路径，并仅向可信防御者开放网络能力。文中演示 ChatGPT Work（基于 GPT-5.6 Sol）15 分钟发现个人网站 13 个问题并在一小时内完成修复。
-42. [如何禁用或避免侵入式 AI：一份覆盖 Windows、Chrome、Edge、Firefox 及主流应用的实用指南](https://www.librarian.net/notoai) · Hacker News 热门（buzzing.cc 中文翻译）
+59. [如何禁用或避免侵入式 AI：一份覆盖 Windows、Chrome、Edge、Firefox 及主流应用的实用指南](https://www.librarian.net/notoai) · Hacker News 热门（buzzing.cc 中文翻译）
    > 一份面向希望减少技术环境中侵入式 AI 的用户的操作指南，涵盖 Adobe Acrobat、Android/Gemini、Apple Intelligence、Chrome、Edge、Firefox、DuckDuckGo、Google Workspace、Slack、WhatsApp 及 Windows 11/Copilot 等平台。
-43. [用 Google 的 Agent Development Kit 构建零信任 AI 智能体](https://developers.googleblog.com/build-zero-trust-ai-agents-with-googles-agent-development-kit) · Google Developers Blog（RSS）
+60. [用 Google 的 Agent Development Kit 构建零信任 AI 智能体](https://developers.googleblog.com/build-zero-trust-ai-agents-with-googles-agent-development-kit) · Google Developers Blog（RSS）
    > Google 开源了基于 ADK 和 Gemini 的零信任客服与退货智能体示例，演示如何防御提示注入等攻击。该架构在 LLM 上下文之外通过三层硬性安全机制保障：硬件支持的加密签名确保数据库写入不可抵赖、gVisor 沙箱隔离动态代码执行、确定性语义网关校验业务逻辑。系统提示词只是软约束，无法作为安全边界。
-44. [开源模型生态的未来：Nvidia 押注“教所有人炼 token”](https://www.interconnects.ai/p/teaching-everyone-to-fish-for-tokens) · Nathan Lambert：Interconnects（RSS）
+61. [开源模型生态的未来：Nvidia 押注“教所有人炼 token”](https://www.interconnects.ai/p/teaching-everyone-to-fish-for-tokens) · Nathan Lambert：Interconnects（RSS）
    > 开源模型生态正日益依赖 Nvidia 的资助，其已投入 260 亿美元推动近乎开源的模型开发，以扩大推理芯片需求。若此路径不奏效，开源模型将转向效率、可修改性等长尾场景，与闭源模型分化。同时，基础模型训练门槛升高，开源社区兴趣正从全量训练转向对 DeepSeek V4 Flash、GLM 5.X 等模型的微调。
-45. [同一集群利用率提升 33 个百分点：改变的是分配顺序](https://huggingface.co/blog/Dharma-AI/gpu-management-pt2) · Hugging Face：Blog（RSS）
+62. [同一集群利用率提升 33 个百分点：改变的是分配顺序](https://huggingface.co/blog/Dharma-AI/gpu-management-pt2) · Hugging Face：Blog（RSS）
    > Hugging Face 构建了一个约束感知的 GPU 分配器，并在七个基准场景中与 FIFO 调度器对比。在相同硬件和负载下，GPU 利用率最高提升 33 个百分点，优先级加权输出在全部场景中均上升，最高达 105%。分配器将实时推理需求按曲线而非峰值处理，批量任务按优先级跨整个调度周期排序，从而回收了预留闲置容量。
-46. [ABC Legal 如何借助 Claude Managed Agents 让每位员工成为构建者](https://claude.com/blog/how-abc-legal-turned-every-employee-into-a-builder-with-claude-managed-agents) · Claude：Blog（网页）
+63. [ABC Legal 如何借助 Claude Managed Agents 让每位员工成为构建者](https://claude.com/blog/how-abc-legal-turned-every-employee-into-a-builder-with-claude-managed-agents) · Claude：Blog（网页）
    > ABC Legal 为 1,100 名员工部署 Claude Enterprise 后，通过 Claude Managed Agents 将零散实验转变为受治理的智能体体系，截至 2026 年 7 月已上线 50 多个生产级智能体，部分覆盖的人工任务成本降低约 50%，约 310 名员工日常使用 Claude。
-47. [当模型持续学习：测试时训练如何改变 AI 的记忆与成本](https://www.tomtunguz.com/test-time-training-impact) · Tomer Tunguz 博客（VC 分析）
+64. [当模型持续学习：测试时训练如何改变 AI 的记忆与成本](https://www.tomtunguz.com/test-time-training-impact) · Tomer Tunguz 博客（VC 分析）
    > 测试时训练（Test-time training）让模型在使用中持续更新权重，而非训练结束后冻结。相比标准 Transformer，其内存需求从随上下文线性增长变为恒定，斯坦福研究显示推理速度最高可提升 2.7 倍，且 In-Place TTT 无需重训即可将 4B 模型提升至 128k 上下文性能。但代价是每个用户需独立模型副本，服务成本转向算力与芯片，更适合编码助手等个性化场景。
-48. [SGLang 重构 CUDA Graph 支持，Breakable CUDA Graph 成 prefill 默认方案](https://www.lmsys.org/blog/2026-08-17-advanced-cuda-graph) · LMSYS：Blog（Chatbot Arena 团队）
+65. [SGLang 重构 CUDA Graph 支持，Breakable CUDA Graph 成 prefill 默认方案](https://www.lmsys.org/blog/2026-08-17-advanced-cuda-graph) · LMSYS：Blog（Chatbot Arena 团队）
    > SGLang 重构 CUDA Graph 支持，通过 runner/backend 接口拆分使不同捕获策略可复用。其社区首创的 Breakable CUDA Graph（BCG）现为 prefill 默认方案，代码量仅为 torch.compile 方案的约四分之一（521 行对比 1,771 行），构建速度快 3.8–5.2 倍。
-49. [Qwen 3.8 27B 表现出色，但默认推理强度过高导致过度思考](https://simonwillison.net/2026/Aug/16/qwen-38-27b) · Simon Willison 博客
+66. [Qwen 3.8 27B 表现出色，但默认推理强度过高导致过度思考](https://simonwillison.net/2026/Aug/16/qwen-38-27b) · Simon Willison 博客
    > 阿里 Qwen 实验室发布 Apache 2 许可的 27B 参数视觉大模型 Qwen 3.8 27B，官方基准显示其超越前代 Qwen 3.6 27B 及闭源 Qwen 3.7-Plus。
-50. [The hyping of Anthropic’s IPO](https://garymarcus.substack.com/p/the-hyping-of-anthropics-ipo) · Gary Marcus：The Road to AI We Can Trust（RSS）
+67. [The hyping of Anthropic’s IPO](https://garymarcus.substack.com/p/the-hyping-of-anthropics-ipo) · Gary Marcus：The Road to AI We Can Trust（RSS）
    > 对 Anthropic IPO 静默期流传的 2028 年 1900 亿美元级营收预测，文章提示其多基于匿名信源和未披露算法，可帮助在追踪上市进展时区分已核实数据与传闻。
-61. [2026年夏季开源模型生态观察：中国前沿模型规模领先，AMD与NVIDIA主导发布量](https://huggingface.co/blog/state-of-open-models-summer-2026) · Hugging Face：Blog（RSS）
+78. [2026年夏季开源模型生态观察：中国前沿模型规模领先，AMD与NVIDIA主导发布量](https://huggingface.co/blog/state-of-open-models-summer-2026) · Hugging Face：Blog（RSS）
    > 2026年1至8月，Hugging Face公开模型仓库从243万增至296万，但85.6%的模型下载量不足200次，1.5%的仓库占据99.2%下载量。中国实验室月度最大开源模型参数规模在754B至2.78万亿之间，美国实验室七个月中五个月低于130B。AMD与NVIDIA各发布超200个新模型仓库，成为发布开源模型最多的机构。
-62. [Claude Code 会话如何最大化 token 价值](https://claude.com/blog/maximizing-the-value-of-your-claude-code-sessions) · Claude：Blog（网页）
+79. [Claude Code 会话如何最大化 token 价值](https://claude.com/blog/maximizing-the-value-of-your-claude-code-sessions) · Claude：Blog（网页）
    > Claude Code 的 token 成本由模型、输入/输出 token 和提示缓存三因素决定，输出 token 价格约为输入的 5 倍。任务间运行 /clear 可减少无关上下文回传，降低 token 用量；会话中途切换模型或 effort 级别会破坏提示缓存，增加成本。
-63. [蚂蚁百灵与 ASystem 团队打通单机 Agentic RL 后训练闭环](https://mp.weixin.qq.com/s?__biz=MzkyODk2MDQwNw%3D%3D&mid=2247487525&idx=1&sn=b9def9117e34b45fce50ab76eeed726c) · 公众号：蚂蚁百灵（Ling）
+80. [蚂蚁百灵与 ASystem 团队打通单机 Agentic RL 后训练闭环](https://mp.weixin.qq.com/s?__biz=MzkyODk2MDQwNw%3D%3D&mid=2247487525&idx=1&sn=b9def9117e34b45fce50ab76eeed726c) · 公众号：蚂蚁百灵（Ling）
    > 蚂蚁百灵与 ASystem 团队合作，用 Ling-3.0-tiny 和 AReno 在 DGX Spark 上跑通单机 Agentic RL 后训练闭环。以井字棋为最小验证任务，用 GSPO 算法训练 400 步后，rollout/rewards_mean 从约 -0.5 升至 0.4，response_len 降至约 850 tokens，工具调用与动作选择趋于稳定。
-64. [OpenRouter 视觉指南：如何通过 API 向多模态模型发送图像](https://openrouter.ai/blog/tutorials/send-image-to-llm) · OpenRouter：Announcements（RSS）
+81. [OpenRouter 视觉指南：如何通过 API 向多模态模型发送图像](https://openrouter.ai/blog/tutorials/send-image-to-llm) · OpenRouter：Announcements（RSS）
    > OpenRouter 发布视觉指南，详解通过 Chat Completions API 向多模态模型发送图像的方法。请求体采用 messages 数组，用户消息的 content 包含 text 和 image_url 两部分，支持公开 URL 或 base64 数据 URL 两种格式，兼容 PNG、JPEG、WebP 和 GIF。
-65. [谁真的需要SOTA模型？OpenRouter数据显示84%token来自非前沿模型](https://www.tomtunguz.com/model-release-exhaustion) · Tomer Tunguz 博客（VC 分析）
+82. [谁真的需要SOTA模型？OpenRouter数据显示84%token来自非前沿模型](https://www.tomtunguz.com/model-release-exhaustion) · Tomer Tunguz 博客（VC 分析）
    > OpenRouter数据显示，84%的模型token并非来自SOTA模型，用户最常用的六款模型性能约为前沿模型的77%，成本仅为Claude Fable 5的2.5%。8月10日当周，六款模型承载了80%流量，混合价格约\$0.50/百万token，而Fable 5为\$20。最佳开源模型性能已从一年前的48%提升至前沿模型的80%，企业正转向更小、微调或开源模型以优化性价比。
-66. [Databricks 如何在数据仓库中使用 AI_Functions：主要用例解析](https://www.databricks.com/blog/using-aifunctions-your-data-warehouse-top-use-cases) · Databricks：Blog（RSS）
+83. [Databricks 如何在数据仓库中使用 AI_Functions：主要用例解析](https://www.databricks.com/blog/using-aifunctions-your-data-warehouse-top-use-cases) · Databricks：Blog（RSS）
    > Databricks 探讨在数据仓库中应用 AI_Functions 的主要场景，帮助组织在结构化数据之外处理非结构化数据。文章聚焦于如何通过该功能将 AI 能力直接集成到 SQL 工作流中，以扩展数据仓库的分析边界。具体用例与实现细节以原文为准。
 
 ---
 *数据来源：aihot.virxact.com · AI HOT 日报*`, csv: `编号,日期,版块,标题,摘要,来源,链接
-1,2026-08-20,模型,Liquid AI 发布 LFM2.5 系列 QAD Q4_0 量化检查点，恢复 97% 精度损失,Liquid AI 发布基于量化感知蒸馏（QAD）训练的 LFM2.5-230M、350M、1.2B-Instruct 和 2.6B 四款 Q4_0 GGUF 检查点，在保持原生 Q4_0 内存与速度的同时，恢复 BF16 平均精度损失的 97%。,Hugging Face：Blog（RSS）,https://huggingface.co/blog/LiquidAI/qad
-2,2026-08-20,产品,GLM-5.3上线：AA智能指数60分并列开源第一，成本更低,GLM-5.3 API即日上线，擅长复杂编码、防御性网络安全与长程任务，在AA综合智能指数中取得60分，与Claude Fable 5、GPT-5.6 Sol等闭源旗舰同级，并与Kimi K3并列开源模型第一。该模型以更小参数规模和更低调用成本降低前沿智能门槛，单任务成本为旗舰模型中最低。API定价与GLM-5.2持平，模型权重将于下周五开源。,公众号：智谱（GLM）,https://mp.weixin.qq.com/s?__biz=MzkyMzI3NzQ0Mg%3D%3D&mid=2247494105&idx=1&sn=8d7409e0fb846a3c7803c142b5d1a8e7
-3,2026-08-20,产品,FastMetal 让 Mac 本地 30 秒生成视频,一段 5 秒 480P 视频，完全在 Mac 上生成，耗时 30 秒。无需 CUDA，无需云端，仅占用 3.9 GiB 内存。 FastMetal 将 FastWan-QAD 系列带到 Apple Silicon。DiT、DMD 采样器和解码器均通过 MLX 在 Metal 上运行，默认 INT8。 三个模型：1.3B 支持 480P，5B 支持 720P，14B 追求画质。 📷 博客：http://haoailab.com/blogs/fastmetal 📷 代码：http://github.com/hao-ai-lab/FastVideo 📷 模型…,X：Sky Computing Lab (@haoailab),https://x.com/haoailab/status/2090177721913770407
-4,2026-08-20,产品,Google 搜索推出 5 项 AI 学习工具,Google 在搜索中推出 5 项 AI 学习工具。AI Mode 的生成式 UI 已全球上线英文版，支持交互式可视化与自定义模拟；练习测验现已在 AI Overviews 和 AI Mode 中免费提供英文版，覆盖 ACT、SAT 等标准化考试。,Google Blog：AI（RSS）,https://blog.google/products-and-platforms/products/search/back-to-school-study-tools
-5,2026-08-20,产品,Replit 推出由 GPT-5.6 Luna 驱动的 Free Mode，免费构建软件,Replit 推出由 GPT-5.6 Luna 驱动的 Free Mode，让用户无需担心 token 成本即可将想法转化为可运行的软件。该模式借助 GPT-5.6 系列的价格性能优势及 OpenAI 近期降价，向数百万用户开放，提供快速解答、建议与项目分析，并可在需要更高级推理时切换至 GPT-5.6 Sol，同时保留项目上下文。,OpenAI：官网动态（RSS · 排除企业/客户案例）,https://openai.com/index/replit
-6,2026-08-20,产品,Claude Code v2.1.236 发布：新增默认模型环境变量与跨会话闲置通知,Claude Code v2.1.236 新增 ANTHROPIC_DEFAULT_MODEL 环境变量，可设置新会话默认模型，且 /model 选择仍可覆盖并跨重启保留。,Claude Code：GitHub Releases（RSS）,https://github.com/anthropics/claude-code/releases/tag/v2.1.236
-7,2026-08-20,动态,Anthropic 在网络关键能力时代放缓模型开发：暂停 RL 训练并强化安全防护,Anthropic 因 OpenAI-Hugging Face 事件及即将推出的 Astra 模型可能达到“关键网络安全能力阈值”，暂时放缓模型扩展速度，包括暂停最新模型两周的强化学习（RL）训练。公司已加强研究环境安全要求，包括工作负载隔离、网络隔离和持续安全测试，并扩大思维链监控范围。涉及 Astra 或网络模型的工作负载需满足最严格安全标准，部分训练和评估工作仍处于暂停状态。,Hacker News 热门（buzzing.cc 中文翻译）,https://openai.com/index/pacing-model-development-cyber-capabilities
-8,2026-08-20,动态,OpenRouter 宣布加入 Stripe,OpenRouter 宣布与 Stripe 合并，以加速推动全球经济增长。OpenRouter 目前每日处理来自 400 多个 AI 模型的 10+ 万亿 token，服务超 1000 万开发者与公司，自成立以来推理量每年至少增长 10 倍。合并后 OpenRouter 将继续以原名、原使命独立运营，产品与路线图不变，路由决策仍以用户利益为先，交易预计在未来数周内完成。,OpenRouter：Announcements（RSS）,https://openrouter.ai/blog/announcements/openrouter-is-joining-stripe
-9,2026-08-20,研究,突破 DeepSeek-V4-Pro 服务极限：H20 上的多场景优化方法,LMSYS 团队针对 1.6 万亿参数的 MoE 模型 DeepSeek-V4-Pro，在 H20 GPU 上通过场景化服务配置逼近 B300 性能。单节点 H20-141GB 参考实现达 271 output tokens/s，与 B300 的 383.7 tokens/s 性能差距缩小至 1.42×。,LMSYS：Blog（Chatbot Arena 团队）,https://www.lmsys.org/blog/2026-08-19-deepseek-v4-pro-engine-optimization-h20
-10,2026-08-20,研究,苹果研究：LLM 类人行为的多维度分析——模型行为、用户因素与系统提示词的影响,"苹果机器学习研究团队对 LLM 的类人行为（如表达想法与情绪、与用户建立关系、拒绝请求并保持边界）进行了多维度分析，涵盖其普遍性、潜在影响与可控性。研究采用 LLM-as-a-judge 与人工评估相结合的方法，样本规模超过 21,000 条数据，旨在为研究者与实践者提供关于何时及何种类型类人行为的决策依据。",Apple Machine Learning Research（RSS）,https://machinelearning.apple.com/research/human-like-behaviors-llms
-11,2026-08-20,研究,倒排索引遍历的 P-完全性：布尔查询 DAG 的复杂度评估,现代 AI 智能体依赖搜索基础设施执行神经符号推理，常编译为深层嵌套的非单调布尔查询。标准倒排索引查询评估策略面临严重理论限制：有状态迭代器模型（Document-at-a-Time）受 NC^1 公式评估结构约束，展开重汇聚逻辑时最坏情况查询复杂度呈 O(2^|Q|) 指数级爆炸。,Apple Machine Learning Research（RSS）,https://machinelearning.apple.com/research/the-p-completeness-of-inverted-index-traversal
-12,2026-08-20,观点,GitHub Copilot app 初学者教程：用 My work 面板管理你的工作,GitHub Copilot app 的 My work 面板将拉取请求和问题集中在一处管理，内置 All、Active、Review requests、Done 四个默认视图，并支持创建自定义视图与过滤器。用户可从问题或拉取请求直接启动新的智能体会话，也可批量选择多个条目创建会话，还能在列表视图和表格视图间切换，并调整仓库范围或新建问题。,GitHub Blog,https://github.blog/ai-and-ml/github-copilot/github-copilot-app-for-beginners-managing-your-work
-13,2026-08-20,观点,Slack 如何构建人机智能体团队：对话即知识,Slack 首席产品官 Jaime DeLanghe 分享了将对话转化为机构知识、构建人机智能体团队的最佳实践。她主张默认使用公开频道，让智能体从可见对话中学习，并建议将会议、邮件、日历等上下文连接起来以减少重复劳动。在 Slack 中由 Claude 驱动的智能体负责起草、总结、监控等生产工作，人类负责审查、决策与交接，形成循环协作。,Claude：Blog（网页）,https://claude.com/blog/turning-conversation-into-knowledge-how-slack-builds-human-agent-teams
-14,2026-08-20,观点,Databricks 如何从单一提示词设计高效的 Genie Agents,Databricks 发布指南，探讨如何从单一提示词设计高效的 Genie Agents。文章指出，通用智能体在处理收入等查询时，往往只会抓取第一个相关数据表，而 Genie Agents 通过更精准的提示词设计，能更准确地定位和回答用户问题。该指南旨在帮助开发者优化智能体行为，提升查询结果的准确性和相关性。,Databricks：Blog（RSS）,https://www.databricks.com/blog/designing-effective-genie-agents-single-prompt
-15,2026-08-19,产品,Sentence Transformers v6.0 新增 MultiVectorEncoder，支持 ColBERT 风格多向量模型,Sentence Transformers v6.0 新增第四种模型类型 MultiVectorEncoder，可直接加载 PyLate、Stanford-NLP ColBERT 及 colpali-engine 检查点，用于 ColBERT 式晚期交互检索。,Hugging Face：Blog（RSS）,https://huggingface.co/blog/multi-vector-encoder
-16,2026-08-19,产品,Mojo 语言正式开源，编译器与工具链全面开放,Mojo🔥 语言现已正式开源，采用 Apache 2.0 许可证（含 LLVM 例外），编译器、工具链及全部源码已发布至 modular GitHub 仓库。Mojo 上周刚达成 1.0 版本（源码稳定），此次开源涵盖整个编译器与工具链。目前暂不接受编译器相关贡献，计划年底前开放，标准库自 2024 年起已接受社区贡献。,Hacker News 热门（buzzing.cc 中文翻译）,https://www.modular.com/blog/mojo-open-source
-17,2026-08-19,产品,Claude 现已支持 Gmail 邮件与 Google Drive 文件管理,Claude 现在可以在 Gmail 中发送邮件，并管理 Google Drive 中的文件。 让 Claude 回复某个邮件线程，它会起草并发送回复。你可以控制何时需要你的批准。 从连接器菜单中选择连接 Gmail 或 Google Drive 即可试用。所有付费套餐均可用。,X：Claude (@claudeai),https://x.com/claudeai/status/2089806039088517356
-18,2026-08-19,产品,OpenAI 推出 ChatGPT for Teens：面向青少年的学习体验与更强安全保护,OpenAI 发布 ChatGPT for Teens，为 13-17 岁用户自动启用，内置更强安全保护与家长控制。新增 Study Mode、负责任作业提醒、测验与学习可视化，以及可设定默认开启时段的 Study Hours，引导青少年分步解题而非直接给答案。OpenAI 同时宣布与 CodeAI 合作，帮助青少年理解、质疑并创造性地使用 AI。,OpenAI：官网动态（RSS · 排除企业/客户案例）,https://openai.com/index/chatgpt-for-teens
-19,2026-08-19,产品,Git 大规模托管为何如此困难,Git 的分布式设计使其大规模托管面临固有挑战：packfile 作为存储和网络传输的基础单元，在服务器端成为可用性与扩展性的瓶颈。业界曾尝试三种方案——分布式文件系统、分布式 packfile、分布式 Git 本身，其中对象级分布式存储因 Git 协议要求网络传输 packfile 导致 clone 性能不佳而被放弃。,Cursor Blog,https://cursor.com/blog/git-at-any-scale
-20,2026-08-19,产品,Claude Science 产品指南：面向生命科学研究的 AI 工作台,Anthropic 发布 Claude Science（测试版），一个覆盖生命科学数字化流程的 AI 工作台，支持数据分析、图表生成与结果产出，并可通过本地守护进程将重任务调度至自有 GPU、SLURM 集群或云账户。,Claude：Blog（网页）,https://claude.com/blog/the-claude-science-product-guide
-21,2026-08-19,动态,OpenAI 启动新计划，强化国家安全领域 AI 的民主监督,OpenAI 启动新计划，帮助民主监督机构发展专业能力与工具，以理解和监督政府将 AI 用于国家安全。未来一年，OpenAI 将提供 500 万美元用于培训、技术支持和 OpenAI 积分，并与监督机构试点工具，帮助授权审查员检查 AI 辅助政府决策的相关记录。OpenAI 强调 AI 应增强而非取代人类判断，且不承担对政府的监督角色。,OpenAI：官网动态（RSS · 排除企业/客户案例）,https://openai.com/index/strengthening-democratic-oversight-in-national-security
-22,2026-08-19,研究,Claude 如何加速蛋白质设计与分析化学研究,Anthropic 公布两项实验：Claude（Mythos Preview 和 Opus 4.8）针对 15 个靶点设计蛋白质结合剂，成功 14 个，命中率达 22.6%-35.1%。,Anthropic：Research（发表成果 · 网页）,https://www.anthropic.com/research/Claude-accelerates-protein-design
-23,2026-08-19,研究,智能体记忆并非越多越好：八款模型评测显示剂量需按能力校准,智能体记忆并非可随意开启的功能，而是需按模型能力校准的剂量。强模型适合注入完整指南集，DeepSeek-V3.2（671B MoE）任务完成率提升+9.5个百分点；较弱模型采用精选检索效果最佳，gpt-oss-120b（117B MoE）提升+16.1pp且仅增加+5% token。该方法无需更新权重或人工标注，通过从智能体过往轨迹中蒸馏指南并在推理时注入实现。,Hugging Face：Blog（RSS）,https://huggingface.co/blog/ibm-research/altk-evolve-hmm
-24,2026-08-19,研究,GRPO 超越英语：多语言与非英语环境下的大规模研究,一项大规模实证研究考察了 GRPO 在多语言和非英语环境下的表现，覆盖多种基础模型、训练语言及推理语言奖励设置。研究发现，以母语进行推理训练与英语推理训练之间的性能差距很小，表明 RLVR 在非英语场景下同样有效。该研究为多语言推理模型的强化学习训练提供了重要参考。,Apple Machine Learning Research（RSS）,https://machinelearning.apple.com/research/grpo-beyond-english
-25,2026-08-19,研究,MVICAD2：引入延迟与膨胀的多视图独立成分分析,巴黎-萨克雷大学等机构提出MVICAD2，允许不同被试的脑源在时间延迟和膨胀两方面存在差异，以解决MVICA假设过于严格、仅估计延迟不足以刻画听觉刺激等脑动态的问题。该模型源可识别，似然有闭式近似，并通过正则化与优化提升性能。模拟显示其优于现有方法，Cam-CAN数据集验证了延迟和膨胀与衰老相关。,Apple Machine Learning Research（RSS）,https://machinelearning.apple.com/research/mvicad2-delays-dilations
-26,2026-08-19,观点,设计 AI 评测：先求清晰，再谈可视化,本文演示如何用开源评测框架 Inspect AI 和 Harbor 评估 agent 技能，并借助 Google Sheets 和 Data Studio 进行可视化分析。,Google AI：DEV 作者专属（RSS）,https://dev.to/googleai/designing-ai-evals-clarity-now-and-visualization-next-4eii
-27,2026-08-19,观点,OpenAI 在“关键网络能力”时代放缓模型开发节奏,OpenAI 因 OpenAI-Hugging Face 事件及即将推出的 Astra 模型可能达到《预备框架》下的“关键网络安全能力”阈值，暂时放缓了模型扩展速度，包括暂停最新部署模型的强化学习训练两周，并搁置最大规模前沿 RL 运行。公司已加强研究环境安全，要求对 Astra 及网络相关负载实施最严格防护，并扩展思维链监控，采用多阶段激活分类器检测机制。,OpenAI：官网动态（RSS · 排除企业/客户案例）,https://openai.com/index/pacing-model-development-cyber-capabilities
-28,2026-08-19,观点,Claude Tag 如何担任 Anthropic CI/CD 故障的一线响应者,Anthropic 的 CI 工程师用 Claude Tag 构建了值班智能体，作为 CI/CD 故障的一线响应者。Claude 在事故发生后中位 14 分钟发布首份基于证据的分析，最快案例中 3 分钟内验证修复并确认错误率恢复基线。该方案通过 Slack 频道、Datadog 或 Grafana 工具访问及 GitHub 技能文件实现，Anthropic 已发布通用设置套件供其他团队部署。,Claude：Blog（网页）,https://claude.com/blog/ai-ci-cd-on-call
-29,2026-08-19,观点,笔记本模型也能媲美云端前沿模型：Qwen3.8-27B 登顶智能指数,作者将 Qwen3.8-27B 装入智能体后表现优异，该模型在 Artificial Analysis 智能指数中排名 135 款模型之首，得分 52，超过 Z.ai 的 753B 参数开源模型 GLM-5.2（51 分）。,Tomer Tunguz 博客（VC 分析）,https://www.tomtunguz.com/birds-dont-fly-like-planes-neither-does-ai
-30,2026-08-19,观点,Populous 如何用 Runway 呈现全球标志性场馆设计,全球设计公司 Populous 高级建筑师 Georgina Myers 介绍团队用 Runway 辅助体育场馆概念设计：过去完整视频需外部渲染团队至少三周，且提交前两周须冻结设计模型；如今 Runway 能生成传达尺度感的完整渲染和航拍图，将视觉制作时间缩短，让设计师把时间还给设计本身。该工具已用于利雅得 MBS 体育场等中东项目，支持 9 种不同活动模式的场景迭代。,Runway：News（网页）,https://runwayml.com/news/customers/populous
-31,2026-08-18,产品,Cursor 推出 Origin 代码托管服务，作为 GitHub 的替代方案,Cursor 今日起向所有付费计划用户开放 Origin 代码托管的早期测试版，提供仓库、拉取请求、代码浏览及 GitHub 同步功能。用户可创建以 cursor.com/codebase/ 为前缀的仓库，或将 GitHub 仓库同步至 Origin，双向同步评论与审查。Vercel、Depot 和 Buildkite 集成已可用，智能体功能即将推出。,Hacker News 热门（buzzing.cc 中文翻译）,https://cursor.com/changelog/origin-code-hosting
-32,2026-08-18,产品,OpenRouter 推出 Activity 仪表盘与 Analytics API：按智能体、模型、请求追踪 AI 使用成本,OpenRouter 发布 Activity 仪表盘和 beta Analytics API，可按智能体、模型、请求维度查看支出、token 量、缓存命中率等指标，并支持下钻至单条请求日志。,OpenRouter：Announcements（RSS）,https://openrouter.ai/blog/announcements/activity-dashboard
-33,2026-08-18,产品,OpenRouter 图像生成 API：代码优先的接入教程,OpenRouter 推出专用图像生成 API，通过统一请求格式和单一密钥即可调用多个提供商的图像模型。开发者向 POST /api/v1/images 发送请求，响应中的 data[0].b64_json 包含 base64 编码的图像数据，解码后即可保存为本地文件。教程演示了 Python 和 JavaScript 两种实现，并支持通过 input_references 传入参考图像生成变体。,OpenRouter：Announcements（RSS）,https://openrouter.ai/blog/tutorials/image-generation
-34,2026-08-18,产品,AgentCore Payments 中间件为 LangChain 智能体提供 API 支付能力,AgentCore Payments 中间件让 LangChain 智能体以确定性会话预算支付 API 费用。该中间件为 x402 支付签名，LangSmith 可追踪每一笔支付记录。,LangChain：Blog（RSS）,https://www.langchain.com/blog/langchain-agentcore-payments
-35,2026-08-18,产品,Claude Code v2.1.234 发布：新增项目目录名变量与 GitLab MR 徽章，修复多项安全与稳定性问题,Claude Code v2.1.234 新增可选 CLAUDE_CODE_PROJECT_DIR_NAME 环境变量、selection:clear 键绑定及 GitLab MR 徽章，并在用量限制重置后自动继续会话。,Claude Code：GitHub Releases（RSS）,https://github.com/anthropics/claude-code/releases/tag/v2.1.234
-36,2026-08-18,动态,NVIDIA 与 SB Energy 合作锁定俄亥俄州 PORTS-Pike 园区电力容量，OpenAI 将入驻,NVIDIA 宣布与 SB Energy 合作，锁定俄亥俄州 PORTS-Pike 科技园区的电力容量（LPS）以独家部署 NVIDIA 算力，OpenAI 将成为租户。,NVIDIA Blog（RSS）,https://blogs.nvidia.com/blog/securing-the-infrastructure-of-intelligence
-37,2026-08-18,动态,A 股迎来“人形机器人第一股”，宇树科技官宣 8 月 19 日科创板上市,宇树科技宣布股票将于 2026 年 8 月 19 日在科创板上市，发行价 150.80 元/股，对应市值约 609.93 亿元，预计募资约 60.99 亿元。该公司 2023 至 2025 年营收分别为 1.59 亿元、3.93 亿元和 16.99 亿元，净利润分别为-1114.51 万元、9547.47 万元和 2.78 亿元，是全球少数实现盈利的高性能通用机器人公司。,IT之家（RSS）,https://www.ithome.com/0/990/812.htm
-38,2026-08-18,动态,404 Media 追踪珍本图书流向：亚马逊批量购书扫描用于 AI 训练后销毁,404 Media 通过在一本珍本图书中放置追踪设备，首次揭露亚马逊未公开的购书行动：批量购入大量书籍，扫描用于 AI 训练数据，随后销毁。追踪显示这些书最终被送往亚马逊的一处人工智能训练中心。,Hacker News 热门（buzzing.cc 中文翻译）,https://www.404media.co/we-tracked-a-shipment-of-rare-books-it-ended-at-an-amazon-ai-training-facility
-39,2026-08-18,动态,OpenAI 为 14 个独立项目提供资助，推动智能时代经济机遇与韧性研究,OpenAI 宣布向 14 个由独立组织主导的项目提供总计 100 万美元资金及最高 100 万美元 API 额度，以推动 AI 进步下的经济机遇与社会韧性研究。,OpenAI：官网动态（RSS · 排除企业/客户案例）,https://openai.com/index/new-policy-ideas-for-the-intelligence-age
-40,2026-08-18,研究,PhotoScan：用智能手机照片估算胰岛素抵抗，精度接近DXA,Google Research 推出 PhotoScan，一种从智能手机 2D 照片直接估算三维身体成分的深度学习框架，可预测胰岛素抵抗，在临床研究中精度接近 DXA 扫描。,Google Research：Blog（网页）,https://research.google/blog/seeing-beyond-bmi-estimating-cardiometabolic-risk-with-smartphone-imagery
-41,2026-08-18,观点,OpenAI 如何用前沿智能加固自身防御：The Defender’s Window,OpenAI 在 OpenAI-Hugging Face 事件后反思低估了模型真实网络攻击能力，正通过四大支柱强化自身安全：用 Codex 验证代码漏洞、用智能体优先分流安全告警、持续枚举攻击路径，并仅向可信防御者开放网络能力。文中演示 ChatGPT Work（基于 GPT-5.6 Sol）15 分钟发现个人网站 13 个问题并在一小时内完成修复。,OpenAI：官网动态（RSS · 排除企业/客户案例）,https://openai.com/index/the-defenders-window
-42,2026-08-18,观点,如何禁用或避免侵入式 AI：一份覆盖 Windows、Chrome、Edge、Firefox 及主流应用的实用指南,一份面向希望减少技术环境中侵入式 AI 的用户的操作指南，涵盖 Adobe Acrobat、Android/Gemini、Apple Intelligence、Chrome、Edge、Firefox、DuckDuckGo、Google Workspace、Slack、WhatsApp 及 Windows 11/Copilot 等平台。,Hacker News 热门（buzzing.cc 中文翻译）,https://www.librarian.net/notoai
-43,2026-08-18,观点,用 Google 的 Agent Development Kit 构建零信任 AI 智能体,Google 开源了基于 ADK 和 Gemini 的零信任客服与退货智能体示例，演示如何防御提示注入等攻击。该架构在 LLM 上下文之外通过三层硬性安全机制保障：硬件支持的加密签名确保数据库写入不可抵赖、gVisor 沙箱隔离动态代码执行、确定性语义网关校验业务逻辑。系统提示词只是软约束，无法作为安全边界。,Google Developers Blog（RSS）,https://developers.googleblog.com/build-zero-trust-ai-agents-with-googles-agent-development-kit
-44,2026-08-18,观点,开源模型生态的未来：Nvidia 押注“教所有人炼 token”,开源模型生态正日益依赖 Nvidia 的资助，其已投入 260 亿美元推动近乎开源的模型开发，以扩大推理芯片需求。若此路径不奏效，开源模型将转向效率、可修改性等长尾场景，与闭源模型分化。同时，基础模型训练门槛升高，开源社区兴趣正从全量训练转向对 DeepSeek V4 Flash、GLM 5.X 等模型的微调。,Nathan Lambert：Interconnects（RSS）,https://www.interconnects.ai/p/teaching-everyone-to-fish-for-tokens
-45,2026-08-18,观点,同一集群利用率提升 33 个百分点：改变的是分配顺序,Hugging Face 构建了一个约束感知的 GPU 分配器，并在七个基准场景中与 FIFO 调度器对比。在相同硬件和负载下，GPU 利用率最高提升 33 个百分点，优先级加权输出在全部场景中均上升，最高达 105%。分配器将实时推理需求按曲线而非峰值处理，批量任务按优先级跨整个调度周期排序，从而回收了预留闲置容量。,Hugging Face：Blog（RSS）,https://huggingface.co/blog/Dharma-AI/gpu-management-pt2
-46,2026-08-18,观点,ABC Legal 如何借助 Claude Managed Agents 让每位员工成为构建者,"ABC Legal 为 1,100 名员工部署 Claude Enterprise 后，通过 Claude Managed Agents 将零散实验转变为受治理的智能体体系，截至 2026 年 7 月已上线 50 多个生产级智能体，部分覆盖的人工任务成本降低约 50%，约 310 名员工日常使用 Claude。",Claude：Blog（网页）,https://claude.com/blog/how-abc-legal-turned-every-employee-into-a-builder-with-claude-managed-agents
-47,2026-08-18,观点,当模型持续学习：测试时训练如何改变 AI 的记忆与成本,测试时训练（Test-time training）让模型在使用中持续更新权重，而非训练结束后冻结。相比标准 Transformer，其内存需求从随上下文线性增长变为恒定，斯坦福研究显示推理速度最高可提升 2.7 倍，且 In-Place TTT 无需重训即可将 4B 模型提升至 128k 上下文性能。但代价是每个用户需独立模型副本，服务成本转向算力与芯片，更适合编码助手等个性化场景。,Tomer Tunguz 博客（VC 分析）,https://www.tomtunguz.com/test-time-training-impact
-48,2026-08-18,观点,SGLang 重构 CUDA Graph 支持，Breakable CUDA Graph 成 prefill 默认方案,"SGLang 重构 CUDA Graph 支持，通过 runner/backend 接口拆分使不同捕获策略可复用。其社区首创的 Breakable CUDA Graph（BCG）现为 prefill 默认方案，代码量仅为 torch.compile 方案的约四分之一（521 行对比 1,771 行），构建速度快 3.8–5.2 倍。",LMSYS：Blog（Chatbot Arena 团队）,https://www.lmsys.org/blog/2026-08-17-advanced-cuda-graph
-49,2026-08-17,观点,Qwen 3.8 27B 表现出色，但默认推理强度过高导致过度思考,阿里 Qwen 实验室发布 Apache 2 许可的 27B 参数视觉大模型 Qwen 3.8 27B，官方基准显示其超越前代 Qwen 3.6 27B 及闭源 Qwen 3.7-Plus。,Simon Willison 博客,https://simonwillison.net/2026/Aug/16/qwen-38-27b
-50,2026-08-17,观点,The hyping of Anthropic’s IPO,对 Anthropic IPO 静默期流传的 2028 年 1900 亿美元级营收预测，文章提示其多基于匿名信源和未披露算法，可帮助在追踪上市进展时区分已核实数据与传闻。,Gary Marcus：The Road to AI We Can Trust（RSS）,https://garymarcus.substack.com/p/the-hyping-of-anthropics-ipo
-51,2026-08-16,研究,AI生成书籍正淹没亚马逊，并拉低人类作者的单书收入,"一项对14,419本自出版电子书的分析显示，AI生成书籍正以数量而非质量挤占人类作者市场，即便未检测到AI文本的书籍，单书收入也在下滑。2023年Q1至2026年Q1，书目总量增长38.3倍，而季度收入仅增长8.9倍；在八个类型中，七个类型的无AI文本书籍单书收入下降。",The Decoder：AI News（RSS）,https://the-decoder.com/ai-generated-books-are-flooding-amazon-and-tanking-sales-for-human-authors
-52,2026-08-15,模型,dots3-note Preview 开源：280B 参数轻量模型，主打长程智能体与多模态推理,小红书技术开源 dots3-note Preview，这是 dots3 系列最轻量模型，总参数 280B、激活参数 16B，支持 512K 上下文及文本、视觉、语音多模态理解，并针对复杂推理和长程 Agent 任务优化。,公众号：小红书技术（dots.llm）,https://mp.weixin.qq.com/s?__biz=Mzg4OTc2MzczNg%3D%3D&mid=2247496140&idx=1&sn=5239a5fbb115c58d2ae0056bb32789ff
-53,2026-08-15,模型,GLM-5.3 发布：编程能力开源第一，并涌现网络安全能力,智谱发布GLM-5.3，基于与GLM-5.2相同的基座，通过极致的后训练Scaling提升智能上界，编程能力较前代提升50%，在Terminal Bench 3.0等公开基准中取得开源第一，并接近Claude Fable 5。模型在白盒代码审查等安全任务中表现持平Mythos 5，在CyberGym测试中得分84.5%。模型权重将在两周后开源，即日起上线ZCode、AutoClaw等工具。,公众号：智谱（GLM）,https://mp.weixin.qq.com/s?__biz=MzkyMzI3NzQ0Mg%3D%3D&mid=2247494084&idx=1&sn=a2e5cd9a534a4825feb3633ea1b6d492
-54,2026-08-15,模型,Gemini 3.7 Flash 全面上线 Pro 与 Ultra 用户,Gemini 3.7 Flash 现已向 Gemini 聊天中的 Pro 和 Ultra 用户开放。该模型更新提升了多步骤任务的推理与准确性，如智能整合数十个文件和邮件为一份主文档。同时，Gemini Spark 也已运行于 3.7 Flash，通过改进对 Google Workspace 应用的工具调用，让个人 AI 智能体更精准。,X：Gemini (@GeminiApp),https://x.com/GeminiApp/status/2088326407730692538
-55,2026-08-15,模型,DeepSeek V4 Pro 登陆硅基流动，1M 上下文,DeepSeek-V4-Pro-0813 正式上线硅基流动 SiliconFlow，提供 Day-0 支持，具备 1M 上下文窗口及低/高/最大三档推理强度，更侧重编码、工具调用与智能体工作流，仍保持 MIT 开源协议。定价为输入 \$1.32/M、输出 \$3.96/M、缓存命中 \$0.44/M。同系列 DeepSeek-V4-Flash-0731 则面向追求速度与成本效益的日常生产场景。,X：硅基流动 SiliconFlow (@SiliconFlowAI),https://x.com/SiliconFlowAI/status/2088127458558271885
-56,2026-08-15,产品,Claude Code v2.1.233 发布：新增 GitLab MR 支持与内存 cgroup 限制,Claude Code v2.1.233 发布，为 --worktree 标志和 agents 视图新增 GitLab 合并请求 URL 支持，并添加可选的 forward_user_identity 网关设置以按用户归因支出。,Claude Code：GitHub Releases（RSS）,https://github.com/anthropics/claude-code/releases/tag/v2.1.233
-57,2026-08-15,动态,OpenAI and Anthropic in price war as Chinese AI rivals gain ground,价格战让模型API的成本弹性成为现实，原先因账单压力转向中国厂商的用户，可能在OpenAI和Anthropic降价后重新比较能力与价格。,Ars Technica：AI（RSS）,https://arstechnica.com/ai/2026/08/openai-and-anthropic-in-price-war-as-chinese-ai-rivals-gain-ground
-58,2026-08-15,动态,Cursor 正式被 SpaceX 收购,Cursor 已被 SpaceX 正式收购，完成自 4 月启动的收购流程。合并后 Cursor 将获得全球最大 GPU 集群，以构建更强且运行成本更低的模型，从而以更低价格向客户提供更强大的模型。本周三发布的 Grok 4.6 是双方合作成果的早期体现。,Cursor Blog,https://cursor.com/blog/joining-spacex
-59,2026-08-15,动态,Claude 文本水印机制如何运作,未来 Claude 模型生成的文本将包含水印，用于判断文本由 Claude 撰写的可能性，这是 Anthropic 为遵守欧盟《AI 法案》而实施的变更。该方法基于 Google DeepMind 的 SynthID-Text 技术，对输出质量、创造力和可读性无实际影响，读者无法区分水印文本与普通文本，且不增加额外 token 或成本。,Anthropic：Newsroom（网页）,https://www.anthropic.com/news/claude-text-watermark
-60,2026-08-15,动态,印尼首个大学AI中心落成：UGM、Indosat与NVIDIA合作培养本地AI人才,印尼通信与数字事务部、Indosat、NVIDIA与加查马达大学（UGM）在日惹共同启动UGM Indosat NVIDIA AI技术中心（NVAITC），这是该国首个大学AI技术中心。,NVIDIA Blog（RSS）,https://blogs.nvidia.com/blog/ugm-indosat-nvidia-ai-technology-center
-61,2026-08-15,观点,2026年夏季开源模型生态观察：中国前沿模型规模领先，AMD与NVIDIA主导发布量,2026年1至8月，Hugging Face公开模型仓库从243万增至296万，但85.6%的模型下载量不足200次，1.5%的仓库占据99.2%下载量。中国实验室月度最大开源模型参数规模在754B至2.78万亿之间，美国实验室七个月中五个月低于130B。AMD与NVIDIA各发布超200个新模型仓库，成为发布开源模型最多的机构。,Hugging Face：Blog（RSS）,https://huggingface.co/blog/state-of-open-models-summer-2026
-62,2026-08-15,观点,Claude Code 会话如何最大化 token 价值,Claude Code 的 token 成本由模型、输入/输出 token 和提示缓存三因素决定，输出 token 价格约为输入的 5 倍。任务间运行 /clear 可减少无关上下文回传，降低 token 用量；会话中途切换模型或 effort 级别会破坏提示缓存，增加成本。,Claude：Blog（网页）,https://claude.com/blog/maximizing-the-value-of-your-claude-code-sessions
-63,2026-08-15,观点,蚂蚁百灵与 ASystem 团队打通单机 Agentic RL 后训练闭环,蚂蚁百灵与 ASystem 团队合作，用 Ling-3.0-tiny 和 AReno 在 DGX Spark 上跑通单机 Agentic RL 后训练闭环。以井字棋为最小验证任务，用 GSPO 算法训练 400 步后，rollout/rewards_mean 从约 -0.5 升至 0.4，response_len 降至约 850 tokens，工具调用与动作选择趋于稳定。,公众号：蚂蚁百灵（Ling）,https://mp.weixin.qq.com/s?__biz=MzkyODk2MDQwNw%3D%3D&mid=2247487525&idx=1&sn=b9def9117e34b45fce50ab76eeed726c
-64,2026-08-15,观点,OpenRouter 视觉指南：如何通过 API 向多模态模型发送图像,OpenRouter 发布视觉指南，详解通过 Chat Completions API 向多模态模型发送图像的方法。请求体采用 messages 数组，用户消息的 content 包含 text 和 image_url 两部分，支持公开 URL 或 base64 数据 URL 两种格式，兼容 PNG、JPEG、WebP 和 GIF。,OpenRouter：Announcements（RSS）,https://openrouter.ai/blog/tutorials/send-image-to-llm
-65,2026-08-15,观点,谁真的需要SOTA模型？OpenRouter数据显示84%token来自非前沿模型,OpenRouter数据显示，84%的模型token并非来自SOTA模型，用户最常用的六款模型性能约为前沿模型的77%，成本仅为Claude Fable 5的2.5%。8月10日当周，六款模型承载了80%流量，混合价格约\$0.50/百万token，而Fable 5为\$20。最佳开源模型性能已从一年前的48%提升至前沿模型的80%，企业正转向更小、微调或开源模型以优化性价比。,Tomer Tunguz 博客（VC 分析）,https://www.tomtunguz.com/model-release-exhaustion
-66,2026-08-15,观点,Databricks 如何在数据仓库中使用 AI_Functions：主要用例解析,Databricks 探讨在数据仓库中应用 AI_Functions 的主要场景，帮助组织在结构化数据之外处理非结构化数据。文章聚焦于如何通过该功能将 AI 能力直接集成到 SQL 工作流中，以扩展数据仓库的分析边界。具体用例与实现细节以原文为准。,Databricks：Blog（RSS）,https://www.databricks.com/blog/using-aifunctions-your-data-warehouse-top-use-cases
+1,2026-08-21,模型,阿里发布 Qwen-UI-Agent，主打让模型真正“会用”每一块屏幕,阿里巴巴正式推出 Qwen-UI-Agent，一个以真实世界为中心的 GUI 智能体基座模型，覆盖移动端、电脑端、网页端及深度搜索（DeepSearch）环境。,IT之家（RSS）,https://www.ithome.com/0/992/239.htm
+2,2026-08-21,模型,Hugging Face 发布 LFM2.5 系列 DSpark 草稿模型，推理速度最高提升 3.18 倍,Hugging Face 发布 LFM2.5 系列三款模型的 DSpark 草稿模型检查点，通过投机解码在不改变输出质量的前提下，GPU 吞吐最高提升 3.18 倍，端侧最高 2.87 倍。草稿模型约 300M 参数，LFM2.5-2.6B 函数调用延迟平均降低 57%，已开源支持 llama.cpp 和 SGLang。,Hugging Face：Blog（RSS）,https://huggingface.co/blog/LiquidAI/lfm25-dspark
+3,2026-08-21,产品,Mistral 推出 Agentic Search：多步检索提升 AI 系统复杂文档查询准确率,Mistral 发布 Agentic Search，通过 search、open、navigate、read、grep 五工具的多步检索循环，让模型在长文档与多来源中查找、定位并验证信息。,Mistral AI：News（网页）,https://mistral.ai/news/agentic-search
+4,2026-08-21,产品,AlloyDB ScaNN 如何将向量搜索扩展到 100 亿向量,AlloyDB 的 ScaNN 索引现已支持超过 100 亿向量的规模，通过全新的四层树架构（预览版）实现，将查询复杂度从 O(N^1/2) 降至 O(N^1/4)。内部测试中，该架构在 100 亿向量规模下可实现 p95 延迟不超过 51 毫秒、召回率达 95%。该功能可通过快速入门指南部署，新用户可享受 30 天免费试用。,Google Cloud：Databases（RSS）,https://cloud.google.com/blog/products/databases/alloydb-scann-index-four-level-tree-improves-vector-search
+5,2026-08-21,产品,Claude Platform 正式上线 Computer Use、Skills API 与 Files API，新增浏览器操作工具,Anthropic 宣布 Computer Use、Skills API 与 Files API 在 Claude Platform 全面可用，并新增浏览器操作工具，让智能体可操作软件、调用团队技能并返回成品文件。,Claude：Blog（网页）,https://claude.com/blog/computer-use-skills-api-files-api
+6,2026-08-21,产品,Anthropic 如何开展 AI 教学,Anthropic 发布 Claude Academy，为全球数百万用户提供 AI 教学资源，帮助其安全、有效地使用 AI。该学院课程借鉴其内部员工培训方法，包括 4D AI Fluency Framework 及“ever-boarding”持续学习项目，并强调以问题为中心、培养持久思维模式而非特定操作行为。,Claude：Blog（网页）,https://claude.com/blog/anthropics-approach-to-teaching-and-learning-ai
+7,2026-08-21,产品,Mooncake 如何为 Miles 强化学习系统实现高效批量 Rollout 数据传输,大规模 LLM 强化学习采用解耦架构后，rollout 数据从推理侧到训练侧的传输成为瓶颈。Mooncake 针对 Miles 系统中异构、碎片化的 rollout 数据（如 list[np.ndarray] 形式的 tokens、loss_masks、rollout_log_probs），通过批量 I/O 优化实现高效传输，同时满足效率、正确性、可扩展性、灵活性和可预测的交接延迟等要求。,LMSYS：Blog（Chatbot Arena 团队）,https://www.lmsys.org/blog/2026-08-20-miles-mooncake-rollout-data-transfer
+8,2026-08-21,产品,Claude Code v2.1.238 发布：新增 readline 键位、插件市场 headersHelper 与多项 Remote Control 修复,"Claude Code v2.1.238 发布，新增 keybindingFlavor 设置（可设为 ""readline"" 使 Ctrl+W 删除至前一个空白符），并为插件市场引入 headersHelper 以生成 HTTP 头。",Claude Code：GitHub Releases（RSS）,https://github.com/anthropics/claude-code/releases/tag/v2.1.238
+9,2026-08-21,产品,Claude Code v2.1.237 发布：修复 LLM 网关提示词缓存，新增“简洁”输出风格,Claude Code v2.1.237 修复了使用 LLM 网关或自定义 base URL 的会话中的提示词缓存问题，并新增内置“简洁”输出风格。该风格下 Claude 直接给出结果，跳过开场白和叙述，但工作完成度不变，可在 /config 的 Output style 下选择。,Claude Code：GitHub Releases（RSS）,https://github.com/anthropics/claude-code/releases/tag/v2.1.237
+10,2026-08-21,产品,LangSmith 预览构建：如何在合并前测试智能体变更,LangSmith 预览构建让团队在合并智能体变更前，于临时的、类生产环境的部署中测试拉取请求分支。该功能旨在降低变更上线风险，使智能体改动验证更贴近真实运行条件。,LangChain：Blog（RSS）,https://www.langchain.com/blog/langsmith-preview-builds-test-agent-changes-before-production
+11,2026-08-21,动态,消息称 OpenAI 首席财务官告知员工：公司最迟将于 2027 年上市,OpenAI 首席财务官萨拉·弗里亚尔在全员大会上告知员工，公司最迟将于 2027 年完成上市，若业务持续向好也可能更早。OpenAI 已于 6 月秘密提交 IPO 招股书，本季度整体年化营收增长 35%，企业级业务年化营收增长 50%，AI 编程与办公产品周活跃用户突破 2000 万。,IT之家（RSS）,https://www.ithome.com/0/991/886.htm
+12,2026-08-21,研究,数据受限下的多语言知识迁移：Apple 提出基于词汇干预的新方法,Apple 研究团队提出一种基于词汇干预的多语言知识迁移方法，旨在解决低资源语言训练数据不足时，模型难以从高资源语言获取科学推理、常识推断和世界知识的问题。该方法无需大量平行语料、翻译系统或辅助模型，为数据受限场景下的跨语言知识迁移提供了更高效的替代方案。,Apple Machine Learning Research（RSS）,https://machinelearning.apple.com/research/multilingual-knowledge-transfer-lexical-interventions
+13,2026-08-21,研究,数据约束下的混合预训练缩放定律,苹果机器学习研究团队通过2000余次语言模型训练实验，系统研究了稀缺目标数据与通用数据混合预训练中的权衡问题。研究发现，目标数据占比过低会导致模型对目标领域暴露不足，而占比过高则因重复样本过多引发收益递减乃至过拟合，为数据约束下的混合预训练策略提供了量化依据。,Apple Machine Learning Research（RSS）,https://machinelearning.apple.com/research/scaling-laws-mixture-pretraining
+14,2026-08-21,观点,Claude Code 初创公司指南：五大规则与创始人洞见,Anthropic 发布面向初创公司的 Claude Code 使用指南，基于对十余家高增长公司的调研，总结出“人人皆可交付、自动化繁琐工作、信任但验证、为重构而构建、原型-自用-产品化”五大规则。,Claude：Blog（网页）,https://claude.com/blog/claude-code-guide-for-startups
+15,2026-08-21,观点,OpenAI 推出 AI Futures 博客，探讨自由社会如何应对变革性 AI,OpenAI 新设 Strategic Futures 团队并推出博客 AI Futures，核心问题是自由社会应如何重构以在变革性 AI 出现时保障个人权利与自主权。团队认为，自主系统和机器智能的进步可能使国家无需依赖人力即可投射力量、征收税收并自动化官僚体系，从而削弱民众在谈判桌上的地位。文章主张借鉴美国开国元勋“以权力制衡权力”的思路，寻求建立并维持适当的权力平衡，而非彻底去中心化。,OpenAI：官网动态（RSS · 排除企业/客户案例）,https://openai.com/index/introducing-ai-futures
+16,2026-08-21,观点,Leopold 的愚蠢：一个年轻人如何象征一个时代,作者以“空头支票”式骗局为类比，指出生成式 AI 行业存在类似循环融资的投机成分，如以 OpenAI 股份为抵押贷款再购入更多股份。文章认为这些债务能否偿付高度不确定，可能最终带来数万亿美元利润，也可能落空，并呼吁需要不同的分析框架。,Gary Marcus：The Road to AI We Can Trust（RSS）,https://garymarcus.substack.com/p/leopolds-folly
+17,2026-08-21,观点,共和党因与大型科技公司关系陷入恐慌,共和党正因与大型科技公司的关系而陷入恐慌，原因是他们意识到大型AI议程在美国民众中极不受欢迎。特朗普已从反对AI监管转向强烈鼓励对前沿AI模型进行自愿预检测试。新成立的超级政治行动委员会Guardrails Alliance指出，共和党因早前向AI行业妥协而面临困境，正急于挽回局面。,Gary Marcus：The Road to AI We Can Trust（RSS）,https://garymarcus.substack.com/p/breaking-the-republican-party-is
+18,2026-08-20,模型,Liquid AI 发布 LFM2.5 系列 QAD Q4_0 量化检查点，恢复 97% 精度损失,Liquid AI 发布基于量化感知蒸馏（QAD）训练的 LFM2.5-230M、350M、1.2B-Instruct 和 2.6B 四款 Q4_0 GGUF 检查点，在保持原生 Q4_0 内存与速度的同时，恢复 BF16 平均精度损失的 97%。,Hugging Face：Blog（RSS）,https://huggingface.co/blog/LiquidAI/qad
+19,2026-08-20,产品,GLM-5.3上线：AA智能指数60分并列开源第一，成本更低,GLM-5.3 API即日上线，擅长复杂编码、防御性网络安全与长程任务，在AA综合智能指数中取得60分，与Claude Fable 5、GPT-5.6 Sol等闭源旗舰同级，并与Kimi K3并列开源模型第一。该模型以更小参数规模和更低调用成本降低前沿智能门槛，单任务成本为旗舰模型中最低。API定价与GLM-5.2持平，模型权重将于下周五开源。,公众号：智谱（GLM）,https://mp.weixin.qq.com/s?__biz=MzkyMzI3NzQ0Mg%3D%3D&mid=2247494105&idx=1&sn=8d7409e0fb846a3c7803c142b5d1a8e7
+20,2026-08-20,产品,FastMetal 让 Mac 本地 30 秒生成视频,一段 5 秒 480P 视频，完全在 Mac 上生成，耗时 30 秒。无需 CUDA，无需云端，仅占用 3.9 GiB 内存。 FastMetal 将 FastWan-QAD 系列带到 Apple Silicon。DiT、DMD 采样器和解码器均通过 MLX 在 Metal 上运行，默认 INT8。 三个模型：1.3B 支持 480P，5B 支持 720P，14B 追求画质。 📷 博客：http://haoailab.com/blogs/fastmetal 📷 代码：http://github.com/hao-ai-lab/FastVideo 📷 模型…,X：Sky Computing Lab (@haoailab),https://x.com/haoailab/status/2090177721913770407
+21,2026-08-20,产品,Google 搜索推出 5 项 AI 学习工具,Google 在搜索中推出 5 项 AI 学习工具。AI Mode 的生成式 UI 已全球上线英文版，支持交互式可视化与自定义模拟；练习测验现已在 AI Overviews 和 AI Mode 中免费提供英文版，覆盖 ACT、SAT 等标准化考试。,Google Blog：AI（RSS）,https://blog.google/products-and-platforms/products/search/back-to-school-study-tools
+22,2026-08-20,产品,Replit 推出由 GPT-5.6 Luna 驱动的 Free Mode，免费构建软件,Replit 推出由 GPT-5.6 Luna 驱动的 Free Mode，让用户无需担心 token 成本即可将想法转化为可运行的软件。该模式借助 GPT-5.6 系列的价格性能优势及 OpenAI 近期降价，向数百万用户开放，提供快速解答、建议与项目分析，并可在需要更高级推理时切换至 GPT-5.6 Sol，同时保留项目上下文。,OpenAI：官网动态（RSS · 排除企业/客户案例）,https://openai.com/index/replit
+23,2026-08-20,产品,Claude Code v2.1.236 发布：新增默认模型环境变量与跨会话闲置通知,Claude Code v2.1.236 新增 ANTHROPIC_DEFAULT_MODEL 环境变量，可设置新会话默认模型，且 /model 选择仍可覆盖并跨重启保留。,Claude Code：GitHub Releases（RSS）,https://github.com/anthropics/claude-code/releases/tag/v2.1.236
+24,2026-08-20,动态,Anthropic 在网络关键能力时代放缓模型开发：暂停 RL 训练并强化安全防护,Anthropic 因 OpenAI-Hugging Face 事件及即将推出的 Astra 模型可能达到“关键网络安全能力阈值”，暂时放缓模型扩展速度，包括暂停最新模型两周的强化学习（RL）训练。公司已加强研究环境安全要求，包括工作负载隔离、网络隔离和持续安全测试，并扩大思维链监控范围。涉及 Astra 或网络模型的工作负载需满足最严格安全标准，部分训练和评估工作仍处于暂停状态。,Hacker News 热门（buzzing.cc 中文翻译）,https://openai.com/index/pacing-model-development-cyber-capabilities
+25,2026-08-20,动态,OpenRouter 宣布加入 Stripe,OpenRouter 宣布与 Stripe 合并，以加速推动全球经济增长。OpenRouter 目前每日处理来自 400 多个 AI 模型的 10+ 万亿 token，服务超 1000 万开发者与公司，自成立以来推理量每年至少增长 10 倍。合并后 OpenRouter 将继续以原名、原使命独立运营，产品与路线图不变，路由决策仍以用户利益为先，交易预计在未来数周内完成。,OpenRouter：Announcements（RSS）,https://openrouter.ai/blog/announcements/openrouter-is-joining-stripe
+26,2026-08-20,研究,突破 DeepSeek-V4-Pro 服务极限：H20 上的多场景优化方法,LMSYS 团队针对 1.6 万亿参数的 MoE 模型 DeepSeek-V4-Pro，在 H20 GPU 上通过场景化服务配置逼近 B300 性能。单节点 H20-141GB 参考实现达 271 output tokens/s，与 B300 的 383.7 tokens/s 性能差距缩小至 1.42×。,LMSYS：Blog（Chatbot Arena 团队）,https://www.lmsys.org/blog/2026-08-19-deepseek-v4-pro-engine-optimization-h20
+27,2026-08-20,研究,苹果研究：LLM 类人行为的多维度分析——模型行为、用户因素与系统提示词的影响,"苹果机器学习研究团队对 LLM 的类人行为（如表达想法与情绪、与用户建立关系、拒绝请求并保持边界）进行了多维度分析，涵盖其普遍性、潜在影响与可控性。研究采用 LLM-as-a-judge 与人工评估相结合的方法，样本规模超过 21,000 条数据，旨在为研究者与实践者提供关于何时及何种类型类人行为的决策依据。",Apple Machine Learning Research（RSS）,https://machinelearning.apple.com/research/human-like-behaviors-llms
+28,2026-08-20,研究,倒排索引遍历的 P-完全性：布尔查询 DAG 的复杂度评估,现代 AI 智能体依赖搜索基础设施执行神经符号推理，常编译为深层嵌套的非单调布尔查询。标准倒排索引查询评估策略面临严重理论限制：有状态迭代器模型（Document-at-a-Time）受 NC^1 公式评估结构约束，展开重汇聚逻辑时最坏情况查询复杂度呈 O(2^|Q|) 指数级爆炸。,Apple Machine Learning Research（RSS）,https://machinelearning.apple.com/research/the-p-completeness-of-inverted-index-traversal
+29,2026-08-20,观点,GitHub Copilot app 初学者教程：用 My work 面板管理你的工作,GitHub Copilot app 的 My work 面板将拉取请求和问题集中在一处管理，内置 All、Active、Review requests、Done 四个默认视图，并支持创建自定义视图与过滤器。用户可从问题或拉取请求直接启动新的智能体会话，也可批量选择多个条目创建会话，还能在列表视图和表格视图间切换，并调整仓库范围或新建问题。,GitHub Blog,https://github.blog/ai-and-ml/github-copilot/github-copilot-app-for-beginners-managing-your-work
+30,2026-08-20,观点,Slack 如何构建人机智能体团队：对话即知识,Slack 首席产品官 Jaime DeLanghe 分享了将对话转化为机构知识、构建人机智能体团队的最佳实践。她主张默认使用公开频道，让智能体从可见对话中学习，并建议将会议、邮件、日历等上下文连接起来以减少重复劳动。在 Slack 中由 Claude 驱动的智能体负责起草、总结、监控等生产工作，人类负责审查、决策与交接，形成循环协作。,Claude：Blog（网页）,https://claude.com/blog/turning-conversation-into-knowledge-how-slack-builds-human-agent-teams
+31,2026-08-20,观点,Databricks 如何从单一提示词设计高效的 Genie Agents,Databricks 发布指南，探讨如何从单一提示词设计高效的 Genie Agents。文章指出，通用智能体在处理收入等查询时，往往只会抓取第一个相关数据表，而 Genie Agents 通过更精准的提示词设计，能更准确地定位和回答用户问题。该指南旨在帮助开发者优化智能体行为，提升查询结果的准确性和相关性。,Databricks：Blog（RSS）,https://www.databricks.com/blog/designing-effective-genie-agents-single-prompt
+32,2026-08-19,产品,Sentence Transformers v6.0 新增 MultiVectorEncoder，支持 ColBERT 风格多向量模型,Sentence Transformers v6.0 新增第四种模型类型 MultiVectorEncoder，可直接加载 PyLate、Stanford-NLP ColBERT 及 colpali-engine 检查点，用于 ColBERT 式晚期交互检索。,Hugging Face：Blog（RSS）,https://huggingface.co/blog/multi-vector-encoder
+33,2026-08-19,产品,Mojo 语言正式开源，编译器与工具链全面开放,Mojo🔥 语言现已正式开源，采用 Apache 2.0 许可证（含 LLVM 例外），编译器、工具链及全部源码已发布至 modular GitHub 仓库。Mojo 上周刚达成 1.0 版本（源码稳定），此次开源涵盖整个编译器与工具链。目前暂不接受编译器相关贡献，计划年底前开放，标准库自 2024 年起已接受社区贡献。,Hacker News 热门（buzzing.cc 中文翻译）,https://www.modular.com/blog/mojo-open-source
+34,2026-08-19,产品,Claude 现已支持 Gmail 邮件与 Google Drive 文件管理,Claude 现在可以在 Gmail 中发送邮件，并管理 Google Drive 中的文件。 让 Claude 回复某个邮件线程，它会起草并发送回复。你可以控制何时需要你的批准。 从连接器菜单中选择连接 Gmail 或 Google Drive 即可试用。所有付费套餐均可用。,X：Claude (@claudeai),https://x.com/claudeai/status/2089806039088517356
+35,2026-08-19,产品,OpenAI 推出 ChatGPT for Teens：面向青少年的学习体验与更强安全保护,OpenAI 发布 ChatGPT for Teens，为 13-17 岁用户自动启用，内置更强安全保护与家长控制。新增 Study Mode、负责任作业提醒、测验与学习可视化，以及可设定默认开启时段的 Study Hours，引导青少年分步解题而非直接给答案。OpenAI 同时宣布与 CodeAI 合作，帮助青少年理解、质疑并创造性地使用 AI。,OpenAI：官网动态（RSS · 排除企业/客户案例）,https://openai.com/index/chatgpt-for-teens
+36,2026-08-19,产品,Git 大规模托管为何如此困难,Git 的分布式设计使其大规模托管面临固有挑战：packfile 作为存储和网络传输的基础单元，在服务器端成为可用性与扩展性的瓶颈。业界曾尝试三种方案——分布式文件系统、分布式 packfile、分布式 Git 本身，其中对象级分布式存储因 Git 协议要求网络传输 packfile 导致 clone 性能不佳而被放弃。,Cursor Blog,https://cursor.com/blog/git-at-any-scale
+37,2026-08-19,产品,Claude Science 产品指南：面向生命科学研究的 AI 工作台,Anthropic 发布 Claude Science（测试版），一个覆盖生命科学数字化流程的 AI 工作台，支持数据分析、图表生成与结果产出，并可通过本地守护进程将重任务调度至自有 GPU、SLURM 集群或云账户。,Claude：Blog（网页）,https://claude.com/blog/the-claude-science-product-guide
+38,2026-08-19,动态,OpenAI 启动新计划，强化国家安全领域 AI 的民主监督,OpenAI 启动新计划，帮助民主监督机构发展专业能力与工具，以理解和监督政府将 AI 用于国家安全。未来一年，OpenAI 将提供 500 万美元用于培训、技术支持和 OpenAI 积分，并与监督机构试点工具，帮助授权审查员检查 AI 辅助政府决策的相关记录。OpenAI 强调 AI 应增强而非取代人类判断，且不承担对政府的监督角色。,OpenAI：官网动态（RSS · 排除企业/客户案例）,https://openai.com/index/strengthening-democratic-oversight-in-national-security
+39,2026-08-19,研究,Claude 如何加速蛋白质设计与分析化学研究,Anthropic 公布两项实验：Claude（Mythos Preview 和 Opus 4.8）针对 15 个靶点设计蛋白质结合剂，成功 14 个，命中率达 22.6%-35.1%。,Anthropic：Research（发表成果 · 网页）,https://www.anthropic.com/research/Claude-accelerates-protein-design
+40,2026-08-19,研究,智能体记忆并非越多越好：八款模型评测显示剂量需按能力校准,智能体记忆并非可随意开启的功能，而是需按模型能力校准的剂量。强模型适合注入完整指南集，DeepSeek-V3.2（671B MoE）任务完成率提升+9.5个百分点；较弱模型采用精选检索效果最佳，gpt-oss-120b（117B MoE）提升+16.1pp且仅增加+5% token。该方法无需更新权重或人工标注，通过从智能体过往轨迹中蒸馏指南并在推理时注入实现。,Hugging Face：Blog（RSS）,https://huggingface.co/blog/ibm-research/altk-evolve-hmm
+41,2026-08-19,研究,GRPO 超越英语：多语言与非英语环境下的大规模研究,一项大规模实证研究考察了 GRPO 在多语言和非英语环境下的表现，覆盖多种基础模型、训练语言及推理语言奖励设置。研究发现，以母语进行推理训练与英语推理训练之间的性能差距很小，表明 RLVR 在非英语场景下同样有效。该研究为多语言推理模型的强化学习训练提供了重要参考。,Apple Machine Learning Research（RSS）,https://machinelearning.apple.com/research/grpo-beyond-english
+42,2026-08-19,研究,MVICAD2：引入延迟与膨胀的多视图独立成分分析,巴黎-萨克雷大学等机构提出MVICAD2，允许不同被试的脑源在时间延迟和膨胀两方面存在差异，以解决MVICA假设过于严格、仅估计延迟不足以刻画听觉刺激等脑动态的问题。该模型源可识别，似然有闭式近似，并通过正则化与优化提升性能。模拟显示其优于现有方法，Cam-CAN数据集验证了延迟和膨胀与衰老相关。,Apple Machine Learning Research（RSS）,https://machinelearning.apple.com/research/mvicad2-delays-dilations
+43,2026-08-19,观点,设计 AI 评测：先求清晰，再谈可视化,本文演示如何用开源评测框架 Inspect AI 和 Harbor 评估 agent 技能，并借助 Google Sheets 和 Data Studio 进行可视化分析。,Google AI：DEV 作者专属（RSS）,https://dev.to/googleai/designing-ai-evals-clarity-now-and-visualization-next-4eii
+44,2026-08-19,观点,OpenAI 在“关键网络能力”时代放缓模型开发节奏,OpenAI 因 OpenAI-Hugging Face 事件及即将推出的 Astra 模型可能达到《预备框架》下的“关键网络安全能力”阈值，暂时放缓了模型扩展速度，包括暂停最新部署模型的强化学习训练两周，并搁置最大规模前沿 RL 运行。公司已加强研究环境安全，要求对 Astra 及网络相关负载实施最严格防护，并扩展思维链监控，采用多阶段激活分类器检测机制。,OpenAI：官网动态（RSS · 排除企业/客户案例）,https://openai.com/index/pacing-model-development-cyber-capabilities
+45,2026-08-19,观点,Claude Tag 如何担任 Anthropic CI/CD 故障的一线响应者,Anthropic 的 CI 工程师用 Claude Tag 构建了值班智能体，作为 CI/CD 故障的一线响应者。Claude 在事故发生后中位 14 分钟发布首份基于证据的分析，最快案例中 3 分钟内验证修复并确认错误率恢复基线。该方案通过 Slack 频道、Datadog 或 Grafana 工具访问及 GitHub 技能文件实现，Anthropic 已发布通用设置套件供其他团队部署。,Claude：Blog（网页）,https://claude.com/blog/ai-ci-cd-on-call
+46,2026-08-19,观点,笔记本模型也能媲美云端前沿模型：Qwen3.8-27B 登顶智能指数,作者将 Qwen3.8-27B 装入智能体后表现优异，该模型在 Artificial Analysis 智能指数中排名 135 款模型之首，得分 52，超过 Z.ai 的 753B 参数开源模型 GLM-5.2（51 分）。,Tomer Tunguz 博客（VC 分析）,https://www.tomtunguz.com/birds-dont-fly-like-planes-neither-does-ai
+47,2026-08-19,观点,Populous 如何用 Runway 呈现全球标志性场馆设计,全球设计公司 Populous 高级建筑师 Georgina Myers 介绍团队用 Runway 辅助体育场馆概念设计：过去完整视频需外部渲染团队至少三周，且提交前两周须冻结设计模型；如今 Runway 能生成传达尺度感的完整渲染和航拍图，将视觉制作时间缩短，让设计师把时间还给设计本身。该工具已用于利雅得 MBS 体育场等中东项目，支持 9 种不同活动模式的场景迭代。,Runway：News（网页）,https://runwayml.com/news/customers/populous
+48,2026-08-18,产品,Cursor 推出 Origin 代码托管服务，作为 GitHub 的替代方案,Cursor 今日起向所有付费计划用户开放 Origin 代码托管的早期测试版，提供仓库、拉取请求、代码浏览及 GitHub 同步功能。用户可创建以 cursor.com/codebase/ 为前缀的仓库，或将 GitHub 仓库同步至 Origin，双向同步评论与审查。Vercel、Depot 和 Buildkite 集成已可用，智能体功能即将推出。,Hacker News 热门（buzzing.cc 中文翻译）,https://cursor.com/changelog/origin-code-hosting
+49,2026-08-18,产品,OpenRouter 推出 Activity 仪表盘与 Analytics API：按智能体、模型、请求追踪 AI 使用成本,OpenRouter 发布 Activity 仪表盘和 beta Analytics API，可按智能体、模型、请求维度查看支出、token 量、缓存命中率等指标，并支持下钻至单条请求日志。,OpenRouter：Announcements（RSS）,https://openrouter.ai/blog/announcements/activity-dashboard
+50,2026-08-18,产品,OpenRouter 图像生成 API：代码优先的接入教程,OpenRouter 推出专用图像生成 API，通过统一请求格式和单一密钥即可调用多个提供商的图像模型。开发者向 POST /api/v1/images 发送请求，响应中的 data[0].b64_json 包含 base64 编码的图像数据，解码后即可保存为本地文件。教程演示了 Python 和 JavaScript 两种实现，并支持通过 input_references 传入参考图像生成变体。,OpenRouter：Announcements（RSS）,https://openrouter.ai/blog/tutorials/image-generation
+51,2026-08-18,产品,AgentCore Payments 中间件为 LangChain 智能体提供 API 支付能力,AgentCore Payments 中间件让 LangChain 智能体以确定性会话预算支付 API 费用。该中间件为 x402 支付签名，LangSmith 可追踪每一笔支付记录。,LangChain：Blog（RSS）,https://www.langchain.com/blog/langchain-agentcore-payments
+52,2026-08-18,产品,Claude Code v2.1.234 发布：新增项目目录名变量与 GitLab MR 徽章，修复多项安全与稳定性问题,Claude Code v2.1.234 新增可选 CLAUDE_CODE_PROJECT_DIR_NAME 环境变量、selection:clear 键绑定及 GitLab MR 徽章，并在用量限制重置后自动继续会话。,Claude Code：GitHub Releases（RSS）,https://github.com/anthropics/claude-code/releases/tag/v2.1.234
+53,2026-08-18,动态,NVIDIA 与 SB Energy 合作锁定俄亥俄州 PORTS-Pike 园区电力容量，OpenAI 将入驻,NVIDIA 宣布与 SB Energy 合作，锁定俄亥俄州 PORTS-Pike 科技园区的电力容量（LPS）以独家部署 NVIDIA 算力，OpenAI 将成为租户。,NVIDIA Blog（RSS）,https://blogs.nvidia.com/blog/securing-the-infrastructure-of-intelligence
+54,2026-08-18,动态,A 股迎来“人形机器人第一股”，宇树科技官宣 8 月 19 日科创板上市,宇树科技宣布股票将于 2026 年 8 月 19 日在科创板上市，发行价 150.80 元/股，对应市值约 609.93 亿元，预计募资约 60.99 亿元。该公司 2023 至 2025 年营收分别为 1.59 亿元、3.93 亿元和 16.99 亿元，净利润分别为-1114.51 万元、9547.47 万元和 2.78 亿元，是全球少数实现盈利的高性能通用机器人公司。,IT之家（RSS）,https://www.ithome.com/0/990/812.htm
+55,2026-08-18,动态,404 Media 追踪珍本图书流向：亚马逊批量购书扫描用于 AI 训练后销毁,404 Media 通过在一本珍本图书中放置追踪设备，首次揭露亚马逊未公开的购书行动：批量购入大量书籍，扫描用于 AI 训练数据，随后销毁。追踪显示这些书最终被送往亚马逊的一处人工智能训练中心。,Hacker News 热门（buzzing.cc 中文翻译）,https://www.404media.co/we-tracked-a-shipment-of-rare-books-it-ended-at-an-amazon-ai-training-facility
+56,2026-08-18,动态,OpenAI 为 14 个独立项目提供资助，推动智能时代经济机遇与韧性研究,OpenAI 宣布向 14 个由独立组织主导的项目提供总计 100 万美元资金及最高 100 万美元 API 额度，以推动 AI 进步下的经济机遇与社会韧性研究。,OpenAI：官网动态（RSS · 排除企业/客户案例）,https://openai.com/index/new-policy-ideas-for-the-intelligence-age
+57,2026-08-18,研究,PhotoScan：用智能手机照片估算胰岛素抵抗，精度接近DXA,Google Research 推出 PhotoScan，一种从智能手机 2D 照片直接估算三维身体成分的深度学习框架，可预测胰岛素抵抗，在临床研究中精度接近 DXA 扫描。,Google Research：Blog（网页）,https://research.google/blog/seeing-beyond-bmi-estimating-cardiometabolic-risk-with-smartphone-imagery
+58,2026-08-18,观点,OpenAI 如何用前沿智能加固自身防御：The Defender’s Window,OpenAI 在 OpenAI-Hugging Face 事件后反思低估了模型真实网络攻击能力，正通过四大支柱强化自身安全：用 Codex 验证代码漏洞、用智能体优先分流安全告警、持续枚举攻击路径，并仅向可信防御者开放网络能力。文中演示 ChatGPT Work（基于 GPT-5.6 Sol）15 分钟发现个人网站 13 个问题并在一小时内完成修复。,OpenAI：官网动态（RSS · 排除企业/客户案例）,https://openai.com/index/the-defenders-window
+59,2026-08-18,观点,如何禁用或避免侵入式 AI：一份覆盖 Windows、Chrome、Edge、Firefox 及主流应用的实用指南,一份面向希望减少技术环境中侵入式 AI 的用户的操作指南，涵盖 Adobe Acrobat、Android/Gemini、Apple Intelligence、Chrome、Edge、Firefox、DuckDuckGo、Google Workspace、Slack、WhatsApp 及 Windows 11/Copilot 等平台。,Hacker News 热门（buzzing.cc 中文翻译）,https://www.librarian.net/notoai
+60,2026-08-18,观点,用 Google 的 Agent Development Kit 构建零信任 AI 智能体,Google 开源了基于 ADK 和 Gemini 的零信任客服与退货智能体示例，演示如何防御提示注入等攻击。该架构在 LLM 上下文之外通过三层硬性安全机制保障：硬件支持的加密签名确保数据库写入不可抵赖、gVisor 沙箱隔离动态代码执行、确定性语义网关校验业务逻辑。系统提示词只是软约束，无法作为安全边界。,Google Developers Blog（RSS）,https://developers.googleblog.com/build-zero-trust-ai-agents-with-googles-agent-development-kit
+61,2026-08-18,观点,开源模型生态的未来：Nvidia 押注“教所有人炼 token”,开源模型生态正日益依赖 Nvidia 的资助，其已投入 260 亿美元推动近乎开源的模型开发，以扩大推理芯片需求。若此路径不奏效，开源模型将转向效率、可修改性等长尾场景，与闭源模型分化。同时，基础模型训练门槛升高，开源社区兴趣正从全量训练转向对 DeepSeek V4 Flash、GLM 5.X 等模型的微调。,Nathan Lambert：Interconnects（RSS）,https://www.interconnects.ai/p/teaching-everyone-to-fish-for-tokens
+62,2026-08-18,观点,同一集群利用率提升 33 个百分点：改变的是分配顺序,Hugging Face 构建了一个约束感知的 GPU 分配器，并在七个基准场景中与 FIFO 调度器对比。在相同硬件和负载下，GPU 利用率最高提升 33 个百分点，优先级加权输出在全部场景中均上升，最高达 105%。分配器将实时推理需求按曲线而非峰值处理，批量任务按优先级跨整个调度周期排序，从而回收了预留闲置容量。,Hugging Face：Blog（RSS）,https://huggingface.co/blog/Dharma-AI/gpu-management-pt2
+63,2026-08-18,观点,ABC Legal 如何借助 Claude Managed Agents 让每位员工成为构建者,"ABC Legal 为 1,100 名员工部署 Claude Enterprise 后，通过 Claude Managed Agents 将零散实验转变为受治理的智能体体系，截至 2026 年 7 月已上线 50 多个生产级智能体，部分覆盖的人工任务成本降低约 50%，约 310 名员工日常使用 Claude。",Claude：Blog（网页）,https://claude.com/blog/how-abc-legal-turned-every-employee-into-a-builder-with-claude-managed-agents
+64,2026-08-18,观点,当模型持续学习：测试时训练如何改变 AI 的记忆与成本,测试时训练（Test-time training）让模型在使用中持续更新权重，而非训练结束后冻结。相比标准 Transformer，其内存需求从随上下文线性增长变为恒定，斯坦福研究显示推理速度最高可提升 2.7 倍，且 In-Place TTT 无需重训即可将 4B 模型提升至 128k 上下文性能。但代价是每个用户需独立模型副本，服务成本转向算力与芯片，更适合编码助手等个性化场景。,Tomer Tunguz 博客（VC 分析）,https://www.tomtunguz.com/test-time-training-impact
+65,2026-08-18,观点,SGLang 重构 CUDA Graph 支持，Breakable CUDA Graph 成 prefill 默认方案,"SGLang 重构 CUDA Graph 支持，通过 runner/backend 接口拆分使不同捕获策略可复用。其社区首创的 Breakable CUDA Graph（BCG）现为 prefill 默认方案，代码量仅为 torch.compile 方案的约四分之一（521 行对比 1,771 行），构建速度快 3.8–5.2 倍。",LMSYS：Blog（Chatbot Arena 团队）,https://www.lmsys.org/blog/2026-08-17-advanced-cuda-graph
+66,2026-08-17,观点,Qwen 3.8 27B 表现出色，但默认推理强度过高导致过度思考,阿里 Qwen 实验室发布 Apache 2 许可的 27B 参数视觉大模型 Qwen 3.8 27B，官方基准显示其超越前代 Qwen 3.6 27B 及闭源 Qwen 3.7-Plus。,Simon Willison 博客,https://simonwillison.net/2026/Aug/16/qwen-38-27b
+67,2026-08-17,观点,The hyping of Anthropic’s IPO,对 Anthropic IPO 静默期流传的 2028 年 1900 亿美元级营收预测，文章提示其多基于匿名信源和未披露算法，可帮助在追踪上市进展时区分已核实数据与传闻。,Gary Marcus：The Road to AI We Can Trust（RSS）,https://garymarcus.substack.com/p/the-hyping-of-anthropics-ipo
+68,2026-08-16,研究,AI生成书籍正淹没亚马逊，并拉低人类作者的单书收入,"一项对14,419本自出版电子书的分析显示，AI生成书籍正以数量而非质量挤占人类作者市场，即便未检测到AI文本的书籍，单书收入也在下滑。2023年Q1至2026年Q1，书目总量增长38.3倍，而季度收入仅增长8.9倍；在八个类型中，七个类型的无AI文本书籍单书收入下降。",The Decoder：AI News（RSS）,https://the-decoder.com/ai-generated-books-are-flooding-amazon-and-tanking-sales-for-human-authors
+69,2026-08-15,模型,dots3-note Preview 开源：280B 参数轻量模型，主打长程智能体与多模态推理,小红书技术开源 dots3-note Preview，这是 dots3 系列最轻量模型，总参数 280B、激活参数 16B，支持 512K 上下文及文本、视觉、语音多模态理解，并针对复杂推理和长程 Agent 任务优化。,公众号：小红书技术（dots.llm）,https://mp.weixin.qq.com/s?__biz=Mzg4OTc2MzczNg%3D%3D&mid=2247496140&idx=1&sn=5239a5fbb115c58d2ae0056bb32789ff
+70,2026-08-15,模型,GLM-5.3 发布：编程能力开源第一，并涌现网络安全能力,智谱发布GLM-5.3，基于与GLM-5.2相同的基座，通过极致的后训练Scaling提升智能上界，编程能力较前代提升50%，在Terminal Bench 3.0等公开基准中取得开源第一，并接近Claude Fable 5。模型在白盒代码审查等安全任务中表现持平Mythos 5，在CyberGym测试中得分84.5%。模型权重将在两周后开源，即日起上线ZCode、AutoClaw等工具。,公众号：智谱（GLM）,https://mp.weixin.qq.com/s?__biz=MzkyMzI3NzQ0Mg%3D%3D&mid=2247494084&idx=1&sn=a2e5cd9a534a4825feb3633ea1b6d492
+71,2026-08-15,模型,Gemini 3.7 Flash 全面上线 Pro 与 Ultra 用户,Gemini 3.7 Flash 现已向 Gemini 聊天中的 Pro 和 Ultra 用户开放。该模型更新提升了多步骤任务的推理与准确性，如智能整合数十个文件和邮件为一份主文档。同时，Gemini Spark 也已运行于 3.7 Flash，通过改进对 Google Workspace 应用的工具调用，让个人 AI 智能体更精准。,X：Gemini (@GeminiApp),https://x.com/GeminiApp/status/2088326407730692538
+72,2026-08-15,模型,DeepSeek V4 Pro 登陆硅基流动，1M 上下文,DeepSeek-V4-Pro-0813 正式上线硅基流动 SiliconFlow，提供 Day-0 支持，具备 1M 上下文窗口及低/高/最大三档推理强度，更侧重编码、工具调用与智能体工作流，仍保持 MIT 开源协议。定价为输入 \$1.32/M、输出 \$3.96/M、缓存命中 \$0.44/M。同系列 DeepSeek-V4-Flash-0731 则面向追求速度与成本效益的日常生产场景。,X：硅基流动 SiliconFlow (@SiliconFlowAI),https://x.com/SiliconFlowAI/status/2088127458558271885
+73,2026-08-15,产品,Claude Code v2.1.233 发布：新增 GitLab MR 支持与内存 cgroup 限制,Claude Code v2.1.233 发布，为 --worktree 标志和 agents 视图新增 GitLab 合并请求 URL 支持，并添加可选的 forward_user_identity 网关设置以按用户归因支出。,Claude Code：GitHub Releases（RSS）,https://github.com/anthropics/claude-code/releases/tag/v2.1.233
+74,2026-08-15,动态,OpenAI and Anthropic in price war as Chinese AI rivals gain ground,价格战让模型API的成本弹性成为现实，原先因账单压力转向中国厂商的用户，可能在OpenAI和Anthropic降价后重新比较能力与价格。,Ars Technica：AI（RSS）,https://arstechnica.com/ai/2026/08/openai-and-anthropic-in-price-war-as-chinese-ai-rivals-gain-ground
+75,2026-08-15,动态,Cursor 正式被 SpaceX 收购,Cursor 已被 SpaceX 正式收购，完成自 4 月启动的收购流程。合并后 Cursor 将获得全球最大 GPU 集群，以构建更强且运行成本更低的模型，从而以更低价格向客户提供更强大的模型。本周三发布的 Grok 4.6 是双方合作成果的早期体现。,Cursor Blog,https://cursor.com/blog/joining-spacex
+76,2026-08-15,动态,Claude 文本水印机制如何运作,未来 Claude 模型生成的文本将包含水印，用于判断文本由 Claude 撰写的可能性，这是 Anthropic 为遵守欧盟《AI 法案》而实施的变更。该方法基于 Google DeepMind 的 SynthID-Text 技术，对输出质量、创造力和可读性无实际影响，读者无法区分水印文本与普通文本，且不增加额外 token 或成本。,Anthropic：Newsroom（网页）,https://www.anthropic.com/news/claude-text-watermark
+77,2026-08-15,动态,印尼首个大学AI中心落成：UGM、Indosat与NVIDIA合作培养本地AI人才,印尼通信与数字事务部、Indosat、NVIDIA与加查马达大学（UGM）在日惹共同启动UGM Indosat NVIDIA AI技术中心（NVAITC），这是该国首个大学AI技术中心。,NVIDIA Blog（RSS）,https://blogs.nvidia.com/blog/ugm-indosat-nvidia-ai-technology-center
+78,2026-08-15,观点,2026年夏季开源模型生态观察：中国前沿模型规模领先，AMD与NVIDIA主导发布量,2026年1至8月，Hugging Face公开模型仓库从243万增至296万，但85.6%的模型下载量不足200次，1.5%的仓库占据99.2%下载量。中国实验室月度最大开源模型参数规模在754B至2.78万亿之间，美国实验室七个月中五个月低于130B。AMD与NVIDIA各发布超200个新模型仓库，成为发布开源模型最多的机构。,Hugging Face：Blog（RSS）,https://huggingface.co/blog/state-of-open-models-summer-2026
+79,2026-08-15,观点,Claude Code 会话如何最大化 token 价值,Claude Code 的 token 成本由模型、输入/输出 token 和提示缓存三因素决定，输出 token 价格约为输入的 5 倍。任务间运行 /clear 可减少无关上下文回传，降低 token 用量；会话中途切换模型或 effort 级别会破坏提示缓存，增加成本。,Claude：Blog（网页）,https://claude.com/blog/maximizing-the-value-of-your-claude-code-sessions
+80,2026-08-15,观点,蚂蚁百灵与 ASystem 团队打通单机 Agentic RL 后训练闭环,蚂蚁百灵与 ASystem 团队合作，用 Ling-3.0-tiny 和 AReno 在 DGX Spark 上跑通单机 Agentic RL 后训练闭环。以井字棋为最小验证任务，用 GSPO 算法训练 400 步后，rollout/rewards_mean 从约 -0.5 升至 0.4，response_len 降至约 850 tokens，工具调用与动作选择趋于稳定。,公众号：蚂蚁百灵（Ling）,https://mp.weixin.qq.com/s?__biz=MzkyODk2MDQwNw%3D%3D&mid=2247487525&idx=1&sn=b9def9117e34b45fce50ab76eeed726c
+81,2026-08-15,观点,OpenRouter 视觉指南：如何通过 API 向多模态模型发送图像,OpenRouter 发布视觉指南，详解通过 Chat Completions API 向多模态模型发送图像的方法。请求体采用 messages 数组，用户消息的 content 包含 text 和 image_url 两部分，支持公开 URL 或 base64 数据 URL 两种格式，兼容 PNG、JPEG、WebP 和 GIF。,OpenRouter：Announcements（RSS）,https://openrouter.ai/blog/tutorials/send-image-to-llm
+82,2026-08-15,观点,谁真的需要SOTA模型？OpenRouter数据显示84%token来自非前沿模型,OpenRouter数据显示，84%的模型token并非来自SOTA模型，用户最常用的六款模型性能约为前沿模型的77%，成本仅为Claude Fable 5的2.5%。8月10日当周，六款模型承载了80%流量，混合价格约\$0.50/百万token，而Fable 5为\$20。最佳开源模型性能已从一年前的48%提升至前沿模型的80%，企业正转向更小、微调或开源模型以优化性价比。,Tomer Tunguz 博客（VC 分析）,https://www.tomtunguz.com/model-release-exhaustion
+83,2026-08-15,观点,Databricks 如何在数据仓库中使用 AI_Functions：主要用例解析,Databricks 探讨在数据仓库中应用 AI_Functions 的主要场景，帮助组织在结构化数据之外处理非结构化数据。文章聚焦于如何通过该功能将 AI 能力直接集成到 SQL 工作流中，以扩展数据仓库的分析边界。具体用例与实现细节以原文为准。,Databricks：Blog（RSS）,https://www.databricks.com/blog/using-aifunctions-your-data-warehouse-top-use-cases
 ` },
   month: { date: "2026-07-23 ~ 2026-08-21", markdown: `# 深南AI日报 Daily AI Brief · 2026-07-23 ~ 2026-08-21
 
