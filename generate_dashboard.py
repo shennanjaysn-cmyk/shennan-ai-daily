@@ -52,7 +52,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.6"
+VERSION = "1.10.7"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -832,10 +832,9 @@ def render_html(info, page_info):
   .top-btn {{
     appearance: none;
     box-sizing: border-box;
-    border: 1px solid rgba(205, 200, 255, 0.45);
-    background: var(--surface-float);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    /* fix_report_01（v1.10.7）：右上角三胶囊视觉统一——底色填实 #151C33，去掉描边（hover/active 效果不变） */
+    border: none;
+    background: #151C33;
     color: var(--mist-body);
     font-family: var(--font-base);
     font-size: 12px;
@@ -880,10 +879,9 @@ def render_html(info, page_info):
     justify-content: center;
     min-width: 108px;
     height: 34px;
-    border: 1px solid rgba(205, 200, 255, 0.45);
-    background: var(--surface-float);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    /* fix_report_01（v1.10.7）：底色填实 #151C33，去掉描边（与 .top-btn 视觉统一；hover 效果不变） */
+    border: none;
+    background: #151C33;
     border-radius: 999px;
     cursor: pointer;
     overflow: hidden;
@@ -947,8 +945,10 @@ def render_html(info, page_info):
     margin: 0 3px;
     user-select: none;
   }}
-  [data-theme="light"] .report-morph {{ background: rgba(245, 242, 236, 0.92); border-color: rgba(131, 126, 101, 0.35); }}
-  [data-theme="light"] .report-morph:hover {{ background: rgba(255, 255, 255, 0.95); border-color: rgba(131, 126, 101, 0.55); }}
+  /* fix_report_01（v1.10.7）：浅色主题下三胶囊仍用 #151C33 填实（深浅主题切换不改变右上方胶囊视觉，仅配色不同原则） */
+  [data-theme="light"] .top-btn,
+  [data-theme="light"] .report-morph {{ background: #151C33; }}
+  [data-theme="light"] .report-morph:hover {{ background: rgba(205, 200, 255, 0.12); border-color: var(--brand-cn); }}
   [data-theme="light"] .report-choice:hover {{ background: rgba(131, 126, 101, 0.12); }}
   [data-theme="light"] .report-divider {{ color: rgba(131, 126, 101, 0.35); }}
   .dropdown-item {{
@@ -1191,7 +1191,8 @@ def render_html(info, page_info):
   .nav {{
     position: sticky;
     top: calc(env(safe-area-inset-top, 0) + 78px);   /* 报告页：ticker + topbar 之后吸顶 */
-    z-index: 50;
+    /* fix_report_01（v1.10.7）：196 高于 ticker(195)，确保 ticker 滚动文字不会"穿插"覆盖 nav 内容（修复右上角三胶囊被遮挡 bug） */
+    z-index: 196;
     /* 用胶囊底色完全遮住背后内容，不再镂空 */
     background: var(--ink-card);
     /* fix_nav_01（v1.10.6）：默认无金线；nav.is-stuck 状态（被滚动压到顶部）再显示金线 */
