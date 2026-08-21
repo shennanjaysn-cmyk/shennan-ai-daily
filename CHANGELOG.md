@@ -23,9 +23,13 @@
 
 ---
 
-## v1.10.10_260821 — fix_report_01 合回合一排 | nav 贴顶 + 置顶渐显金边
-
 ## v1.10.11_260821 — fix_report_01 合回合一排 | hero-lead 两行右对齐 + nav 点击永久锁定高亮（修复 v1.10.6 起 CSS 未写 .is-active-by-click）
+
+**类型**：修订 +1（视觉优化 + 交互修复）
+**日期**：2026-08-21
+
+- 🔨 **hero-lead 引用段两行 + 右对齐**：在「以下」前插入 `<br>` 断为两行；去掉 `.hero-grid` 的 `max-width:1024px`，hero 与新闻模块同处 `.wrap` 内容宽度，引用段右端自然对齐新闻模块右端。
+- 😐 **nav 点击永久锁定高亮**：修复 v1.10.6 起 `.is-active-by-click` 在 CSS 中漏写高亮规则、且 IO 在 800ms 后强行 `remove` 导致点击高亮永远不可见；改为引入 `lockedIdx` 锁（点过任意胶囊后 IO 完全让位，永久保持高亮直到下次点击）+ clickGuard 800→1500ms + IO rootMargin `-80px→-50px` 匹配 nav 贴顶新位置。
 
 ---
 

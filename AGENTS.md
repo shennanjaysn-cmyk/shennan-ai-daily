@@ -9,12 +9,12 @@
 ## 怎么跑
 
 ```bash
-# 字体（仅字体/字重变更时；必须用隔离 venv）
+# 字体（仅字体/字重变更时；必须用隔离 venv，含 fonttools/brotli）
 ~/.workbuddy/binaries/python/envs/default/Scripts/python.exe build_fonts_css.py
-# 生成（managed venv python）
-~/.workbuddy/binaries/python/envs/default/Scripts/python.exe generate_dashboard.py
+# 生成（managed 版本 python，-S 不加载用户 site，纯标准库即可）
+/c/Users/JDD/.workbuddy/binaries/python/versions/3.13.12/python.exe -S generate_dashboard.py
 # 本地验证门禁：先本地构建 + 校验 releases/index.html（卡片为整卡<a>、早中晚已隐藏、报告页正常），确认无误再 push
-~/.workbuddy/binaries/python/envs/default/Scripts/python.exe generate_dashboard.py
+/c/Users/JDD/.workbuddy/binaries/python/versions/3.13.12/python.exe -S generate_dashboard.py
 # 部署：推送 main 即由 GitHub Actions 自动生成 + 部署 gh-pages
 git push origin main
 ```
@@ -22,7 +22,7 @@ git push origin main
 ## 本地环境注意
 
 - **curl 直连 aihot.virxact.com 会报 schannel SSL 错误（exit 35）**：这是本机代理环境所致，不是部署问题；用 `gh api` 查 Pages / Actions 状态更可靠。
-- 生成器用 managed venv python：`~/.workbuddy/binaries/python/envs/default/Scripts/python.exe generate_dashboard.py`（Git Bash 下 `~` 不展开时需用绝对路径 `/c/Users/JDD/.workbuddy/binaries/python/envs/default/Scripts/python.exe`）。
+- 生成器用 managed 版本 python（纯标准库，加 `-S` 不加载用户 site）：`/c/Users/JDD/.workbuddy/binaries/python/versions/3.13.12/python.exe -S generate_dashboard.py`。Git Bash 下 `~` 不展开，写绝对路径。
 
 ## 技术栈
 
@@ -62,7 +62,7 @@ git push origin main
 
 ## 当前状态与下一步
 
-- 当前版本 **v1.10.2**（近期：v1.10.1 浅色模式视觉重置为 light-only 覆盖、保留深色原样；v1.10.0 新闻卡片香槟金外框 + CTA #F1F0FF + 箭头→；v1.9.7 留言按钮改为 lucide message-circle 图标；更早版本演进见 CHANGELOG.md；本地版本归档 `releases/`）。
+- 当前版本 **v1.10.11**（v1.10.10 nav 与报告三胶囊合并单行 + 置顶渐显金边；v1.10.11 hero-lead 两行右对齐 + nav 点击永久锁定高亮。更早演进见 CHANGELOG.md；本地版本归档 `releases/`）。
 - 主线部署：**GitHub Pages**（源 `releases/`）。**本地验证门禁**：每次先本地 `generate_dashboard.py` 构建并校验 `releases/index.html`，确认无误再 `git push`。
 - 已完成：A 视觉入口 / B 早中晚时段体系（胶囊已隐藏，逻辑保留）/ C 深浅模式+悬浮按钮（FAB inline onclick 终极兜底 + 留言/反馈 FAB 化）/ D 导出增强 / E 数据源滚动条 / 分类多元化（具身·大会 派生桶）/ F 聚合报告页（周报+月报）/ 新闻卡片整卡链接（v1.3.0 样式）/ 开源合规（GitHub Issue 留言 + robots.txt）/ 字体合规（全面切换 SIL OFL）/ 浅色模式重设计（语义色补齐+独立配色）/ ticker 移到顶部 + marquee 滚动 + 紧凑 + 深色品牌 / 卡片 hover 节奏差 + 高度封顶 / UTC 时区 bug 修复 / 阅读原文箭头放大 / 卡片金边改为顶部线 / nav 与 topbar 错开不重叠 / 留言/反馈 FAB 化与 hover 展开。
 - **DOMContentLoaded 教训**：当 JS 用 `getElementById` 拿页面元素时，要么把元素放在 script 之前，要么把 JS 包进 `DOMContentLoaded`。FAB bug 是教科书反面案例。**终极兜底：关键交互按钮直接用 inline `onclick`，彻底绕开 JS 监听链**。
