@@ -52,7 +52,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.5"
+VERSION = "1.10.6"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -380,7 +380,7 @@ def render_html(info, page_info):
     sections_html = "\n".join(render_section(s, i) for i, s in enumerate(cards_by_section))
 
     nav_html = "\n".join(
-        f'<a class="nav-chip{(" active") if i == 0 else ""}" href="#{s["slug"]}"><span class="nav-roman">{s["roman"]}</span><span class="nav-label">{s["display_label"]}</span><span class="nav-n">{s["count"]}<span class="count-unit">条</span></span></a>'
+        f'<a class="nav-chip" href="#{s["slug"]}" data-slug="{s["slug"]}"><span class="nav-roman">{s["roman"]}</span><span class="nav-label">{s["display_label"]}</span><span class="nav-n">{s["count"]}<span class="count-unit">条</span></span></a>'
         for i, s in enumerate(cards_by_section)
     )
 
@@ -1194,36 +1194,56 @@ def render_html(info, page_info):
     z-index: 50;
     /* 用胶囊底色完全遮住背后内容，不再镂空 */
     background: var(--ink-card);
-    border-bottom: 1px solid rgba(131, 126, 101, 0.45);  /* 浅浅细细的金色分割线 */
-    transition: transform .3s ease;
+    /* fix_nav_01（v1.10.6）：默认无金线；nav.is-stuck 状态（被滚动压到顶部）再显示金线 */
+    border-bottom: 1px solid transparent;
+    transition: border-color .25s ease, transform .3s ease;
   }}
-  [data-theme="light"] .nav {{
-    border-bottom-color: rgba(131, 126, 101, 0.35);
+  .nav.is-stuck {{
+    border-bottom-color: rgba(131, 126, 101, 0.55);   /* 浅淡金线，仅贴顶时显形 */
+  }}
+  [data-theme="light"] .nav.is-stuck {{
+    border-bottom-color: rgba(131, 126, 101, 0.55);  /* 深浅统一金线（不再换浅色） */
   }}
   /* 移动端滚动时自动隐藏顶栏/导航，上滑时恢复（由 JS 切换 .hide）；鼠标悬停时临时显示 */
   .nav.hide, .topbar.hide {{ transform: translateY(-160%); }}
   .nav.hide:hover, .topbar.hide:hover {{ transform: translateY(0); }}
   .nav-inner {{
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 10px 28px;          /* 更紧凑，缩短与顶部的视觉距离 */
+    /* fix_nav_01（v1.10.6）：max-width 去除；padding-left 与 .wrap(28px) 对齐；5 胶囊整体左移 */
+    padding: 10px 28px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;     /* 工具按钮已 fixed 到右上，这里居中 */
+    justify-content: flex-start;     /* 整体左移：第一个胶囊与新闻模块左边界对齐 */
     align-items: center;
     gap: 8px;
     overflow-x: visible;
     scrollbar-width: none;
   }}
+  /* 移动端（< 768px）：5 分类胶囊可水平滚动，避免被压缩换行变窄难看 */
+  @media (max-width: 767.98px) {{
+    .nav-inner {{
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-right: 14px;
+    }}
+    .nav-inner::-webkit-scrollbar {{ display: none; }}
+    /* scroll-snap 让滑动有"卡位"感 */
+    .nav-inner .nav-chip {{ scroll-snap-align: start; }}
+  }}
   .nav-actions {{
-    position: fixed;
-    top: 16px;
-    right: 24px;
-    z-index: 210;              /* 高于 topbar(200) / ticker(195)，避免被遮挡 */
+    /* fix_nav_01：fixed -> static，5 胶囊组用 margin-left:auto 把 3 个工具胶囊推到行尾；垂直居中 */
+    position: static;
     display: flex;
     align-items: center;
     gap: 10px;
     flex-shrink: 0;
+    margin-left: auto;            /* flex-spacer 把右侧三胶囊推到底 */
+    align-self: center;
+  }}
+  /* 移动端：5 胶囊已可横滑，3 工具胶囊继续在右（不参与滑动条） */
+  @media (max-width: 767.98px) {{
+    .nav-actions {{ flex-shrink: 0; padding-left: 8px; background: var(--ink-card); }}
   }}
   /* 首页：隐藏固定 topbar，工具胶囊已合并进 nav，8 胶囊在同一行 sticky 对齐 */
   [data-page-period] .topbar {{ display: none; }}
@@ -2122,6 +2142,99 @@ def render_html(info, page_info):
       window.open(url, '_blank', 'noopener');
       shutM();
     }});
+  }})();
+
+  // ============================================================
+  // NAV: chip click 高亮切换 + scroll-spy (IntersectionObserver)
+  //      + sticky nav 顶到顶部时加 .is-stuck 触发金线
+  // (fix_nav_01 v1.10.6)
+  // ============================================================
+  (function(){{
+    const navEl = document.querySelector('.nav');
+    const chips = Array.from(document.querySelectorAll('.nav-chip'));
+    if (!navEl || chips.length === 0) return;
+
+    let clickGuardUntil = 0;          // 点击后 800ms 内 IO 不覆盖点击设置的 active
+    function activateByClick(idx) {{
+      chips.forEach((c, i) => c.classList.toggle('is-active-by-click', i === idx));
+      clickGuardUntil = Date.now() + 800;
+    }}
+    function activateByIO(idx) {{
+      if (Date.now() < clickGuardUntil) return;       // 点击优先短期抑制
+      chips.forEach((c, i) => {{
+        c.classList.toggle('is-active-by-io', i === idx);
+        c.classList.remove('is-active-by-click');
+      }});
+    }}
+
+    // 1. click 切换
+    chips.forEach((chip, i) => {{
+      chip.addEventListener('click', () => activateByClick(i));
+    }});
+    // 默认激活第一个（无论 click 还是 IO 都没触发时）
+    chips[0].classList.add('is-active-by-io');
+
+    // 2. scroll-spy: 用 IO 监听每个 section 锚点，取最靠近视窗中线的为 active
+    const slugToChip = new Map();
+    const slugToIdx = new Map();
+    chips.forEach((c, i) => {{
+      const slug = c.getAttribute('data-slug') || c.getAttribute('href').slice(1);
+      slugToChip.set(slug, c);
+      slugToIdx.set(slug, i);
+    }});
+    const sections = Array.from(document.querySelectorAll('main .section'))
+      .map(sec => ({{
+        slug: sec.id,
+        idx: slugToIdx.get(sec.id),
+        el: sec
+      }}))
+      .filter(o => o.idx !== undefined);
+
+    if ('IntersectionObserver' in window && sections.length > 0) {{
+      let activeIdx = 0;
+      const io = new IntersectionObserver((entries) => {{
+        // 找当前最靠近视窗顶 80px 内的 section（即刚跨过 nav 底部的）
+        let bestIdx = activeIdx;
+        let bestTop = -Infinity;
+        entries.forEach(en => {{
+          const rect = en.boundingClientRect;
+          if (rect.top <= 120 && rect.bottom >= 0) {{
+            const sec = sections.find(s => s.el === en.target);
+            if (sec && rect.top > bestTop) {{
+              bestTop = rect.top;
+              bestIdx = sec.idx;
+            }}
+          }}
+        }});
+        // 若无 entry 满足，按当前 activeIdx 维持
+        if (bestTop === -Infinity) return;
+        if (bestIdx !== activeIdx) {{
+          activeIdx = bestIdx;
+          activateByIO(bestIdx);
+        }}
+      }}, {{
+        // 多个 rootMargin，匹配滚动边界
+        rootMargin: '-80px 0px -55% 0px',
+        threshold: [0, 0.01, 0.5]
+      }});
+      sections.forEach(s => io.observe(s.el));
+    }}
+
+    // 3. nav sticky 监听：用一个隐形 sentinel 放在 nav 上方；sentinel 离开视窗 = nav 贴顶
+    if ('IntersectionObserver' in window) {{
+      const sentinel = document.createElement('div');
+      sentinel.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none;';
+      navEl.parentNode.insertBefore(sentinel, navEl);
+      const sIO = new IntersectionObserver(([en]) => {{
+        navEl.classList.toggle('is-stuck', en.intersectionRatio === 0);
+      }}, {{ rootMargin: '-1px 0px 0px 0px', threshold: [1] }});
+      sIO.observe(sentinel);
+    }} else {{
+      // 兜底：滚到 top < 1px 时认为是贴顶
+      window.addEventListener('scroll', () => {{
+        navEl.classList.toggle('is-stuck', window.scrollY < 1);
+      }}, {{ passive: true }});
+    }}
   }})();
 
   }}); // DOMContentLoaded end
