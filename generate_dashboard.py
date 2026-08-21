@@ -52,7 +52,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.7"
+VERSION = "1.10.8"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -501,8 +501,8 @@ def render_html(info, page_info):
 
     if is_report:
         hero_headline = '<h1 class="hero-title"><span class="title-white">聚合报告</span> <span class="title-brief">AI Brief</span></h1>'
-        hero_date_block = f'''<div class="hero-date" style="font-size:28px;font-weight:300;color:var(--gold);letter-spacing:.02em;">{html.escape(date_str)}</div>
-        <div class="hero-meta">聚合窗口：<span class="accent">{fmt_short(ws_dt)} — {fmt_short(we_dt)}</span>（北京时间，UTC+8）</div>'''
+        hero_date_block = f'''<div class="hero-date" style="font-size:28px;font-weight:300;color:var(--gold);letter-spacing:.02em;">{html.escape(date_str)}</div>'''
+        hero_meta_block = f'''<div class="hero-meta">聚合窗口：<span class="accent">{fmt_short(ws_dt)} — {fmt_short(we_dt)}</span>（北京时间，UTC+8）</div>'''
         hero_lead_text = f'以下 <span class="lead-strong">{total}</span> 条动态来自近{"7" if report_range=="week" else "30"}天日报汇总，按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>'
     else:
         hero_headline = '<h1 class="hero-title"><span class="title-white">Daily AI</span> <span class="title-brief">Brief</span></h1>'
@@ -511,8 +511,8 @@ def render_html(info, page_info):
           <span class="dot">/</span>
           <span class="big">{hero_dd}</span>
           <span class="small">/ {hero_year}</span>
-        </div>
-        <div class="hero-meta">
+        </div>'''
+        hero_meta_block = f'''<div class="hero-meta">
           送达时间：<span class="accent">{fmt_full(gen_dt)}</span>
         </div>'''
         hero_lead_text = f'覆盖窗口 <span class="lead-strong">{fmt_short(ws_dt)} — {fmt_short(we_dt)}</span>（北京时间，UTC+8）。以下 <span class="lead-strong">{total}</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>'
@@ -986,8 +986,8 @@ def render_html(info, page_info):
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 18px 0 8px;
-    margin-bottom: 10px;
+    padding: 12px 0 4px;
+    margin-bottom: 6px;
   }}
   .brand-logo .sn-logo {{
     width: 44px; height: 44px;
@@ -1019,7 +1019,7 @@ def render_html(info, page_info):
 
   /* ===== HERO ===== */
   .hero {{
-    padding: 56px 0 40px;
+    padding: 24px 0 40px;
     border-bottom: 1px solid var(--line-gold);
   }}
   .hero-title {{
@@ -1098,9 +1098,13 @@ def render_html(info, page_info):
     pointer-events: none;
   }}
   .hero-grid {{
-    display: block;
-    max-width: 720px;
+    display: flex;
+    align-items: flex-start;
+    gap: 200px;
+    max-width: 880px;
   }}
+  .hero-date-col {{ flex-shrink: 0; padding-top: 12px; }}
+  .hero-info-col {{ flex: 1 1 320px; min-width: 0; }}
   .hero-date {{
     font-family: var(--font-num);
     font-weight: 300;
@@ -1134,14 +1138,14 @@ def render_html(info, page_info):
     font-family: var(--font-base);
     font-size: 13px;
     color: var(--mist-dim);
-    margin-top: 18px;
+    margin-top: 0;
     letter-spacing: 0.04em;
   }}
   .hero-meta .accent {{ color: var(--brand-cn); font-weight: 500; }}
   .hero-lead {{
     font-size: 14px;
     color: var(--mist-dim);
-    margin-top: 18px;
+    margin-top: 14px;
     max-width: 560px;
     line-height: 1.85;
     padding: 16px 18px;
@@ -1731,8 +1735,14 @@ def render_html(info, page_info):
     .hero-date .small {{ font-size: 32px; }}
     .card-grid {{ grid-template-columns: 1fr; }}
     .wrap {{ padding: 0 20px; }}
-    .brand-logo {{ padding: 12px 0 6px; }}
+    .brand-logo {{ padding: 10px 0 4px; }}
     .brand-logo .sn-logo {{ width: 38px; height: 38px; object-fit: contain; }}
+    /* 移动端 hero-grid 改回上下堆叠（去掉 200px 间距） */
+    .hero-grid {{ display: block; gap: 0; }}
+    .hero-date-col {{ margin-bottom: 16px; }}
+    .hero-info-col {{ width: 100%; }}
+    .hero-meta {{ margin-top: 0; }}
+    .hero-lead {{ margin-top: 14px; max-width: 100%; }}
     /* 移动端：导航条横向滚动，避免 8 胶囊换行错位 */
     .nav-inner {{ flex-wrap: nowrap; overflow-x: auto; padding: 10px 14px; gap: 6px; position: relative; }}
     .nav-chip {{ flex-shrink: 0; }}
@@ -1804,8 +1814,11 @@ def render_html(info, page_info):
     <div class="hero-sub"><span class="sub-brand">深南AI日报</span></div>
     {hero_headline}
     <div class="hero-grid">
-      <div>
+      <div class="hero-date-col">
         {hero_date_block}
+      </div>
+      <div class="hero-info-col">
+        {hero_meta_block}
         <div class="hero-lead">
           {hero_lead_text}
         </div>
