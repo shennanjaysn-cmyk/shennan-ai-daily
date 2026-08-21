@@ -52,7 +52,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.3"
+VERSION = "1.10.5"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -384,13 +384,6 @@ def render_html(info, page_info):
         for i, s in enumerate(cards_by_section)
     )
 
-    section_stats = [(s["label"], s["count"]) for s in cards_by_section]
-    hero_stat_cells = "\n".join(
-        f'<div class="stat-cell"><div class="stat-num">{c}</div><div class="stat-lab">{html.escape(lab)}</div></div>'
-        for lab, c in section_stats
-    )
-    grid_cols = 2 if len(cards_by_section) % 2 == 0 else 3
-
     hero_mm = f"{d.month:02d}"
     hero_dd = f"{d.day:02d}"
     hero_year = d.year
@@ -692,16 +685,7 @@ def render_html(info, page_info):
       radial-gradient(ellipse 50% 35% at 70% 85%, rgba(74, 91, 196, 0.08), transparent 60%);
   }}
 
-  /* 统计卡：浅紫底 + 靛蓝数字 */
-  [data-theme="light"] .stat-cell {{ background: #cdc8ff; }}
-  [data-theme="light"] .stat-num {{ color: #1600ff; }}
-  [data-theme="light"] .stat-total {{
-    background: linear-gradient(135deg, #cdc8ff 0%, #e6e3ff 100%);
-  }}
-  [data-theme="light"] .stat-total .num {{ color: #1600ff; }}
-  [data-theme="light"] .stat-lab,
-  [data-theme="light"] .stat-total .lab {{ color: #232387; }}
-
+  /* 统计卡整块已下线（v1.10.5），保留 nav chip 浅色规则 */
   [data-theme="light"] .nav-chip {{
     background: rgba(205, 200, 255, 0.35);
     border-color: rgba(205, 200, 255, 0.55);
@@ -1114,10 +1098,8 @@ def render_html(info, page_info):
     pointer-events: none;
   }}
   .hero-grid {{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-    align-items: end;
+    display: block;
+    max-width: 720px;
   }}
   .hero-date {{
     font-family: var(--font-num);
@@ -1204,42 +1186,7 @@ def render_html(info, page_info):
   }}
   .hero-tip:hover::after {{ opacity: 1; visibility: visible; }}
 
-  .hero-stats {{
-    display: grid;
-    gap: 1px;
-    background: #313C7D;
-    border: 1px solid #313C7D;
-    border-radius: 4px;
-    overflow: hidden;
-    opacity: 0.88;
-  }}
-  /* 浅色模式保持原有柔和描边，不被深色模式覆盖 */
-  [data-theme="light"] .hero-stats {{
-    background: var(--line-faint);
-    border-color: var(--line-faint);
-  }}
-  .hero-stats.cols-2 {{ grid-template-columns: repeat(2, 1fr); }}
-  .hero-stats.cols-3 {{ grid-template-columns: repeat(3, 1fr); }}
-  .stat-cell {{
-    background: rgba(15, 20, 36, 0.72);
-    padding: 18px 20px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }}
-  .stat-num {{ font-family: var(--font-num); font-weight: 300; font-size: 30px; color: var(--gold); line-height: 1; }}
-  .stat-lab {{ font-size: 11.5px; color: var(--mist-faint); letter-spacing: 0.05em; }}
-  .stat-total {{
-    grid-column: 1 / -1;
-    background: linear-gradient(135deg, rgba(79,92,199,0.16), rgba(218,200,135,0.05));
-    padding: 16px 24px;
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-  }}
-  .stat-total .num {{ font-family: var(--font-num); font-weight: 300; font-size: 34px; color: var(--gold); line-height: 1; }}
-  .stat-total .lab {{ font-size: 11px; color: var(--mist-dim); letter-spacing: 0.18em; text-transform: uppercase; }}
-
+  /* hero-stats 整块已下线（v1.10.5） */
   /* ===== STICKY NAV ===== */
   .nav {{
     position: sticky;
@@ -1757,13 +1704,10 @@ def render_html(info, page_info):
     .nav {{ padding-top: 0; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: none; }}
     .nav-inner {{ background: var(--surface-float); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); border: 1px solid var(--line-faint); border-radius: 999px; margin: 0 14px; padding: 8px 14px; }}
     .hero {{ padding: 36px 0 24px; }}
-    .hero-grid {{ grid-template-columns: 1fr; gap: 36px; }}
     .hero-title {{ font-size: 34px; word-break: break-word; }}
     .hero-date .big {{ font-size: 110px; }}
     .hero-date .dot {{ font-size: 72px; }}
     .hero-date .small {{ font-size: 32px; }}
-    .hero-stats {{ grid-template-columns: repeat(2, 1fr) !important; }}
-    .stat-total {{ grid-column: 1 / -1; }}
     .card-grid {{ grid-template-columns: 1fr; }}
     .wrap {{ padding: 0 20px; }}
     .brand-logo {{ padding: 12px 0 6px; }}
@@ -1843,13 +1787,6 @@ def render_html(info, page_info):
         {hero_date_block}
         <div class="hero-lead">
           {hero_lead_text}
-        </div>
-      </div>
-      <div class="hero-stats cols-{grid_cols}">
-        {hero_stat_cells}
-        <div class="stat-total">
-          <span class="num">{total}</span>
-          <span class="lab">Total · 总条数</span>
         </div>
       </div>
     </div>
