@@ -557,6 +557,26 @@
     animation: riseIn .65s cubic-bezier(.2,.7,.3,1) both;
     animation-delay: calc(var(--d) * 60ms);
   }
+  /* _fix_nav_03：点击 nav 胶囊后，目标 section 着陆瞬间的脉冲高亮，强化“你到了这一组”的锚定感 */
+  .reveal-sec.flash::before {
+    content: "";
+    position: absolute;
+    left: -10px; right: -10px; top: -10px; bottom: -10px;
+    border-radius: 16px;
+    pointer-events: none;
+    box-shadow: 0 0 0 2px var(--accent, #4F5CC7), 0 0 28px 4px rgba(79,92,199,.45);
+    opacity: 0;
+    animation: secFlash .7s ease-out forwards;
+  }
+  .reveal-sec { position: relative; }
+  @keyframes secFlash {
+    0%   { opacity: 0; }
+    18%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-sec.flash::before { animation: none; opacity: 0; }
+  }
   .reveal { opacity: 1; transform: none; }
   .in-view .reveal {
     opacity: 1;
@@ -6095,9 +6115,43 @@
     // 默认：第一个胶囊高亮（打开页面即亮，修复“无默认高亮”）
     paint(0);
 
-    // 点击：高亮并锁定，直到下次点选别的胶囊
+    // _fix_nav_03：点击胶囊 → 极速位移 + 着陆脉冲，强化分组落点感知（尤其周报/月报）
+    // 用 rAF 自写指数缓出，比原生 smooth 更快更可控；落点精确对齐吸顶 nav 高度。
+    let scrollAnim = null;
+    function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+    function goToSection(sec, chip) {
+      if (!sec) return;
+      const navH = navEl.offsetHeight || 64;
+      const top = sec.getBoundingClientRect().top + window.scrollY - navH - 8;
+      const startY = window.scrollY;
+      const delta = top - startY;
+      if (Math.abs(delta) < 2) { landFlash(sec); return; }   // 已在目标附近，直接脉冲
+      const dur = 340;                                          // 极速：~340ms
+      const t0 = performance.now();
+      if (scrollAnim) cancelAnimationFrame(scrollAnim);
+      (function step(now) {
+        const p = Math.min(1, (now - t0) / dur);
+        window.scrollTo(0, startY + delta * easeOutExpo(p));
+        if (p < 1) { scrollAnim = requestAnimationFrame(step); }
+        else { landFlash(sec); }
+      })(t0);
+    }
+    function landFlash(sec) {
+      sec.classList.remove('flash');
+      // 强制 reflow 以便重复点击也能重放动画
+      void sec.offsetWidth;
+      sec.classList.add('flash');
+      setTimeout(() => sec.classList.remove('flash'), 750);
+    }
+
+    // 点击：高亮并锁定，直到下次点选别的胶囊；同时触发极速位移 + 着陆脉冲
     chips.forEach((chip, i) => {
-      chip.addEventListener('click', () => { manualIdx = i; paint(i); });
+      chip.addEventListener('click', (e) => {
+        e.preventDefault();                       // 拦截原生锚点跳变，改用特效位移
+        manualIdx = i; paint(i);
+        const sec = document.querySelector(chip.getAttribute('href'));
+        goToSection(sec, chip);
+      });
     });
 
     // 滚动跟随：仅在点选前生效；点选后锁定，滚动不再抢
