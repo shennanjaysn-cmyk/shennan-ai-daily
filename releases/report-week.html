@@ -550,7 +550,7 @@
   /* ===== HERO ===== */
   .hero {
     padding: 24px 0 40px;
-    border-bottom: 1px solid var(--line-gold);
+    /* fix_report_01（v1.10.9）：去掉 hero 底边金线——nav 默认无金边，仅在 .is-stuck 吸顶时下方再出现 */
   }
   .hero-title {
     font-family: var(--font-en-display);
@@ -631,10 +631,13 @@
     display: flex;
     align-items: flex-start;
     gap: 200px;
-    max-width: 880px;
+    /* fix_report_01（v1.10.9）：max-width 放大到 1024——大号日期(08/21/2026)自然宽 ~480px + 200 gap + info 320 = 1000，再多 24 余量 */
+    max-width: 1024px;
+    /* fix_report_01（v1.10.9）：flex-wrap 让 info-col 在窗口不够时自然下移到日期下，与移动端一致 */
+    flex-wrap: wrap;
   }
   .hero-date-col { flex-shrink: 0; padding-top: 12px; }
-  .hero-info-col { flex: 1 1 320px; min-width: 0; }
+  .hero-info-col { flex: 1 1 320px; min-width: 320px; }
   .hero-date {
     font-family: var(--font-num);
     font-weight: 300;
@@ -676,7 +679,8 @@
     font-size: 14px;
     color: var(--mist-dim);
     margin-top: 14px;
-    max-width: 560px;
+    /* fix_report_01（v1.10.9）：去掉 max-width 限制——引用段自然拍一行，窗口缩小时再收起，直到位置不够了再下移到日期下 */
+    max-width: none;
     line-height: 1.85;
     padding: 16px 18px;
     border-left: 2px solid var(--brand-cn);
@@ -780,10 +784,10 @@
   @media (max-width: 767.98px) {
     .nav-actions { flex-shrink: 0; padding-left: 8px; background: var(--ink-card); }
   }
-  /* 首页：隐藏固定 topbar，工具胶囊已合并进 nav，8 胶囊在同一行 sticky 对齐 */
-  [data-page-period] .topbar { display: none; }
-  /* 首页 ticker 随页面滚走后，nav 直接贴顶，不再留 32px 镂空间隙 */
-  [data-page-period] .nav { top: env(safe-area-inset-top, 0); }
+  /* fix_report_01（v1.10.9）：首页三工具胶囊已恢复回 topbar，固定显示整页右上角；nav 收回纯 5 分类胶囊 */
+  [data-page-period] .topbar { display: flex; }
+  /* fix_report_01（v1.10.9）：首页三胶囊回到 topbar，nav 吸顶位置从贴顶改为 topbar 下方（32 ticker + 50 topbar） */
+  [data-page-period] .nav { top: calc(env(safe-area-inset-top, 0) + 82px); }
   .nav-inner::-webkit-scrollbar { display: none; }
   .nav-chip {
     display: inline-flex;

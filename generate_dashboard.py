@@ -52,7 +52,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.8"
+VERSION = "1.10.9"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -461,13 +461,14 @@ def render_html(info, page_info):
   </div>
 </div>'''
 
-    # v1.9.3：首页把右侧工具胶囊（报告/历史日报/导出）合并进导航条，与 5 个分类胶囊在同一行 sticky 对齐
+    # fix_report_01（v1.10.9）：三工具胶囊恢复回整页右上角 topbar；nav 收回纯 5 分类胶囊
     if is_report:
         nav_actions_html = ""
         topbar_tools_html = report_dropdown_html  # 报告页保留「返回今日」在 topbar
     else:
-        nav_actions_html = f'''<div class="nav-actions">
-  {report_dropdown_html}
+        nav_actions_html = ""
+        # 首页 topbar 三胶囊：报告 / 历史日报 / 导出，统一实色 #151C33 填充去描边（v1.10.7 视觉延续）
+        topbar_tools_html = f'''{report_dropdown_html}
   <div class="dropdown" id="historyDropdown">
     <button class="top-btn" type="button" aria-haspopup="true" aria-expanded="false">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -495,9 +496,7 @@ def render_html(info, page_info):
       <a class="dropdown-item" href="#" data-export="csv">CSV 表格</a>
       <a class="dropdown-item" href="#" data-export="pdf">PDF 文档</a>
     </div>
-  </div>
-</div>'''
-        topbar_tools_html = ""
+  </div>'''
 
     if is_report:
         hero_headline = '<h1 class="hero-title"><span class="title-white">聚合报告</span> <span class="title-brief">AI Brief</span></h1>'
@@ -1020,7 +1019,7 @@ def render_html(info, page_info):
   /* ===== HERO ===== */
   .hero {{
     padding: 24px 0 40px;
-    border-bottom: 1px solid var(--line-gold);
+    /* fix_report_01（v1.10.9）：去掉 hero 底边金线——nav 默认无金边，仅在 .is-stuck 吸顶时下方再出现 */
   }}
   .hero-title {{
     font-family: var(--font-en-display);
@@ -1101,10 +1100,13 @@ def render_html(info, page_info):
     display: flex;
     align-items: flex-start;
     gap: 200px;
-    max-width: 880px;
+    /* fix_report_01（v1.10.9）：max-width 放大到 1024——大号日期(08/21/2026)自然宽 ~480px + 200 gap + info 320 = 1000，再多 24 余量 */
+    max-width: 1024px;
+    /* fix_report_01（v1.10.9）：flex-wrap 让 info-col 在窗口不够时自然下移到日期下，与移动端一致 */
+    flex-wrap: wrap;
   }}
   .hero-date-col {{ flex-shrink: 0; padding-top: 12px; }}
-  .hero-info-col {{ flex: 1 1 320px; min-width: 0; }}
+  .hero-info-col {{ flex: 1 1 320px; min-width: 320px; }}
   .hero-date {{
     font-family: var(--font-num);
     font-weight: 300;
@@ -1146,7 +1148,8 @@ def render_html(info, page_info):
     font-size: 14px;
     color: var(--mist-dim);
     margin-top: 14px;
-    max-width: 560px;
+    /* fix_report_01（v1.10.9）：去掉 max-width 限制——引用段自然拍一行，窗口缩小时再收起，直到位置不够了再下移到日期下 */
+    max-width: none;
     line-height: 1.85;
     padding: 16px 18px;
     border-left: 2px solid var(--brand-cn);
@@ -1250,10 +1253,10 @@ def render_html(info, page_info):
   @media (max-width: 767.98px) {{
     .nav-actions {{ flex-shrink: 0; padding-left: 8px; background: var(--ink-card); }}
   }}
-  /* 首页：隐藏固定 topbar，工具胶囊已合并进 nav，8 胶囊在同一行 sticky 对齐 */
-  [data-page-period] .topbar {{ display: none; }}
-  /* 首页 ticker 随页面滚走后，nav 直接贴顶，不再留 32px 镂空间隙 */
-  [data-page-period] .nav {{ top: env(safe-area-inset-top, 0); }}
+  /* fix_report_01（v1.10.9）：首页三工具胶囊已恢复回 topbar，固定显示整页右上角；nav 收回纯 5 分类胶囊 */
+  [data-page-period] .topbar {{ display: flex; }}
+  /* fix_report_01（v1.10.9）：首页三胶囊回到 topbar，nav 吸顶位置从贴顶改为 topbar 下方（32 ticker + 50 topbar） */
+  [data-page-period] .nav {{ top: calc(env(safe-area-inset-top, 0) + 82px); }}
   .nav-inner::-webkit-scrollbar {{ display: none; }}
   .nav-chip {{
     display: inline-flex;
