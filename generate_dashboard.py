@@ -16,6 +16,7 @@ Outputs per run (all under releases/):
 """
 import json
 import html
+import sys
 import urllib.request
 import urllib.error
 import base64
@@ -52,7 +53,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.13"
+VERSION = "1.10.17"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -985,14 +986,29 @@ def render_html(info, page_info):
     color: var(--text-primary);
   }}
 
-  /* ===== BRAND LOGO ===== */
+  /* ===== BRAND LOGO + HERO TOP ROW（_fix_report_001：logo 左、三工具胶囊右上角，同行顶对齐）===== */
+  .hero-top {{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0 4px;
+    margin-bottom: 6px;
+  }}
   .brand-logo {{
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 0 4px;
-    margin-bottom: 6px;
+    padding: 0;
+    margin: 0;
   }}
+  .hero-actions {{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }}
+  .hero-actions .nav-actions {{ margin-left: 0; }}
   .brand-logo .sn-logo {{
     width: 44px; height: 44px;
     flex-shrink: 0;
@@ -1749,7 +1765,7 @@ def render_html(info, page_info):
     .hero-date .small {{ font-size: 32px; }}
     .card-grid {{ grid-template-columns: 1fr; }}
     .wrap {{ padding: 0 20px; }}
-    .brand-logo {{ padding: 10px 0 4px; }}
+    .hero-top {{ padding: 10px 0 4px; }}
     .brand-logo .sn-logo {{ width: 38px; height: 38px; object-fit: contain; }}
     /* 移动端 hero-grid 改回上下堆叠（去掉 200px 间距） */
     .hero-grid {{ display: block; gap: 0; }}
@@ -1822,8 +1838,11 @@ def render_html(info, page_info):
 <div class="wrap">
   <!-- HERO -->
   <header class="hero">
-    <div class="brand-logo">
-      {logo_img}
+    <div class="hero-top">
+      <div class="brand-logo">
+        {logo_img}
+      </div>
+      <div class="hero-actions" id="heroActions"></div>
     </div>
     <div class="hero-sub"><span class="sub-brand">深南AI日报</span></div>
     {hero_headline}
@@ -2051,6 +2070,13 @@ def render_html(info, page_info):
       noon: '午报：12:30 更新',
       night: '晚报：18:30 更新'
     }};
+    // _fix_report_002 修复：原 `${{'morning':'08:10',...}}[key]` 在 f-string 转义后变成非法 JS (SyntaxError: Missing 闭括号)，
+    // 导致整个主脚本从 1902 行起死亡、placeActions/nav 高亮全部不执行。改为干净的常量对象。
+    const periodTime = {{
+      morning: '08:10',
+      noon: '12:30',
+      night: '18:30'
+    }};
 
     const chips = Array.from(document.querySelectorAll('.time-chip'));
     const body = document.body;
@@ -2066,7 +2092,7 @@ def render_html(info, page_info):
                          (key === 'night' && activeKey !== 'night');
         btn.classList.toggle('active', key === activeKey);
         btn.disabled = isFuture;
-        btn.title = isFuture ? `将于 ${{'morning':'08:10','noon':'12:30','night':'18:30'}}[key] 更新` : periodTip[key];
+        btn.title = isFuture ? `将于 ${{periodTime[key]}} 更新` : periodTip[key];
       }});
     }}
 
@@ -2194,21 +2220,36 @@ def render_html(info, page_info):
       window.addEventListener('load', () => {{ if (manualIdx < 0) paint(0); }});
     }}
 
-    // 3. nav sticky 监听：用一个隐形 sentinel 放在 nav 上方；sentinel 离开视窗 = nav 贴顶
-    if ('IntersectionObserver' in window) {{
-      const sentinel = document.createElement('div');
-      sentinel.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none;';
-      navEl.parentNode.insertBefore(sentinel, navEl);
-      const sIO = new IntersectionObserver(([en]) => {{
-        navEl.classList.toggle('is-stuck', en.intersectionRatio === 0);
-      }}, {{ rootMargin: '-1px 0px 0px 0px', threshold: [1] }});
-      sIO.observe(sentinel);
-    }} else {{
-      // 兜底：滚到 top < 1px 时认为是贴顶
-      window.addEventListener('scroll', () => {{
-        navEl.classList.toggle('is-stuck', window.scrollY < 1);
-      }}, {{ passive: true }});
+    // 3. nav sticky 监听 + 三工具胶囊在「hero 右上角(静止) / nav 行内(吸顶)」间搬运
+    const actionsEl = document.querySelector('.nav-actions');
+    const heroActionsEl = document.getElementById('heroActions');
+    const navInnerEl = document.querySelector('.nav-inner');
+    const ACTIONS_DESKTOP = 880;
+    function placeActions() {{
+      if (!actionsEl || !heroActionsEl || !navInnerEl) return;
+      const stuck = navEl.classList.contains('is-stuck');
+      const isDesktop = window.innerWidth > ACTIONS_DESKTOP;
+      // 桌面：静止→hero 右上角（与 logo 同排）；吸顶→搬回 nav 行内（与 5 分类合并一排）。移动端：始终留在 nav。
+      if (isDesktop && !stuck) {{
+        if (actionsEl.parentNode !== heroActionsEl) heroActionsEl.appendChild(actionsEl);
+      }} else {{
+        if (actionsEl.parentNode !== navInnerEl) navInnerEl.appendChild(actionsEl);
+      }}
     }}
+    // _fix_report_002：弃用 1px 哨兵 + IntersectionObserver 判定吸顶（哨兵定位依赖祖先定位上下文，
+    // 初始 IO 回调在某些渲染环境/headless 下会误报 ratio=0→stuck=true，把胶囊误搬回 nav）。
+    // 改用确定性的几何判定：nav 自身是 sticky top:0，当其 getBoundingClientRect().top <= 0 时即为吸顶。
+    function updateStuck() {{
+      const stuck = navEl.getBoundingClientRect().top <= 0;
+      navEl.classList.toggle('is-stuck', stuck);
+      placeActions();
+    }}
+    let stuckTicking = false;
+    window.addEventListener('scroll', () => {{
+      if (!stuckTicking) {{ requestAnimationFrame(updateStuck); stuckTicking = true; setTimeout(() => stuckTicking = false, 0); }}
+    }}, {{ passive: true }});
+    updateStuck();   // 初始定位（桌面静止 scrollY=0 → nav.top > 0 → 不吸顶 → 胶囊到 hero 右上角）
+    window.addEventListener('resize', placeActions);
   }})();
 
   }}); // DOMContentLoaded end
@@ -2438,10 +2479,14 @@ def main():
             "csv": export_csv(month_info),
         }
 
-    # Clean old archives
-    removed = cleanup_old_archives(keep_days=30)
-    if removed:
-        print(f"Removed {removed} old daily archive(s)")
+    # Clean old archives — DISABLED by default (v1.10.17 修复：曾静默删 30天前 daily 归档，违反"保留全量历史")
+    # 仅当显式传入 --cleanup 才执行；deploy.yml / 日常本地生成均不再自动删档
+    if "--cleanup" in sys.argv:
+        removed = cleanup_old_archives(keep_days=30)
+        if removed:
+            print(f"Removed {removed} old daily archive(s)")
+    else:
+        print("Skipped archive cleanup (pass --cleanup to prune daily archives older than 30d)")
 
     # Write exports.js (shared by all pages — eliminates ~426KB inline per page)
     scope_js_parts = []

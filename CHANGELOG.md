@@ -12,6 +12,43 @@
 
 ---
 
+## v1.10.17_260821 — 封死生成器静默删档地雷（_fix_report_001 收尾）
+
+**类型**：修订 +1（数据安全修复）
+**日期**：2026-08-21
+**根因**：`generate_dashboard.py` 的 `main()` 无条件调用 `cleanup_old_archives(keep_days=30)`，每次本地生成或 GitHub Actions（`deploy.yml` 在 push/cron 时都跑 `python generate_dashboard.py`）都会静默删除 `releases/daily/` 下 30 天前的归档，违反"releases 保留全量历史"约定，且完全未经确认。
+**修复**：清理改为**默认关闭**，仅在显式传入 `--cleanup` 时执行。deploy 与日常生成不再自动删档；需要腾空间时手动 `python generate_dashboard.py --cleanup`。
+**影响**：线上 gh-pages 与本地 releases/ 的历史 daily 归档不再被自动抹掉。
+
+---
+
+## v1.10.16_260821 — 吸顶判定改为确定性几何（_fix_report_001 二次修）
+
+**类型**：修订 +3（稳健性修复）
+**日期**：2026-08-21
+**根因**：v1.10.15 修复 SyntaxError 后，`placeActions()` 仍偶发不把胶囊搬到 hero 右上角。原因是吸顶判定用「1px 哨兵 + `IntersectionObserver`」：哨兵 `position:absolute;top:0` 的实际位置依赖其祖先的定位上下文，IO 初始回调在某些渲染环境/无头浏览器下会误报 `ratio===0` → `stuck=true`，把胶囊立刻搬回 nav。属于用脆弱几何点做状态判定的反模式。
+**修复**：删除哨兵与 IO，改用 `navEl.getBoundingClientRect().top <= 0`（nav 自身 `position:sticky; top:0`，吸顶时 top 必然 ≤0）配合 `requestAnimationFrame` 节流的 scroll 监听。`scrollY=0` 时 `nav.top > 0`、天然不吸顶、胶囊到 hero 右上角，状态确定、无竞态。
+**影响**：_fix_report_001 的三胶囊布局在所有环境下都稳定生效。
+
+**类型**：修订 +2（阻塞性 bug 修复）
+**日期**：2026-08-21
+**根因**：`generate_dashboard.py` 的 f-string 模板里时段 chip 的 title 写了一个残废的 JS 模板表达式（`${'morning':'08:10',...}[key]`，对象字面量大括号被吞），生成的 `releases/index.html` 第 ~1902 行抛 `Uncaught SyntaxError: Missing } in template expression`，**整个主脚本从该行起死亡**。后果：`placeActions()` / nav 高亮 IO / 时段切换全部不执行，三胶囊永不搬运、nav 永不亮——表现为"完全没变化"。
+**修复**：将时段时间抽为干净的 `periodTime` 常量对象，`btn.title` 改用 `periodTime[key]`。修后 console 干净、生成产物合法。
+**影响**：_fix_report_001 的三胶囊布局与 v1.10.13 的 nav 高亮终于真正生效。
+
+---
+
+## v1.10.14_260821 — 三工具胶囊移到 hero 右上角 + 吸顶合并一排（_fix_report_001）
+
+**类型**：修订 +1（布局优化）
+**日期**：2026-08-21
+
+- 📐 **三工具胶囊（报告/历史日报/导出）移到页面右上角**：hero 顶部新增 `.hero-top` 一行 = `[logo] …… [三胶囊]`，胶囊与 logo 同排右上角对齐；静止时 nav 只剩 5 分类胶囊。
+- 🔀 **吸顶时合并成一排**：用 JS 把 `.nav-actions` 在 `.hero-actions`（静止）与 `.nav-inner`（吸顶）间搬运——nav 吸顶时三胶囊搬回 nav 行内，与 5 分类合并成一排；回顶再搬回 hero 右上角。下拉交互基于 `.dropdown` 类委托绑定，搬运不丢监听。
+- 📱 **移动端（≤880）不搬**：维持 v1.10.10 现状（三胶囊始终在 nav），避免与移动端横滑/隐藏逻辑冲突；resize 跨断点自动重算位置。
+
+---
+
 ## v1.10.13_260821 — nav 高亮重写（根治「默认不亮 / 点选不持久」）
 
 **类型**：修订 +1（交互修复 · 根因修复）
