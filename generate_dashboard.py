@@ -52,7 +52,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.10"
+VERSION = "1.10.11"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -516,7 +516,7 @@ def render_html(info, page_info):
         hero_meta_block = f'''<div class="hero-meta">
           送达时间：<span class="accent">{fmt_full(gen_dt)}</span>
         </div>'''
-        hero_lead_text = f'覆盖窗口 <span class="lead-strong">{fmt_short(ws_dt)} — {fmt_short(we_dt)}</span>（北京时间，UTC+8）。以下 <span class="lead-strong">{total}</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>'
+        hero_lead_text = f'覆盖窗口 <span class="lead-strong">{fmt_short(ws_dt)} — {fmt_short(we_dt)}</span>（北京时间，UTC+8）。<br>以下 <span class="lead-strong">{total}</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>'
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -703,7 +703,8 @@ def render_html(info, page_info):
     border-left-color: rgba(22, 0, 255, 0.25);
   }}
   [data-theme="light"] .nav-chip.active,
-  [data-theme="light"] .nav-chip.is-active-by-io {{
+  [data-theme="light"] .nav-chip.is-active-by-io,
+  [data-theme="light"] .nav-chip.is-active-by-click {{
     background: #1600ff;
     border-color: #1600ff;
     color: #fff;
@@ -711,7 +712,9 @@ def render_html(info, page_info):
   [data-theme="light"] .nav-chip.active .nav-roman,
   [data-theme="light"] .nav-chip.active .nav-n,
   [data-theme="light"] .nav-chip.is-active-by-io .nav-roman,
-  [data-theme="light"] .nav-chip.is-active-by-io .nav-n {{
+  [data-theme="light"] .nav-chip.is-active-by-io .nav-n,
+  [data-theme="light"] .nav-chip.is-active-by-click .nav-roman,
+  [data-theme="light"] .nav-chip.is-active-by-click .nav-n {{
     color: #fff;
     border-left-color: rgba(255, 255, 255, 0.35);
   }}
@@ -1102,8 +1105,8 @@ def render_html(info, page_info):
     display: flex;
     align-items: flex-start;
     gap: 200px;
-    /* fix_report_01（v1.10.9）：max-width 放大到 1024——大号日期(08/21/2026)自然宽 ~480px + 200 gap + info 320 = 1000，再多 24 余量 */
-    max-width: 1024px;
+    /* fix_report_01（v1.10.11）：去掉 max-width 限制——hero 与新闻模块同处 .wrap 内容宽度，hero-lead 右端自然对齐 .wrap 右端（与新闻模块右端齐平） */
+    max-width: none;
     /* fix_report_01（v1.10.9）：flex-wrap 让 info-col 在窗口不够时自然下移到日期下，与移动端一致 */
     flex-wrap: wrap;
   }}
@@ -1150,7 +1153,7 @@ def render_html(info, page_info):
     font-size: 14px;
     color: var(--mist-dim);
     margin-top: 14px;
-    /* fix_report_01（v1.10.9）：去掉 max-width 限制——引用段自然拍一行，窗口缩小时再收起，直到位置不够了再下移到日期下 */
+    /* fix_report_01（v1.10.11）：max-width 恢复 none——hero-grid 已放开 max-width，hero-lead 自然填满 hero-info-col（与右端对齐新闻模块） */
     max-width: none;
     line-height: 1.85;
     padding: 16px 18px;
@@ -1282,7 +1285,8 @@ def render_html(info, page_info):
   .nav-chip:hover .nav-roman,
   .nav-chip:hover .nav-n {{ color: var(--text-primary); border-left-color: rgba(255,255,255,0.3); }}
   .nav-chip.active,
-  .nav-chip.is-active-by-io {{
+  .nav-chip.is-active-by-io,
+  .nav-chip.is-active-by-click {{
     border-color: var(--btn);
     color: var(--text-primary);
     background: var(--btn);
@@ -1290,7 +1294,9 @@ def render_html(info, page_info):
   .nav-chip.active .nav-roman,
   .nav-chip.active .nav-n,
   .nav-chip.is-active-by-io .nav-roman,
-  .nav-chip.is-active-by-io .nav-n {{ color: var(--text-primary); border-left-color: rgba(255,255,255,0.3); }}
+  .nav-chip.is-active-by-io .nav-n,
+  .nav-chip.is-active-by-click .nav-roman,
+  .nav-chip.is-active-by-click .nav-n {{ color: var(--text-primary); border-left-color: rgba(255,255,255,0.3); }}
   .nav-roman {{ font-family: var(--font-num); font-weight: 400; color: var(--ultra-bright); font-size: 12px; }}
   .nav-n {{ font-family: 'Space Grotesk', sans-serif; font-weight: 400; color: var(--gold); font-size: 12px; padding-left: 8px; border-left: 1px solid var(--line); }}
   .nav-n .count-unit {{ font-family: 'ZCOOL XiaoWei', sans-serif; font-weight: 300; margin-left: 4px; font-size: 11px; }}
@@ -2173,16 +2179,21 @@ def render_html(info, page_info):
     const chips = Array.from(document.querySelectorAll('.nav-chip'));
     if (!navEl || chips.length === 0) return;
 
-    let clickGuardUntil = 0;          // 点击后 800ms 内 IO 不覆盖点击设置的 active
+    let clickGuardUntil = 0;          // 点击后 1500ms 内 IO 不覆盖点击设置的 active
+    let lockedIdx = -1;              // 用户已点击锁定的胶囊索引；>=0 时 IO 完全让位（v1.10.11 修复点击不持久高亮）
     function activateByClick(idx) {{
-      chips.forEach((c, i) => c.classList.toggle('is-active-by-click', i === idx));
-      clickGuardUntil = Date.now() + 800;
+      lockedIdx = idx;
+      chips.forEach((c, i) => {{
+        c.classList.toggle('is-active-by-click', i === idx);
+        c.classList.remove('is-active-by-io');     // 点击后清掉 IO 高亮，避免双亮
+      }});
+      clickGuardUntil = Date.now() + 1500;
     }}
     function activateByIO(idx) {{
       if (Date.now() < clickGuardUntil) return;       // 点击优先短期抑制
+      if (lockedIdx >= 0) return;                     // 已有锁定的胶囊，IO 全部让位（v1.10.11）
       chips.forEach((c, i) => {{
         c.classList.toggle('is-active-by-io', i === idx);
-        c.classList.remove('is-active-by-click');
       }});
     }}
 
@@ -2233,7 +2244,8 @@ def render_html(info, page_info):
         }}
       }}, {{
         // 多个 rootMargin，匹配滚动边界
-        rootMargin: '-80px 0px -55% 0px',
+        // fix_report_01（v1.10.11）：nav 改贴顶后 rootMargin 顶部 -80 → -50，与新吸顶位置匹配
+        rootMargin: '-50px 0px -55% 0px',
         threshold: [0, 0.01, 0.5]
       }});
       sections.forEach(s => io.observe(s.el));
