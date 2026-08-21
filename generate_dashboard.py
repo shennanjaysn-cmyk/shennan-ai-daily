@@ -52,7 +52,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.11"
+VERSION = "1.10.13"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -1221,11 +1221,14 @@ def render_html(info, page_info):
   .nav.hide, .topbar.hide {{ transform: translateY(-160%); }}
   .nav.hide:hover, .topbar.hide:hover {{ transform: translateY(0); }}
   .nav-inner {{
-    /* fix_nav_01（v1.10.6）：max-width 去除；padding-left 与 .wrap(28px) 对齐；5 胶囊整体左移 */
+    /* fix_nav_001：与 .wrap(max-width:1280px; margin:0 auto; padding:0 28px) 同网格对齐
+       —— 宽屏下导航胶囊左边缘与新闻模块左边缘严格对齐（此前全宽 28px 导致宽屏左偏一个 (100vw-1280)/2 偏移） */
+    max-width: 1280px;
+    margin: 0 auto;
     padding: 10px 28px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;     /* 整体左移：第一个胶囊与新闻模块左边界对齐 */
+    justify-content: flex-start;     /* 第一个胶囊与新闻模块左边界对齐 */
     align-items: center;
     gap: 8px;
     overflow-x: visible;
@@ -1977,30 +1980,9 @@ def render_html(info, page_info):
     }});
   }})();
 
-  // 2) 锚点导航高亮当前版块（v1.10.1 修复：点击立即切换，IO 不再延迟覆盖）
-  (function() {{
-    const chips = Array.from(document.querySelectorAll('.nav-chip'));
-    const sections = chips.map(c => document.querySelector(c.getAttribute('href')));
-    function setActive(href) {{
-      chips.forEach(c => {{
-        const isActive = c.getAttribute('href') === href;
-        c.classList.toggle('active', isActive);
-        c.classList.remove('is-active-by-io');
-      }});
-    }}
-    chips.forEach(c => {{
-      c.addEventListener('click', () => setActive(c.getAttribute('href')));
-    }});
-    if (!('IntersectionObserver' in window)) return;
-    const io = new IntersectionObserver((entries) => {{
-      entries.forEach(e => {{
-        if (e.isIntersecting) {{
-          setActive('#' + e.target.id);
-        }}
-      }});
-    }}, {{ rootMargin: '-30% 0px -60% 0px' }});
-    sections.forEach(s => s && io.observe(s));
-  }})();
+  // 2) [v1.10.12 删除] 原“锚点导航高亮”脚本已并入下方 NAV 单一实现（见 2175 段）。
+  //    之前此处与 2175 段各有一套 nav-chip 高亮逻辑，互相撤销 class 导致
+  //    “打开无默认高亮 / 点选不持久”——典型的双实现冲突。现在只保留一份真相。
 
   // 3) 滚动入场动效
   (function() {{
@@ -2170,85 +2152,46 @@ def render_html(info, page_info):
   }})();
 
   // ============================================================
-  // NAV: chip click 高亮切换 + scroll-spy (IntersectionObserver)
-  //      + sticky nav 顶到顶部时加 .is-stuck 触发金线
-  // (fix_nav_01 v1.10.6)
+  // NAV: 胶囊高亮（v1.10.12 重写为单一真相）
+  //   需求：① 默认第一个胶囊高亮 ② 点选的胶囊高亮并锁定
+  //   实现：只用 .active 一个 class（深浅 CSS 均已支持）；
+  //         manualIdx>=0 表示用户已点选锁定，滚动跟随让位。
+  //   （is-stuck 金线逻辑见下方 // 3.）
   // ============================================================
   (function(){{
     const navEl = document.querySelector('.nav');
     const chips = Array.from(document.querySelectorAll('.nav-chip'));
     if (!navEl || chips.length === 0) return;
 
-    let clickGuardUntil = 0;          // 点击后 1500ms 内 IO 不覆盖点击设置的 active
-    let lockedIdx = -1;              // 用户已点击锁定的胶囊索引；>=0 时 IO 完全让位（v1.10.11 修复点击不持久高亮）
-    function activateByClick(idx) {{
-      lockedIdx = idx;
-      chips.forEach((c, i) => {{
-        c.classList.toggle('is-active-by-click', i === idx);
-        c.classList.remove('is-active-by-io');     // 点击后清掉 IO 高亮，避免双亮
-      }});
-      clickGuardUntil = Date.now() + 1500;
-    }}
-    function activateByIO(idx) {{
-      if (Date.now() < clickGuardUntil) return;       // 点击优先短期抑制
-      if (lockedIdx >= 0) return;                     // 已有锁定的胶囊，IO 全部让位（v1.10.11）
-      chips.forEach((c, i) => {{
-        c.classList.toggle('is-active-by-io', i === idx);
-      }});
+    let manualIdx = -1;                 // 用户点击锁定的胶囊索引；>=0 时滚动跟随让位
+    function paint(idx) {{
+      chips.forEach((c, i) => c.classList.toggle('active', i === idx));
     }}
 
-    // 1. click 切换
+    // 默认：第一个胶囊高亮（打开页面即亮，修复“无默认高亮”）
+    paint(0);
+
+    // 点击：高亮并锁定，直到下次点选别的胶囊
     chips.forEach((chip, i) => {{
-      chip.addEventListener('click', () => activateByClick(i));
+      chip.addEventListener('click', () => {{ manualIdx = i; paint(i); }});
     }});
-    // 默认激活第一个（无论 click 还是 IO 都没触发时）
-    chips[0].classList.add('is-active-by-io');
 
-    // 2. scroll-spy: 用 IO 监听每个 section 锚点，取最靠近视窗中线的为 active
-    const slugToChip = new Map();
-    const slugToIdx = new Map();
-    chips.forEach((c, i) => {{
-      const slug = c.getAttribute('data-slug') || c.getAttribute('href').slice(1);
-      slugToChip.set(slug, c);
-      slugToIdx.set(slug, i);
-    }});
-    const sections = Array.from(document.querySelectorAll('main .section'))
-      .map(sec => ({{
-        slug: sec.id,
-        idx: slugToIdx.get(sec.id),
-        el: sec
-      }}))
-      .filter(o => o.idx !== undefined);
-
-    if ('IntersectionObserver' in window && sections.length > 0) {{
-      let activeIdx = 0;
+    // 滚动跟随：仅在点选前生效；点选后锁定，滚动不再抢
+    if ('IntersectionObserver' in window) {{
+      const sections = chips.map(c => document.querySelector(c.getAttribute('href'))).filter(Boolean);
+      let lastIdx = 0;
       const io = new IntersectionObserver((entries) => {{
-        // 找当前最靠近视窗顶 80px 内的 section（即刚跨过 nav 底部的）
-        let bestIdx = activeIdx;
-        let bestTop = -Infinity;
-        entries.forEach(en => {{
-          const rect = en.boundingClientRect;
-          if (rect.top <= 120 && rect.bottom >= 0) {{
-            const sec = sections.find(s => s.el === en.target);
-            if (sec && rect.top > bestTop) {{
-              bestTop = rect.top;
-              bestIdx = sec.idx;
-            }}
-          }}
+        if (manualIdx >= 0) return;                  // 已锁定，滚动不抢
+        let bestIdx = -1, bestTop = Infinity;
+        sections.forEach((sec, i) => {{
+          const r = sec.getBoundingClientRect();
+          if (r.top <= 120 && r.bottom >= 0 && r.top < bestTop) {{ bestTop = r.top; bestIdx = i; }}
         }});
-        // 若无 entry 满足，按当前 activeIdx 维持
-        if (bestTop === -Infinity) return;
-        if (bestIdx !== activeIdx) {{
-          activeIdx = bestIdx;
-          activateByIO(bestIdx);
-        }}
-      }}, {{
-        // 多个 rootMargin，匹配滚动边界
-        // fix_report_01（v1.10.11）：nav 改贴顶后 rootMargin 顶部 -80 → -50，与新吸顶位置匹配
-        rootMargin: '-50px 0px -55% 0px',
-        threshold: [0, 0.01, 0.5]
-      }});
-      sections.forEach(s => io.observe(s.el));
+        if (bestIdx >= 0 && bestIdx !== lastIdx) {{ lastIdx = bestIdx; paint(bestIdx); }}
+      }}, {{ rootMargin: '0px 0px -55% 0px', threshold: 0 }});
+      sections.forEach(s => io.observe(s));
+      // 兜底：首屏若 IO 未及时触发，确保首颗仍亮
+      window.addEventListener('load', () => {{ if (manualIdx < 0) paint(0); }});
     }}
 
     // 3. nav sticky 监听：用一个隐形 sentinel 放在 nav 上方；sentinel 离开视窗 = nav 贴顶
