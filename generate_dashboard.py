@@ -53,7 +53,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.21"
+VERSION = "1.10.22"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -446,7 +446,7 @@ def render_html(info, page_info):
   <a class="{m_cls}" href="{doc_prefix}report-month.html">月报</a>
   <span class="nav-actions-sep" aria-hidden="true"></span>
   <a class="back-today back-today-nav" href="{doc_prefix}index.html" title="返回今日日报">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M12 3v18"/><path d="M12 8l-5 4 5 4"/></svg>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/></svg>
     返回今日
   </a>
 </div>'''
@@ -458,7 +458,7 @@ def render_html(info, page_info):
 
     if is_report:
         report_dropdown_html = f'''<a class="top-btn back-today" href="{doc_prefix}index.html" title="返回今日日报">
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M12 3v18"/><path d="M12 8l-5 4 5 4"/></svg>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/></svg>
   返回今日
 </a>'''
     else:
@@ -1125,7 +1125,7 @@ def render_html(info, page_info):
     appearance: none;
     font-family: var(--font-mono);
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 700;   /* _fix_report_button：周报/月报 字体改黑体（更重） */
     line-height: 1;
     color: var(--mist-dim);
     background: transparent;
@@ -1147,9 +1147,15 @@ def render_html(info, page_info):
     background: rgba(205, 200, 255, 0.10);
   }}
   .time-chip.active {{
-    color: var(--brand-brief);
-    background: rgba(218, 200, 135, 0.18);
-    box-shadow: inset 0 0 8px rgba(218, 200, 135, 0.12);
+    /* _fix_report_button：进来即持久强高亮（金色实底+深字），并放大如「返回今日」 */
+    color: #1A1405;
+    background: linear-gradient(180deg, rgba(232,217,160,0.96), rgba(214,196,128,0.88));
+    border: 1px solid rgba(255,243,214,0.85);
+    box-shadow: 0 3px 12px rgba(218,200,135,0.50), inset 0 1px 0 rgba(255,255,255,0.35);
+    font-weight: 800;
+    transform: scale(1.07);
+    letter-spacing: 0.04em;
+    z-index: 1;
   }}
   .time-chip:disabled {{
     opacity: 0.35;
@@ -1330,8 +1336,8 @@ def render_html(info, page_info):
     gap: 4px;
     padding: 4px 10px;
     border-radius: 999px;
-    border: 1px solid rgba(205, 200, 255, 0.30);
-    background: rgba(205, 200, 255, 0.06);
+    border: 1px solid rgba(205, 200, 255, 0.50);   /* _fix_report_button：色块更显眼 */
+    background: rgba(205, 200, 255, 0.12);
     color: var(--mist-body);
     font-size: 12px;
     font-weight: 500;
@@ -2149,7 +2155,9 @@ def render_html(info, page_info):
       night: '18:30'
     }};
 
-    const chips = Array.from(document.querySelectorAll('.time-chip'));
+    // _fix_report_button：只管带 data-period 的时段胶囊（早/午/晚）；报告页周报/月报胶囊无 data-period，
+    // 其 .active 由服务端按 report_range 下发，必须保留——否则会被这里 toggle('active', false) 剥掉，导致"进来不常亮、只闪一下"
+    const chips = Array.from(document.querySelectorAll('.time-chip[data-period]'));
     const body = document.body;
 
     function applyTheme(theme) {{

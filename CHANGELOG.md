@@ -12,6 +12,30 @@
 
 ---
 
+## v1.10.22_260824 — 报告页按钮金色强高亮（_fix_report_button）
+
+**类型**：修订 +1（视觉强化 + 根因修复）
+**日期**：2026-08-24
+
+- **🎯 根因修复（最关键）**：JS 选择器从 `.time-chip` 收窄为 `.time-chip[data-period]`。报告页周/月胶囊不带 `data-period`，原先被 `setChips(period).toggle('active', false)` 默默剥掉 → 导致"点一下闪一下金、进来不常亮"。收窄后服务端下发的 `.active` 稳保持久高亮
+- **字体改黑体**：`.time-chip` `font-weight: 500 → 700`；`.active → 800`（双层加重）
+- **active 持久强高亮（金色召唤术）**：金色实底微渐变 + 深字 + 暖光外阴影 + 放大
+  ```css
+  .time-chip.active {
+    color: #1A1405;
+    background: linear-gradient(180deg, rgba(232,217,160,0.96), rgba(214,196,128,0.88));
+    border: 1px solid rgba(255,243,214,0.85);
+    box-shadow: 0 3px 12px rgba(218,200,135,0.50), inset 0 1px 0 rgba(255,255,255,0.35);
+    font-weight: 800;
+    transform: scale(1.07);
+    letter-spacing: 0.04em;
+    z-index: 1;
+  }
+  ```
+- **返回今日色块更显眼**：`border 0.30→0.50`，`bg 0.06→0.12`
+- **🔙→🏠 图标**：原"十字+箭头"换成清晰"屋顶+房子"home SVG（report_switch + report_dropdown 两处一致）
+- bump VERSION 1.10.21 → 1.10.22
+
 ## v1.10.21_260824 — 报告页三合一收尾（_fix_report_002）
 
 **类型**：修订 +1（报告页交互修复 + 视觉对齐）
