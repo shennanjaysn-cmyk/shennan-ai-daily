@@ -53,7 +53,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.20"
+VERSION = "1.10.21"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -439,11 +439,18 @@ def render_html(info, page_info):
         m_cls = "time-chip active" if report_range == "month" else "time-chip"
         # _fix_week_01 / _fix_month_01：周报/月报 切换胶囊改为 .nav-actions，
         # 由 placeActions 在「hero 右上角(静止) / nav 行内(吸顶)」间搬运，沿用主页规则
-        report_switch_html = f'''<div class="nav-actions report-range" role="tablist" aria-label="报告范围">
-  <a class="{w_cls}" href="report-week.html">周报</a>
-  <a class="{m_cls}" href="report-month.html">月报</a>
+        # _fix_report_002：把「返回今日」也合并进同一组 .nav-actions（与切换胶囊间加细分隔），
+        # topbar 在报告页因此全部置空（连固定栏都不需要了）
+        report_switch_html = f'''<div class="nav-actions report-range" role="toolbar" aria-label="报告范围/工具">
+  <a class="{w_cls}" href="{doc_prefix}report-week.html">周报</a>
+  <a class="{m_cls}" href="{doc_prefix}report-month.html">月报</a>
+  <span class="nav-actions-sep" aria-hidden="true"></span>
+  <a class="back-today back-today-nav" href="{doc_prefix}index.html" title="返回今日日报">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M12 3v18"/><path d="M12 8l-5 4 5 4"/></svg>
+    返回今日
+  </a>
 </div>'''
-        period_or_range = ""   # 报告页：切换胶囊移入 nav-actions（下方），topbar 仅留「返回今日」
+        period_or_range = ""   # 报告页：所有工具胶囊已合并进 nav-actions，topbar 留空
     else:
         period_or_range = f'''<div class="period-group" role="tablist" aria-label="日报时段">
     {period_html}
@@ -470,8 +477,10 @@ def render_html(info, page_info):
     # fix_report_01（v1.10.10）：三工具胶囊（报告/历史日报/导出）合并回导航条 nav-actions，与 5 分类胶囊同一行对齐；
     # 首页 topbar 隐藏，nav 吸顶到页面最顶（safe-area），置顶后 .is-stuck 渐显金边
     if is_report:
-        nav_actions_html = report_switch_html  # 周报/月报 切换胶囊，placeActions 静止→hero右上角、吸顶→nav行内
-        topbar_tools_html = report_dropdown_html  # 报告页保留「返回今日」在 topbar
+        # _fix_report_002：所有工具胶囊（周报/月报切换 + 返回今日）都合并进 nav-actions
+        # 报告页 topbar 完全留空 — 不再需要 fixed topbar
+        nav_actions_html = report_switch_html
+        topbar_tools_html = ""
     else:
         nav_actions_html = f'''<div class="nav-actions">
   {report_dropdown_html}
@@ -1157,7 +1166,7 @@ def render_html(info, page_info):
     flex-wrap: wrap;
   }}
   .hero-date-col {{ flex-shrink: 0; padding-top: 12px; }}
-  .hero-info-col {{ flex: 1 1 320px; min-width: 320px; }}
+  .hero-info-col {{ flex: 1 1 320px; min-width: 320px; margin-top: -60px; }}
   .hero-date {{
     font-family: var(--font-num);
     font-weight: 300;
@@ -1311,6 +1320,38 @@ def render_html(info, page_info):
   [data-page-period] .topbar {{ display: none; }}
   /* fix_report_01（v1.10.10）：首页 nav 吸顶到页面最顶（safe-area），置顶后 .is-stuck 渐显金边做视觉分割 */
   [data-page-period] .nav {{ top: env(safe-area-inset-top, 0); }}
+  /* _fix_report_002：报告页所有工具胶囊都在 nav-actions 里，topbar 完全留空并隐藏；同时 nav 提到 ticker 之下、紧贴可视顶部 */
+  [data-page-report] .topbar {{ display: none; }}
+  [data-page-report] .nav {{ top: env(safe-area-inset-top, 0); }}
+  /* _fix_report_002：返回今日按钮在 nav 行内 (与 .time-chip 同一行)，样式紧凑——胶囊风格统一 */
+  .back-today-nav {{
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(205, 200, 255, 0.30);
+    background: rgba(205, 200, 255, 0.06);
+    color: var(--mist-body);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all .18s ease;
+  }}
+  .back-today-nav:hover {{
+    color: var(--text-title);
+    border-color: rgba(205, 200, 255, 0.65);
+    background: rgba(205, 200, 255, 0.14);
+  }}
+  .nav-actions-sep {{
+    width: 1px;
+    height: 16px;
+    background: rgba(205, 200, 255, 0.20);
+    margin: 0 4px;
+    flex-shrink: 0;
+  }}
   .nav-inner::-webkit-scrollbar {{ display: none; }}
   .nav-chip {{
     display: inline-flex;
@@ -2302,13 +2343,17 @@ def render_html(info, page_info):
     }}
     // _fix_report_002：弃用 1px 哨兵 + IntersectionObserver 判定吸顶（哨兵定位依赖祖先定位上下文，
     // 初始 IO 回调在某些渲染环境/headless 下会误报 ratio=0→stuck=true，把胶囊误搬回 nav）。
-    // 改用确定性的几何判定：nav 自身是 sticky top:0，当其 getBoundingClientRect().top <= 0 时即为吸顶。
+    // 改用确定性的几何判定：nav 自身是 sticky，当其 top 等于 cssTop 时即为吸住。
+    // _fix_report_003（v1.10.21）：报告页 nav.top=calc(safe-area+78px) 让 sticky 边界为 78px，
+    // 旧的 `<= 0` 恒假导致报告页永远不吸顶（主页 nav.top=0 巧合能 work）。
+    // 现在读 nav 的 cssTop 作为阈值，兼容主页 0 / 报告页 78 / 移动端各 top 值。
     function updateStuck() {{
-      const stuck = navEl.getBoundingClientRect().top <= 0;
+      const cssTop = parseFloat(getComputedStyle(navEl).top) || 0;
+      const stuck = navEl.getBoundingClientRect().top <= cssTop;
       navEl.classList.toggle('is-stuck', stuck);
       placeActions();
     }}
-    let stuckTicking = false;
+        let stuckTicking = false;
     window.addEventListener('scroll', () => {{
       if (!stuckTicking) {{ requestAnimationFrame(updateStuck); stuckTicking = true; setTimeout(() => stuckTicking = false, 0); }}
     }}, {{ passive: true }});

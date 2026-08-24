@@ -675,7 +675,7 @@
     flex-wrap: wrap;
   }
   .hero-date-col { flex-shrink: 0; padding-top: 12px; }
-  .hero-info-col { flex: 1 1 320px; min-width: 320px; }
+  .hero-info-col { flex: 1 1 320px; min-width: 320px; margin-top: -60px; }
   .hero-date {
     font-family: var(--font-num);
     font-weight: 300;
@@ -829,6 +829,38 @@
   [data-page-period] .topbar { display: none; }
   /* fix_report_01（v1.10.10）：首页 nav 吸顶到页面最顶（safe-area），置顶后 .is-stuck 渐显金边做视觉分割 */
   [data-page-period] .nav { top: env(safe-area-inset-top, 0); }
+  /* _fix_report_002：报告页所有工具胶囊都在 nav-actions 里，topbar 完全留空并隐藏；同时 nav 提到 ticker 之下、紧贴可视顶部 */
+  [data-page-report] .topbar { display: none; }
+  [data-page-report] .nav { top: env(safe-area-inset-top, 0); }
+  /* _fix_report_002：返回今日按钮在 nav 行内 (与 .time-chip 同一行)，样式紧凑——胶囊风格统一 */
+  .back-today-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(205, 200, 255, 0.30);
+    background: rgba(205, 200, 255, 0.06);
+    color: var(--mist-body);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all .18s ease;
+  }
+  .back-today-nav:hover {
+    color: var(--text-title);
+    border-color: rgba(205, 200, 255, 0.65);
+    background: rgba(205, 200, 255, 0.14);
+  }
+  .nav-actions-sep {
+    width: 1px;
+    height: 16px;
+    background: rgba(205, 200, 255, 0.20);
+    margin: 0 4px;
+    flex-shrink: 0;
+  }
   .nav-inner::-webkit-scrollbar { display: none; }
   .nav-chip {
     display: inline-flex;
@@ -1380,10 +1412,7 @@
 <!-- 顶部工具栏：首页隐藏（工具已合并进 nav），报告页显示报告切换/返回今日 -->
 <div class="topbar">
   
-  <a class="top-btn back-today" href="index.html" title="返回今日日报">
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M12 3v18"/><path d="M12 8l-5 4 5 4"/></svg>
-  返回今日
-</a>
+  
 </div>
 
 <div class="wrap">
@@ -1419,9 +1448,14 @@
 <a class="nav-chip" href="#industry" data-slug="industry"><span class="nav-roman">Ⅲ</span><span class="nav-label">动态</span><span class="nav-n">11<span class="count-unit">条</span></span></a>
 <a class="nav-chip" href="#papers" data-slug="papers"><span class="nav-roman">Ⅳ</span><span class="nav-label">研究</span><span class="nav-n">16<span class="count-unit">条</span></span></a>
 <a class="nav-chip" href="#tips" data-slug="tips"><span class="nav-roman">Ⅴ</span><span class="nav-label">观点</span><span class="nav-n">23<span class="count-unit">条</span></span></a>
-    <div class="nav-actions report-range" role="tablist" aria-label="报告范围">
+    <div class="nav-actions report-range" role="toolbar" aria-label="报告范围/工具">
   <a class="time-chip active" href="report-week.html">周报</a>
   <a class="time-chip" href="report-month.html">月报</a>
+  <span class="nav-actions-sep" aria-hidden="true"></span>
+  <a class="back-today back-today-nav" href="index.html" title="返回今日日报">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M12 3v18"/><path d="M12 8l-5 4 5 4"/></svg>
+    返回今日
+  </a>
 </div>
   </div>
 </nav>
@@ -2626,13 +2660,17 @@
     }
     // _fix_report_002：弃用 1px 哨兵 + IntersectionObserver 判定吸顶（哨兵定位依赖祖先定位上下文，
     // 初始 IO 回调在某些渲染环境/headless 下会误报 ratio=0→stuck=true，把胶囊误搬回 nav）。
-    // 改用确定性的几何判定：nav 自身是 sticky top:0，当其 getBoundingClientRect().top <= 0 时即为吸顶。
+    // 改用确定性的几何判定：nav 自身是 sticky，当其 top 等于 cssTop 时即为吸住。
+    // _fix_report_003（v1.10.21）：报告页 nav.top=calc(safe-area+78px) 让 sticky 边界为 78px，
+    // 旧的 `<= 0` 恒假导致报告页永远不吸顶（主页 nav.top=0 巧合能 work）。
+    // 现在读 nav 的 cssTop 作为阈值，兼容主页 0 / 报告页 78 / 移动端各 top 值。
     function updateStuck() {
-      const stuck = navEl.getBoundingClientRect().top <= 0;
+      const cssTop = parseFloat(getComputedStyle(navEl).top) || 0;
+      const stuck = navEl.getBoundingClientRect().top <= cssTop;
       navEl.classList.toggle('is-stuck', stuck);
       placeActions();
     }
-    let stuckTicking = false;
+        let stuckTicking = false;
     window.addEventListener('scroll', () => {
       if (!stuckTicking) { requestAnimationFrame(updateStuck); stuckTicking = true; setTimeout(() => stuckTicking = false, 0); }
     }, { passive: true });

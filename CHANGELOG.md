@@ -12,6 +12,18 @@
 
 ---
 
+## v1.10.21_260824 — 报告页三合一收尾（_fix_report_002）
+
+**类型**：修订 +1（报告页交互修复 + 视觉对齐）
+**日期**：2026-08-24
+
+- **nav 吸顶修复（致命）**：`updateStuck()` 原判定 `rect.top <= 0`，但报告页 `.nav` 的 `top=78px`（safe-area+topbar+ticker 偏移），`rect.top` 永远 = 78 → `is-stuck` 永远 false → 金边 + 工具胶囊搬到 nav 行全部失效，用户视角"周月胶囊消失后不再浮现"。改为 `getComputedStyle(navEl).top` 作阈值，兼容主页 0 / 报告页 78 / 移动端各值
+- **工具胶囊合并成一行**：报告页 `topbar` 完全隐藏（`[data-page-report] .topbar{display:none}` + `topbar_tools_html=""`），周报/月报 切换 + 「返回今日」全部打包进同一 `.nav-actions.report-range`，吸顶时随 nav 行浮现（不再因 hero 滚走而消失）
+- **当前页高亮**：当前是周报/月报 的胶囊加 `.time-chip.active` 高亮（复用现有类 `color:var(--brand-brief);background:rgba(218,200,135,0.18)`）
+- **nav.top 统一**：报告页 `.nav` 改为 `top:env(safe-area-inset-top,0)` 与首页一致（topbar 已隐藏，无需 78px 偏移），单一吸顶逻辑
+- **右栏对齐**：报告页 hero 右栏（meta + lead）`margin-top:-60px` 上移，实测与大标题字顶 delta≈2px 基本齐平
+- bump VERSION 1.10.20 → 1.10.21
+
 ## v1.10.20_260824 — 月报自然月逻辑（_fix_month_01）
 
 **类型**：修订 +1（数据语义修正）
