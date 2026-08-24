@@ -12,6 +12,19 @@
 
 ---
 
+## v1.10.20_260824 — 月报自然月逻辑（_fix_month_01）
+
+**类型**：修订 +1（数据语义修正）
+**日期**：2026-08-24
+**根因**：`generate_dashboard.py` 的月报聚合用 `aggregate_info(available_dates[:30])`——"最近 30 天"，而非"上个月整月"。在 8/24 打开看到 7/26~8/24，与 lead 文案"上个月整月"完全矛盾。
+**修复**：
+- 以 `datetime.now(BEIJING)` 为基准计算"上个月"自然边界（`prev_start`=上月 1 日、`prev_end`=上月最后一天，跨年自动衔接）
+- 过滤 `available_dates` 仅取落在上月内的日期，再 `aggregate_info` 聚合
+- 覆盖 `date_str` 为 `YYYY-MM-01 ~ YYYY-MM-<月末>`（`aggregate_info` 本身只返回首尾，不一定跨整月）
+- 渲染守卫从硬阈值 `len(available_dates) >= 8` 改为 `if _month_dates:`，依赖真实数据存在性
+- 验证：今天 (8/24) 月报 = 2026-07-01 ~ 2026-07-31；9/1 打开 = 8/1 ~ 8/31（自动衔接）；1/1 打开 = 上年 12 月整月（跨年）
+- bump VERSION 1.10.19 → 1.10.20
+
 ## v1.10.19_260824 — 周报页改版（_fix_week_01）
 
 **类型**：优化 +1

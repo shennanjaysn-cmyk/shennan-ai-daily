@@ -53,7 +53,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.19"
+VERSION = "1.10.20"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -2535,8 +2535,22 @@ def main():
             "markdown": export_markdown(week_info),
             "csv": export_csv(week_info),
         }
-    if len(available_dates) >= 8:
-        month_info = aggregate_info(available_dates[:30])
+    # _fix_month_01：月报 = 自然月，永远总结上个月整月（无论今天是几号），跨年自动衔接
+    # 原实现 aggregate_info(available_dates[:30]) 取的是"最近30天"，语义错误
+    _now = datetime.now(BEIJING)
+    _this_month_1 = _now.replace(day=1)
+    _prev_end = _this_month_1 - timedelta(days=1)
+    _prev_start = _prev_end.replace(day=1)
+    _prev_set = set()
+    _d = _prev_start
+    while _d <= _prev_end:
+        _prev_set.add(_d.strftime("%Y-%m-%d"))
+        _d += timedelta(days=1)
+    _month_dates = [ds for ds in available_dates if ds in _prev_set]
+    if _month_dates:
+        month_info = aggregate_info(_month_dates)
+        # 覆盖 date_str 为自然月整月范围（aggregate_info 返回首尾日期，不一定跨整月）
+        month_info["date_str"] = f"{_prev_start:%Y-%m-%d} ~ {_prev_end:%Y-%m-%d}"
         export_scopes["month"] = {
             "date": month_info["date_str"],
             "markdown": export_markdown(month_info),
@@ -2595,7 +2609,7 @@ def main():
         week_report = render_html(week_info, {**report_base, "is_report": True, "report_range": "week"})
         (RELEASES / "report-week.html").write_text(week_report, encoding="utf-8")
         print("OK -> report-week.html")
-    if len(available_dates) >= 8:
+    if _month_dates:
         month_report = render_html(month_info, {**report_base, "is_report": True, "report_range": "month"})
         (RELEASES / "report-month.html").write_text(month_report, encoding="utf-8")
         print("OK -> report-month.html")
