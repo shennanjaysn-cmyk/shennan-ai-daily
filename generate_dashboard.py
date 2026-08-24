@@ -53,7 +53,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.18"
+VERSION = "1.10.19"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -424,7 +424,10 @@ def render_html(info, page_info):
     is_report = page_info.get("is_report", False)
     report_range = page_info.get("report_range", "week")
     if is_report:
-        title = f"聚合报告 · 深南AI日报 Daily AI Brief · {date_str}"
+        if report_range == "week":
+            title = f"周报 · 深南AI日报 Weekly AI Brief · {date_str}"
+        else:
+            title = f"月报 · 深南AI日报 Monthly AI Brief · {date_str}"
         body_attrs = f'data-page-report="{report_range}"'
     else:
         title = f"深南AI日报 Daily AI Brief · {date_str}"
@@ -434,11 +437,13 @@ def render_html(info, page_info):
     if is_report:
         w_cls = "time-chip active" if report_range == "week" else "time-chip"
         m_cls = "time-chip active" if report_range == "month" else "time-chip"
-        report_switch_html = f'''<div class="period-group report-range" role="tablist" aria-label="报告范围">
+        # _fix_week_01 / _fix_month_01：周报/月报 切换胶囊改为 .nav-actions，
+        # 由 placeActions 在「hero 右上角(静止) / nav 行内(吸顶)」间搬运，沿用主页规则
+        report_switch_html = f'''<div class="nav-actions report-range" role="tablist" aria-label="报告范围">
   <a class="{w_cls}" href="report-week.html">周报</a>
   <a class="{m_cls}" href="report-month.html">月报</a>
 </div>'''
-        period_or_range = report_switch_html
+        period_or_range = ""   # 报告页：切换胶囊移入 nav-actions（下方），topbar 仅留「返回今日」
     else:
         period_or_range = f'''<div class="period-group" role="tablist" aria-label="日报时段">
     {period_html}
@@ -465,7 +470,7 @@ def render_html(info, page_info):
     # fix_report_01（v1.10.10）：三工具胶囊（报告/历史日报/导出）合并回导航条 nav-actions，与 5 分类胶囊同一行对齐；
     # 首页 topbar 隐藏，nav 吸顶到页面最顶（safe-area），置顶后 .is-stuck 渐显金边
     if is_report:
-        nav_actions_html = ""
+        nav_actions_html = report_switch_html  # 周报/月报 切换胶囊，placeActions 静止→hero右上角、吸顶→nav行内
         topbar_tools_html = report_dropdown_html  # 报告页保留「返回今日」在 topbar
     else:
         nav_actions_html = f'''<div class="nav-actions">
@@ -502,10 +507,15 @@ def render_html(info, page_info):
         topbar_tools_html = ""
 
     if is_report:
-        hero_headline = '<h1 class="hero-title"><span class="title-white">聚合报告</span> <span class="title-brief">AI Brief</span></h1>'
+        if report_range == "week":
+            hero_headline = '<h1 class="hero-title"><span class="title-white">周报</span> <span class="title-brief">Weekly AI Brief</span></h1>'
+            hero_meta_block = f'''<div class="hero-meta">周报周期：<span class="accent">{html.escape(date_str)}</span></div>'''
+            hero_lead_text = f'以下 <span class="lead-strong">{total}</span> 条动态来自本周自然7天（截止昨天）。周报为滚动7天，跨月自然连续，不锁周首日。按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>'
+        else:
+            hero_headline = '<h1 class="hero-title"><span class="title-white">月报</span> <span class="title-brief">Monthly AI Brief</span></h1>'
+            hero_meta_block = f'''<div class="hero-meta">月报周期：<span class="accent">{html.escape(date_str)}</span></div>'''
+            hero_lead_text = f'以下 <span class="lead-strong">{total}</span> 条动态来自上个月整月（自然月，无论今天是几号）。月报固定总结上月 1 日至月末，跨年自动衔接。按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>'
         hero_date_block = f'''<div class="hero-date" style="font-size:28px;font-weight:300;color:var(--gold);letter-spacing:.02em;">{html.escape(date_str)}</div>'''
-        hero_meta_block = f'''<div class="hero-meta">聚合窗口：<span class="accent">{fmt_short(ws_dt)} — {fmt_short(we_dt)}</span>（北京时间，UTC+8）</div>'''
-        hero_lead_text = f'以下 <span class="lead-strong">{total}</span> 条动态来自近{"7" if report_range=="week" else "30"}天日报汇总，按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>'
     else:
         hero_headline = '<h1 class="hero-title"><span class="title-white">Daily AI</span> <span class="title-brief">Brief</span></h1>'
         hero_date_block = f'''<div class="hero-date">
