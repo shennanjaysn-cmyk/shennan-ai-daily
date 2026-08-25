@@ -12,6 +12,31 @@
 
 ---
 
+## v1.10.25_260825 — 共X条渐隐提前 + 报告页位置统一（_fix_vision_02）
+
+**类型**：修订 +1（视觉细节打磨）
+**日期**：2026-08-25
+
+- **共X条渐隐提前 80px**：`updateStuck()` 新增 `FADE_AHEAD=80` 阈值，nav 距吸顶 80px 内即加 `.fading` 类，`.nav.fading .nav-total-count` 沿用 0.4s transition 平滑淡出+收窄，比"吸顶才消失"更顺滑
+- **报告页共X条位置与主页统一**：移除原先嵌在 `report-range` 内部 [周/月] 之后的逻辑，改为与主页一致作为 `nav-inner` 直接子元素（`{nav_total_html}` 统一渲染），三页 DOM 结构完全一致
+
+## v1.10.24_260825 — hero 顶底精调 + 共X条平滑渐隐 + 报告页加共X条（_fix_vision_02）
+
+**类型**：修订 +1（视觉细节打磨）
+**日期**：2026-08-25
+
+- **主页 hero 按大号日期顶/底精调**：`[data-page-period] .hero-info-col` 改为 `flex column + justify-content space-between` —— 送达时间顶对齐"08 25"上边、引用块底对齐"08 25"下边（报告页无此选择器，保持 -60px 不动）
+- **共X条平滑渐隐**：`.nav.is-stuck .nav-total-count` 从瞬时 `display:none` 升级为 `opacity/transform/max-width/padding/border-width` 全加 `transition:0.4s ease` 平滑淡出+收窄
+- **周报/月报 nav 也加共X条**：嵌进 `nav-actions.report-range` 内 [周/月] 之后、sep 之前（周报共 79 条、月报共 91 条）
+
+## v1.10.23_260825 — 主页 hero 底对齐 + 共X条指示器（_fix_vision_02）
+
+**类型**：修订 +1（视觉细节打磨）
+**日期**：2026-08-25
+
+- **主页 hero 右栏底对齐到绿线**：新增 `[data-page-period] .hero-info-col { margin-top:0; align-self:flex-end; }`，右栏（送达时间+覆盖窗口）底边与大日期下方绿线齐平（报告页不匹配，保持原样）
+- **主页 nav 右区共X条金色指示器**：`nav_total_html = '共<span class="num">{total}</span>条'`，胶囊+金色数字+`margin-left:auto` 推到最右；吸顶后 `.nav.is-stuck .nav-total-count{display:none}` 让位给报告/历史日报/导出；报告页 `nav_total_html=""` 不生成
+
 ## v1.10.22_260824 — 报告页按钮金色强高亮（_fix_report_button）
 
 **类型**：修订 +1（视觉强化 + 根因修复）

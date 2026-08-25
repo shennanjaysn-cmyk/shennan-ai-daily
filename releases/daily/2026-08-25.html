@@ -58,7 +58,7 @@
 /* All fonts are OFL / open-source licensed for web embedding */
 @font-face {
   font-family: 'ZCOOL XiaoWei';
-  src: url(fonts/)ZCOOLXiaoWei-400-normal.woff2) format('woff2');
+  src: url(../fonts/)ZCOOLXiaoWei-400-normal.woff2) format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -66,7 +66,7 @@
 
 @font-face {
   font-family: 'Space Grotesk';
-  src: url(fonts/)SpaceGrotesk-300700-normal.woff2) format('woff2');
+  src: url(../fonts/)SpaceGrotesk-300700-normal.woff2) format('woff2');
   font-weight: 300 700;
   font-style: normal;
   font-display: swap;
@@ -74,7 +74,7 @@
 
 @font-face {
   font-family: 'Neue Regrade';
-  src: url(fonts/)NeueRegrade-800-italic.woff2) format('woff2');
+  src: url(../fonts/)NeueRegrade-800-italic.woff2) format('woff2');
   font-weight: 800;
   font-style: italic;
   font-display: swap;
@@ -82,7 +82,7 @@
 
 @font-face {
   font-family: 'Neue Regrade';
-  src: url(fonts/)NeueRegrade-300-normal.woff2) format('woff2');
+  src: url(../fonts/)NeueRegrade-300-normal.woff2) format('woff2');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -90,7 +90,7 @@
 
 @font-face {
   font-family: 'Neue Regrade';
-  src: url(fonts/)NeueRegrade-400-normal.woff2) format('woff2');
+  src: url(../fonts/)NeueRegrade-400-normal.woff2) format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -98,7 +98,7 @@
 
 @font-face {
   font-family: 'Poppins';
-  src: url(fonts/)Poppins-400-normal.woff2) format('woff2');
+  src: url(../fonts/)Poppins-400-normal.woff2) format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -827,10 +827,7 @@
     margin-left: auto;            /* flex-spacer 把右侧三胶囊推到底 */
     align-self: center;
   }
-  /* _fix_vision_02：主页 nav 右区显示"共X条"指示器
-   * _fix_vision_03：报告页也加（共X条 嵌入 nav-actions 内 [周/月] 之后、sep 之前）
-   * _fix_vision_03：吸顶触发淡出+收窄（不瞬时 display:none，给 0.4s 渐隐）
-   */
+  /* _fix_vision_02：主页 nav 右区显示"共X条"指示器；吸顶后隐藏（让位给 nav-actions 的报告/历史日报/导出） */
   .nav-total-count {
     display: inline-flex;
     align-items: center;
@@ -846,11 +843,6 @@
     border: 1px solid rgba(205, 200, 255, 0.30);
     border-radius: 999px;
     background: rgba(205, 200, 255, 0.06);
-    /* 渐隐过渡 */
-    max-width: 120px;
-    overflow: hidden;
-    transition: opacity .4s ease, transform .4s ease,
-                max-width .4s ease, padding .4s ease, border-width .4s ease;
   }
   .nav-total-count .num {
     color: var(--gold);
@@ -858,18 +850,7 @@
     font-family: var(--font-num);
     font-size: 13px;
   }
-  /* 吸顶/接近吸顶即触发渐隐 + 收窄——提前启动、不瞬时 display:none */
-  .nav.is-stuck .nav-total-count,
-  .nav.fading .nav-total-count {
-    opacity: 0;
-    transform: translateY(-4px);
-    max-width: 0;
-    padding-left: 0;
-    padding-right: 0;
-    border-left-width: 0;
-    border-right-width: 0;
-    pointer-events: none;
-  }
+  .nav.is-stuck .nav-total-count { display: none; }
   /* 移动端：5 胶囊已可横滑，3 工具胶囊继续在右（不参与滑动条） */
   @media (max-width: 767.98px) {
     .nav-actions { flex-shrink: 0; padding-left: 8px; background: var(--ink-card); }
@@ -879,17 +860,8 @@
   [data-page-period] .topbar { display: none; }
   /* fix_report_01（v1.10.10）：首页 nav 吸顶到页面最顶（safe-area），置顶后 .is-stuck 渐显金边做视觉分割 */
   [data-page-period] .nav { top: env(safe-area-inset-top, 0); }
-  /* _fix_vision_02：主页 hero 右栏底对齐到绿线（与大日期底齐平），报告页保持 -60px 不动
-   * _fix_vision_03：主页精调——hero-meta 顶对齐大号日期上边、hero-lead 底对齐大号日期下边（flex column + space-between）
-   * 报告页不匹配 [data-page-period]，保持 .hero-info-col 基类 margin-top -60px 不变
-   */
-  [data-page-period] .hero-info-col {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-top: 0;
-    align-self: stretch;
-  }
+  /* _fix_vision_02：主页 hero 右栏底对齐到绿线（与大日期底齐平），报告页保持 -60px 不动 */
+  [data-page-period] .hero-info-col { margin-top: 0; align-self: flex-end; }
   /* _fix_report_002：报告页所有工具胶囊都在 nav-actions 里，topbar 完全留空并隐藏；同时 nav 提到 ticker 之下、紧贴可视顶部 */
   [data-page-report] .topbar { display: none; }
   [data-page-report] .nav { top: env(safe-area-inset-top, 0); }
@@ -1527,9 +1499,9 @@
     <span>报告</span>
   </div>
   <div class="report-choices" role="group">
-    <a class="report-choice" href="report-week.html">周报</a>
+    <a class="report-choice" href="../report-week.html">周报</a>
     <span class="report-divider">|</span>
-    <a class="report-choice" href="report-month.html">月报</a>
+    <a class="report-choice" href="../report-month.html">月报</a>
   </div>
 </div>
   <div class="dropdown" id="historyDropdown">
@@ -1538,36 +1510,36 @@
       历史日报
     </button>
     <div class="dropdown-menu" role="menu">
-      <a class="dropdown-item selected" href="./daily/2026-08-25.html">2026-08-25</a>
-<a class="dropdown-item" href="./daily/2026-08-24.html">2026-08-24</a>
-<a class="dropdown-item" href="./daily/2026-08-23.html">2026-08-23</a>
-<a class="dropdown-item" href="./daily/2026-08-22.html">2026-08-22</a>
-<a class="dropdown-item" href="./daily/2026-08-21.html">2026-08-21</a>
-<a class="dropdown-item" href="./daily/2026-08-20.html">2026-08-20</a>
-<a class="dropdown-item" href="./daily/2026-08-19.html">2026-08-19</a>
-<a class="dropdown-item" href="./daily/2026-08-18.html">2026-08-18</a>
-<a class="dropdown-item" href="./daily/2026-08-17.html">2026-08-17</a>
-<a class="dropdown-item" href="./daily/2026-08-16.html">2026-08-16</a>
-<a class="dropdown-item" href="./daily/2026-08-15.html">2026-08-15</a>
-<a class="dropdown-item" href="./daily/2026-08-14.html">2026-08-14</a>
-<a class="dropdown-item" href="./daily/2026-08-13.html">2026-08-13</a>
-<a class="dropdown-item" href="./daily/2026-08-12.html">2026-08-12</a>
-<a class="dropdown-item" href="./daily/2026-08-11.html">2026-08-11</a>
-<a class="dropdown-item" href="./daily/2026-08-10.html">2026-08-10</a>
-<a class="dropdown-item" href="./daily/2026-08-09.html">2026-08-09</a>
-<a class="dropdown-item" href="./daily/2026-08-08.html">2026-08-08</a>
-<a class="dropdown-item" href="./daily/2026-08-07.html">2026-08-07</a>
-<a class="dropdown-item" href="./daily/2026-08-06.html">2026-08-06</a>
-<a class="dropdown-item" href="./daily/2026-08-05.html">2026-08-05</a>
-<a class="dropdown-item" href="./daily/2026-08-04.html">2026-08-04</a>
-<a class="dropdown-item" href="./daily/2026-08-03.html">2026-08-03</a>
-<a class="dropdown-item" href="./daily/2026-08-02.html">2026-08-02</a>
-<a class="dropdown-item" href="./daily/2026-08-01.html">2026-08-01</a>
-<a class="dropdown-item" href="./daily/2026-07-31.html">2026-07-31</a>
-<a class="dropdown-item" href="./daily/2026-07-30.html">2026-07-30</a>
-<a class="dropdown-item" href="./daily/2026-07-29.html">2026-07-29</a>
-<a class="dropdown-item" href="./daily/2026-07-28.html">2026-07-28</a>
-<a class="dropdown-item" href="./daily/2026-07-27.html">2026-07-27</a>
+      <a class="dropdown-item selected" href="./2026-08-25.html">2026-08-25</a>
+<a class="dropdown-item" href="./2026-08-24.html">2026-08-24</a>
+<a class="dropdown-item" href="./2026-08-23.html">2026-08-23</a>
+<a class="dropdown-item" href="./2026-08-22.html">2026-08-22</a>
+<a class="dropdown-item" href="./2026-08-21.html">2026-08-21</a>
+<a class="dropdown-item" href="./2026-08-20.html">2026-08-20</a>
+<a class="dropdown-item" href="./2026-08-19.html">2026-08-19</a>
+<a class="dropdown-item" href="./2026-08-18.html">2026-08-18</a>
+<a class="dropdown-item" href="./2026-08-17.html">2026-08-17</a>
+<a class="dropdown-item" href="./2026-08-16.html">2026-08-16</a>
+<a class="dropdown-item" href="./2026-08-15.html">2026-08-15</a>
+<a class="dropdown-item" href="./2026-08-14.html">2026-08-14</a>
+<a class="dropdown-item" href="./2026-08-13.html">2026-08-13</a>
+<a class="dropdown-item" href="./2026-08-12.html">2026-08-12</a>
+<a class="dropdown-item" href="./2026-08-11.html">2026-08-11</a>
+<a class="dropdown-item" href="./2026-08-10.html">2026-08-10</a>
+<a class="dropdown-item" href="./2026-08-09.html">2026-08-09</a>
+<a class="dropdown-item" href="./2026-08-08.html">2026-08-08</a>
+<a class="dropdown-item" href="./2026-08-07.html">2026-08-07</a>
+<a class="dropdown-item" href="./2026-08-06.html">2026-08-06</a>
+<a class="dropdown-item" href="./2026-08-05.html">2026-08-05</a>
+<a class="dropdown-item" href="./2026-08-04.html">2026-08-04</a>
+<a class="dropdown-item" href="./2026-08-03.html">2026-08-03</a>
+<a class="dropdown-item" href="./2026-08-02.html">2026-08-02</a>
+<a class="dropdown-item" href="./2026-08-01.html">2026-08-01</a>
+<a class="dropdown-item" href="./2026-07-31.html">2026-07-31</a>
+<a class="dropdown-item" href="./2026-07-30.html">2026-07-30</a>
+<a class="dropdown-item" href="./2026-07-29.html">2026-07-29</a>
+<a class="dropdown-item" href="./2026-07-28.html">2026-07-28</a>
+<a class="dropdown-item" href="./2026-07-27.html">2026-07-27</a>
     </div>
   </div>
   <div class="dropdown" id="exportDropdown">
@@ -1794,11 +1766,11 @@
     <!-- 文档入口：黑色 → 深蓝渐变底条，链接十字居中（全宽拉通，脱离 .wrap 约束） -->
     <div class="footer-bottom">
       <nav class="footer-docs">
-        <a href="report.html"><svg class="doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>聚合报告</a>
-        <a href="license.html"><svg class="doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 4-1.34 4-4V3"/><path d="M21 7h-2c-2 0 4-1.34 4-4V3"/></svg>LICENSE</a>
-        <a href="disclaimer.html"><svg class="doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>免责声明</a>
+        <a href="../report.html"><svg class="doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>聚合报告</a>
+        <a href="../license.html"><svg class="doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 4-1.34 4-4V3"/><path d="M21 7h-2c-2 0 4-1.34 4-4V3"/></svg>LICENSE</a>
+        <a href="../disclaimer.html"><svg class="doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>免责声明</a>
         <a href="https://github.com/shennanjaysn-cmyk/shennan-ai-daily" target="_blank" rel="noopener noreferrer"><svg class="doc-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.419-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>仓库地址</a>
-        <a href="about.html"><svg class="doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>关于项目</a>
+        <a href="../about.html"><svg class="doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>关于项目</a>
       </nav>
     </div>
   </footer>
@@ -1821,7 +1793,7 @@
   </div>
 </div>
 
-<script src="exports.js"></script>
+<script src="../exports.js"></script>
 <script>
   // 等待 DOM 完整后再绑定交互（修复 FAB 在脚本之后导致 getElementById 拿 null 的 bug）
   document.addEventListener('DOMContentLoaded', function() {
@@ -2179,16 +2151,10 @@
     // _fix_report_003（v1.10.21）：报告页 nav.top=calc(safe-area+78px) 让 sticky 边界为 78px，
     // 旧的 `<= 0` 恒假导致报告页永远不吸顶（主页 nav.top=0 巧合能 work）。
     // 现在读 nav 的 cssTop 作为阈值，兼容主页 0 / 报告页 78 / 移动端各 top 值。
-    // _fix_vision_04：共x条「渐隐提前」——nav 接近吸顶（提前 FADE_AHEAD px）就开始淡出，
-    // 不等完全吸顶，避免到站才突兀消失。is-stuck 仍按 cssTop 触发（金线/胶囊搬运）。
-    const FADE_AHEAD = 80;
     function updateStuck() {
       const cssTop = parseFloat(getComputedStyle(navEl).top) || 0;
-      const rectTop = navEl.getBoundingClientRect().top;
-      const stuck = rectTop <= cssTop;
-      const fading = rectTop <= cssTop + FADE_AHEAD;
+      const stuck = navEl.getBoundingClientRect().top <= cssTop;
       navEl.classList.toggle('is-stuck', stuck);
-      navEl.classList.toggle('fading', fading);
       placeActions();
     }
         let stuckTicking = false;

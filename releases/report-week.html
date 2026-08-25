@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>周报 · 深南AI日报 Weekly AI Brief · 2026-08-18 ~ 2026-08-24</title>
+<title>周报 · 深南AI日报 Weekly AI Brief · 2026-08-19 ~ 2026-08-25</title>
 <script>
   // 早期初始化 + 全局 FAB 主题切换函数（必须最先定义，inline onclick 直接调用）
   (function(){
@@ -827,14 +827,69 @@
     margin-left: auto;            /* flex-spacer 把右侧三胶囊推到底 */
     align-self: center;
   }
+  /* _fix_vision_02：主页 nav 右区显示"共X条"指示器
+   * _fix_vision_03：报告页也加（共X条 嵌入 nav-actions 内 [周/月] 之后、sep 之前）
+   * _fix_vision_03：吸顶触发淡出+收窄（不瞬时 display:none，给 0.4s 渐隐）
+   */
+  .nav-total-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--mist-body);
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+    white-space: nowrap;
+    border: 1px solid rgba(205, 200, 255, 0.30);
+    border-radius: 999px;
+    background: rgba(205, 200, 255, 0.06);
+    /* 渐隐过渡 */
+    max-width: 120px;
+    overflow: hidden;
+    transition: opacity .4s ease, transform .4s ease,
+                max-width .4s ease, padding .4s ease, border-width .4s ease;
+  }
+  .nav-total-count .num {
+    color: var(--gold);
+    font-weight: 700;
+    font-family: var(--font-num);
+    font-size: 13px;
+  }
+  /* 吸顶/接近吸顶即触发渐隐 + 收窄——提前启动、不瞬时 display:none */
+  .nav.is-stuck .nav-total-count,
+  .nav.fading .nav-total-count {
+    opacity: 0;
+    transform: translateY(-4px);
+    max-width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    pointer-events: none;
+  }
   /* 移动端：5 胶囊已可横滑，3 工具胶囊继续在右（不参与滑动条） */
   @media (max-width: 767.98px) {
     .nav-actions { flex-shrink: 0; padding-left: 8px; background: var(--ink-card); }
+    .nav-total-count { display: none; }
   }
   /* fix_report_01（v1.10.10）：首页三工具胶囊已合并进 nav-actions（与 5 分类同一行），topbar 在首页隐藏 */
   [data-page-period] .topbar { display: none; }
   /* fix_report_01（v1.10.10）：首页 nav 吸顶到页面最顶（safe-area），置顶后 .is-stuck 渐显金边做视觉分割 */
   [data-page-period] .nav { top: env(safe-area-inset-top, 0); }
+  /* _fix_vision_02：主页 hero 右栏底对齐到绿线（与大日期底齐平），报告页保持 -60px 不动
+   * _fix_vision_03：主页精调——hero-meta 顶对齐大号日期上边、hero-lead 底对齐大号日期下边（flex column + space-between）
+   * 报告页不匹配 [data-page-period]，保持 .hero-info-col 基类 margin-top -60px 不变
+   */
+  [data-page-period] .hero-info-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 0;
+    align-self: stretch;
+  }
   /* _fix_report_002：报告页所有工具胶囊都在 nav-actions 里，topbar 完全留空并隐藏；同时 nav 提到 ticker 之下、紧贴可视顶部 */
   [data-page-report] .topbar { display: none; }
   [data-page-report] .nav { top: env(safe-area-inset-top, 0); }
@@ -1434,12 +1489,12 @@
     <h1 class="hero-title"><span class="title-white">周报</span> <span class="title-brief">Weekly AI Brief</span></h1>
     <div class="hero-grid">
       <div class="hero-date-col">
-        <div class="hero-date" style="font-size:28px;font-weight:300;color:var(--gold);letter-spacing:.02em;">2026-08-18 ~ 2026-08-24</div>
+        <div class="hero-date" style="font-size:28px;font-weight:300;color:var(--gold);letter-spacing:.02em;">2026-08-19 ~ 2026-08-25</div>
       </div>
       <div class="hero-info-col">
-        <div class="hero-meta">周报周期：<span class="accent">2026-08-18 ~ 2026-08-24</span></div>
+        <div class="hero-meta">周报周期：<span class="accent">2026-08-19 ~ 2026-08-25</span></div>
         <div class="hero-lead">
-          以下 <span class="lead-strong">83</span> 条动态来自本周自然7天（截止昨天）。周报为滚动7天，跨月自然连续，不锁周首日。按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>
+          以下 <span class="lead-strong">79</span> 条动态来自本周自然7天（截止昨天）。周报为滚动7天，跨月自然连续，不锁周首日。按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>
         </div>
       </div>
     </div>
@@ -1449,11 +1504,11 @@
 <!-- STICKY NAV：首页右侧合并报告/历史日报/导出，8 个胶囊同一行对齐 -->
 <nav class="nav">
   <div class="nav-inner">
-    <a class="nav-chip" href="#models" data-slug="models"><span class="nav-roman">Ⅰ</span><span class="nav-label">模型</span><span class="nav-n">5<span class="count-unit">条</span></span></a>
+    <a class="nav-chip" href="#models" data-slug="models"><span class="nav-roman">Ⅰ</span><span class="nav-label">模型</span><span class="nav-n">6<span class="count-unit">条</span></span></a>
 <a class="nav-chip" href="#products" data-slug="products"><span class="nav-roman">Ⅱ</span><span class="nav-label">产品</span><span class="nav-n">28<span class="count-unit">条</span></span></a>
-<a class="nav-chip" href="#industry" data-slug="industry"><span class="nav-roman">Ⅲ</span><span class="nav-label">动态</span><span class="nav-n">11<span class="count-unit">条</span></span></a>
+<a class="nav-chip" href="#industry" data-slug="industry"><span class="nav-roman">Ⅲ</span><span class="nav-label">动态</span><span class="nav-n">9<span class="count-unit">条</span></span></a>
 <a class="nav-chip" href="#papers" data-slug="papers"><span class="nav-roman">Ⅳ</span><span class="nav-label">研究</span><span class="nav-n">16<span class="count-unit">条</span></span></a>
-<a class="nav-chip" href="#tips" data-slug="tips"><span class="nav-roman">Ⅴ</span><span class="nav-label">观点</span><span class="nav-n">23<span class="count-unit">条</span></span></a>
+<a class="nav-chip" href="#tips" data-slug="tips"><span class="nav-roman">Ⅴ</span><span class="nav-label">观点</span><span class="nav-n">20<span class="count-unit">条</span></span></a>
     <div class="nav-actions report-range" role="toolbar" aria-label="报告范围/工具">
   <a class="time-chip active" href="report-week.html">周报</a>
   <a class="time-chip" href="report-month.html">月报</a>
@@ -1463,6 +1518,7 @@
     返回今日
   </a>
 </div>
+    <div class="nav-total-count">共<span class="num">79</span>条</div>
   </div>
 </nav>
 
@@ -1473,11 +1529,20 @@
     <div class="sec-mark">Ⅰ</div>
     <h2 class="sec-title">模型</h2>
     <div class="sec-line"></div>
-    <div class="sec-count">5<span class="count-unit">条</span></div>
+    <div class="sec-count">6<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://x.com/OpenBMB/status/2090786300194590816" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">04</div>
+<a class="card" href="https://openai.com/index/gpt-5-6-in-kiro" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">01</div>
+  <div class="card-body">
+    <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
+    <h3 class="card-title">GPT-5.6 登陆 Kiro，为开发者提升性价比</h3>
+    <p class="card-summary">GPT-5.6 模型家族现已登陆软件开发智能体 Kiro，包含 Sol、Terra 和 Luna 三款模型。在 Terminal-Bench 2.1 测试中，GPT-5.6 Terra 在 Kiro 内完成任务成本降低约 82%。该更新由 OpenAI 与 AWS 合作优化，旨在以更少迭代和更高 token 价值帮助开发者产出更高质量的代码。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://x.com/OpenBMB/status/2090786300194590816" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">18</div>
   <div class="card-body">
     <span class="chip">X：面壁智能 OpenBMB (@OpenBMB)</span>
     <h3 class="card-title">面壁智能 OpenBMB 推出 MathForm，面向 Lean 4 数学自动形式化的开源框架、数据集与模型</h3>
@@ -1485,8 +1550,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://api-docs.deepseek.com/zh-cn/updates#%E6%97%B6%E9%97%B4-2026-08-21" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">05</div>
+<a class="card" href="https://api-docs.deepseek.com/zh-cn/updates#%E6%97%B6%E9%97%B4-2026-08-21" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">19</div>
   <div class="card-body">
     <span class="chip">DeepSeek：API 更新日志</span>
     <h3 class="card-title">DeepSeek-V4-Flash-Vision-Exp 发布</h3>
@@ -1494,8 +1559,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.ithome.com/0/992/239.htm" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">19</div>
+<a class="card" href="https://www.ithome.com/0/992/239.htm" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">33</div>
   <div class="card-body">
     <span class="chip">IT之家（RSS）</span>
     <h3 class="card-title">阿里发布 Qwen-UI-Agent，主打让模型真正“会用”每一块屏幕</h3>
@@ -1503,8 +1568,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://huggingface.co/blog/LiquidAI/lfm25-dspark" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">20</div>
+<a class="card" href="https://huggingface.co/blog/LiquidAI/lfm25-dspark" target="_blank" rel="noopener noreferrer" style="--d:4">
+  <div class="card-num">34</div>
   <div class="card-body">
     <span class="chip">Hugging Face：Blog（RSS）</span>
     <h3 class="card-title">Hugging Face 发布 LFM2.5 系列 DSpark 草稿模型，推理速度最高提升 3.18 倍</h3>
@@ -1512,8 +1577,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://huggingface.co/blog/LiquidAI/qad" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">36</div>
+<a class="card" href="https://huggingface.co/blog/LiquidAI/qad" target="_blank" rel="noopener noreferrer" style="--d:5">
+  <div class="card-num">50</div>
   <div class="card-body">
     <span class="chip">Hugging Face：Blog（RSS）</span>
     <h3 class="card-title">Liquid AI 发布 LFM2.5 系列 QAD Q4_0 量化检查点，恢复 97% 精度损失</h3>
@@ -1531,8 +1596,53 @@
     <div class="sec-count">28<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://www.lmsys.org/blog/2026-08-21-sglang-fast-recovery" target="_blank" rel="noopener noreferrer" style="--d:0">
+<a class="card" href="https://blogs.nvidia.com/blog/vera-rubin-nvl72-efficiency-ai-agents" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">02</div>
+  <div class="card-body">
+    <span class="chip">NVIDIA Blog（RSS）</span>
+    <h3 class="card-title">NVIDIA Vera Rubin NVL72 树立 AI 智能体效率新标准：每瓦特工作量提升至 30 倍</h3>
+    <p class="card-summary">NVIDIA 实测数据显示，Vera Rubin NVL72 在智能体工作负载下每兆瓦吞吐量较 GB300 NVL72 最高提升 30 倍，每百万 token 成本降低至 35 倍。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://engineering.fb.com/2026/08/24/networking-traffic/metaroce-rdma-transport-ai-ethernet" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">03</div>
+  <div class="card-body">
+    <span class="chip">Meta Engineering Blog（RSS）</span>
+    <h3 class="card-title">MetaRoCE：为 AI 规模以太网打造的全新 RDMA 传输协议</h3>
+    <p class="card-summary">Meta 设计并开源了 MetaRoCE，一个专为 AI 工作负载在通用以太网上打造的 RDMA 传输协议，已通过 Open Compute Project（OCP）发布规范、参考软件实现和合规测试套件。该协议将智能移至端点，原生支持乱序交付、多路径、无损容忍和双向拥塞控制，无需 PFC，可在百万 GPU 规模下提供高吞吐、低尾延迟。现有 RDMA Verbs API 和软件栈无需修改即可运行。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://blogs.nvidia.com/blog/nvlink-fusion-xpu-ai-factory" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">04</div>
+  <div class="card-body">
+    <span class="chip">NVIDIA Blog（RSS）</span>
+    <h3 class="card-title">NVIDIA 如何用 NVLink Fusion 让定制 XPU 融入世界级 AI 工厂</h3>
+    <p class="card-summary">NVIDIA 推出 NVLink Fusion，将定制 XPU 接入其 NVLink 扩展域，使 XPU 间端到端延迟比基于现成以太网的方案低 3 倍、数据包速率高 10 倍。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://engineering.fb.com/2026/08/24/networking-traffic/mtia-300-meta-training-chip-built-in-nics" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">05</div>
+  <div class="card-body">
+    <span class="chip">Meta Engineering Blog（RSS）</span>
+    <h3 class="card-title">MTIA 300：Meta 首款内置 NIC 与通信卸载引擎的训练芯片</h3>
+    <p class="card-summary">Meta 发布 MTIA 300，这是其自研加速器家族中首款针对推荐与排序模型训练优化的芯片。芯片封装内集成 12 个 800 Gbps RDMA NIC，提供 1.2 TB/s 总 I/O 带宽，并通过 16 个专用消息引擎卸载通信，使大规模 GEMM 与集合通信并发时计算吞吐损耗低于 0.5%。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://blogs.nvidia.com/blog/vera-rubin-lpx-spectrum-x-nvlink-fusion" target="_blank" rel="noopener noreferrer" style="--d:4">
   <div class="card-num">06</div>
+  <div class="card-body">
+    <span class="chip">NVIDIA Blog（RSS）</span>
+    <h3 class="card-title">NVIDIA 扩展 Vera Rubin 推理能力，Groq 3 LPX 全面投产支持智能体系统</h3>
+    <p class="card-summary">NVIDIA 宣布 Vera Rubin NVL72 扩展快速 token 生成能力，以支持智能体系统。其机架级系统 NVIDIA Groq 3 LPX 已全面投产，旨在通过 AI 工厂各层协同工作来定义下一代 AI 推理，而非依赖单一芯片、网络或系统的突破。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://www.lmsys.org/blog/2026-08-21-sglang-fast-recovery" target="_blank" rel="noopener noreferrer" style="--d:5">
+  <div class="card-num">20</div>
   <div class="card-body">
     <span class="chip">LMSYS：Blog（Chatbot Arena 团队）</span>
     <h3 class="card-title">SGLang 推出 Weight Cache Daemon，实现亚秒级引擎重启</h3>
@@ -1540,8 +1650,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://claude.com/blog/bringing-claude-mythos-5-to-more-defenders" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">07</div>
+<a class="card" href="https://claude.com/blog/bringing-claude-mythos-5-to-more-defenders" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">21</div>
   <div class="card-body">
     <span class="chip">Claude：Blog（网页）</span>
     <h3 class="card-title">Claude Mythos 5 网络安全能力扩展至更多防御者</h3>
@@ -1549,8 +1659,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://x.ai/news/grok-bot-more-plans" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">08</div>
+<a class="card" href="https://x.ai/news/grok-bot-more-plans" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">22</div>
   <div class="card-body">
     <span class="chip">xAI：News（网页）</span>
     <h3 class="card-title">Grok Bot 扩展至更多订阅计划</h3>
@@ -1558,8 +1668,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://github.com/anthropics/claude-code/releases/tag/v2.1.239" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">09</div>
+<a class="card" href="https://github.com/anthropics/claude-code/releases/tag/v2.1.239" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">23</div>
   <div class="card-body">
     <span class="chip">Claude Code：GitHub Releases（RSS）</span>
     <h3 class="card-title">Claude Code v2.1.239 发布：修复多项 Bug 并新增成本估算与 /claude-api 升级功能</h3>
@@ -1567,8 +1677,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://mistral.ai/news/agentic-search" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">21</div>
+<a class="card" href="https://mistral.ai/news/agentic-search" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">35</div>
   <div class="card-body">
     <span class="chip">Mistral AI：News（网页）</span>
     <h3 class="card-title">Mistral 推出 Agentic Search：多步检索提升 AI 系统复杂文档查询准确率</h3>
@@ -1576,8 +1686,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://cloud.google.com/blog/products/databases/alloydb-scann-index-four-level-tree-improves-vector-search" target="_blank" rel="noopener noreferrer" style="--d:5">
-  <div class="card-num">22</div>
+<a class="card" href="https://cloud.google.com/blog/products/databases/alloydb-scann-index-four-level-tree-improves-vector-search" target="_blank" rel="noopener noreferrer" style="--d:4">
+  <div class="card-num">36</div>
   <div class="card-body">
     <span class="chip">Google Cloud：Databases（RSS）</span>
     <h3 class="card-title">AlloyDB ScaNN 如何将向量搜索扩展到 100 亿向量</h3>
@@ -1585,8 +1695,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://claude.com/blog/computer-use-skills-api-files-api" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">23</div>
+<a class="card" href="https://claude.com/blog/computer-use-skills-api-files-api" target="_blank" rel="noopener noreferrer" style="--d:5">
+  <div class="card-num">37</div>
   <div class="card-body">
     <span class="chip">Claude：Blog（网页）</span>
     <h3 class="card-title">Claude Platform 正式上线 Computer Use、Skills API 与 Files API，新增浏览器操作工具</h3>
@@ -1594,8 +1704,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://claude.com/blog/anthropics-approach-to-teaching-and-learning-ai" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">24</div>
+<a class="card" href="https://claude.com/blog/anthropics-approach-to-teaching-and-learning-ai" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">38</div>
   <div class="card-body">
     <span class="chip">Claude：Blog（网页）</span>
     <h3 class="card-title">Anthropic 如何开展 AI 教学</h3>
@@ -1603,8 +1713,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.lmsys.org/blog/2026-08-20-miles-mooncake-rollout-data-transfer" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">25</div>
+<a class="card" href="https://www.lmsys.org/blog/2026-08-20-miles-mooncake-rollout-data-transfer" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">39</div>
   <div class="card-body">
     <span class="chip">LMSYS：Blog（Chatbot Arena 团队）</span>
     <h3 class="card-title">Mooncake 如何为 Miles 强化学习系统实现高效批量 Rollout 数据传输</h3>
@@ -1612,8 +1722,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://github.com/anthropics/claude-code/releases/tag/v2.1.238" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">26</div>
+<a class="card" href="https://github.com/anthropics/claude-code/releases/tag/v2.1.238" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">40</div>
   <div class="card-body">
     <span class="chip">Claude Code：GitHub Releases（RSS）</span>
     <h3 class="card-title">Claude Code v2.1.238 发布：新增 readline 键位、插件市场 headersHelper 与多项 Remote Control 修复</h3>
@@ -1621,8 +1731,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://github.com/anthropics/claude-code/releases/tag/v2.1.237" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">27</div>
+<a class="card" href="https://github.com/anthropics/claude-code/releases/tag/v2.1.237" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">41</div>
   <div class="card-body">
     <span class="chip">Claude Code：GitHub Releases（RSS）</span>
     <h3 class="card-title">Claude Code v2.1.237 发布：修复 LLM 网关提示词缓存，新增“简洁”输出风格</h3>
@@ -1630,8 +1740,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.langchain.com/blog/langsmith-preview-builds-test-agent-changes-before-production" target="_blank" rel="noopener noreferrer" style="--d:5">
-  <div class="card-num">28</div>
+<a class="card" href="https://www.langchain.com/blog/langsmith-preview-builds-test-agent-changes-before-production" target="_blank" rel="noopener noreferrer" style="--d:4">
+  <div class="card-num">42</div>
   <div class="card-body">
     <span class="chip">LangChain：Blog（RSS）</span>
     <h3 class="card-title">LangSmith 预览构建：如何在合并前测试智能体变更</h3>
@@ -1639,8 +1749,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://mp.weixin.qq.com/s?__biz=MzkyMzI3NzQ0Mg%3D%3D&mid=2247494105&idx=1&sn=8d7409e0fb846a3c7803c142b5d1a8e7" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">37</div>
+<a class="card" href="https://mp.weixin.qq.com/s?__biz=MzkyMzI3NzQ0Mg%3D%3D&mid=2247494105&idx=1&sn=8d7409e0fb846a3c7803c142b5d1a8e7" target="_blank" rel="noopener noreferrer" style="--d:5">
+  <div class="card-num">51</div>
   <div class="card-body">
     <span class="chip">公众号：智谱（GLM）</span>
     <h3 class="card-title">GLM-5.3上线：AA智能指数60分并列开源第一，成本更低</h3>
@@ -1648,8 +1758,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://x.com/haoailab/status/2090177721913770407" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">38</div>
+<a class="card" href="https://x.com/haoailab/status/2090177721913770407" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">52</div>
   <div class="card-body">
     <span class="chip">X：Sky Computing Lab (@haoailab)</span>
     <h3 class="card-title">FastMetal 让 Mac 本地 30 秒生成视频</h3>
@@ -1657,8 +1767,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://blog.google/products-and-platforms/products/search/back-to-school-study-tools" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">39</div>
+<a class="card" href="https://blog.google/products-and-platforms/products/search/back-to-school-study-tools" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">53</div>
   <div class="card-body">
     <span class="chip">Google Blog：AI（RSS）</span>
     <h3 class="card-title">Google 搜索推出 5 项 AI 学习工具</h3>
@@ -1666,8 +1776,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://openai.com/index/replit" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">40</div>
+<a class="card" href="https://openai.com/index/replit" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">54</div>
   <div class="card-body">
     <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
     <h3 class="card-title">Replit 推出由 GPT-5.6 Luna 驱动的 Free Mode，免费构建软件</h3>
@@ -1675,8 +1785,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://github.com/anthropics/claude-code/releases/tag/v2.1.236" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">41</div>
+<a class="card" href="https://github.com/anthropics/claude-code/releases/tag/v2.1.236" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">55</div>
   <div class="card-body">
     <span class="chip">Claude Code：GitHub Releases（RSS）</span>
     <h3 class="card-title">Claude Code v2.1.236 发布：新增默认模型环境变量与跨会话闲置通知</h3>
@@ -1684,8 +1794,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://huggingface.co/blog/multi-vector-encoder" target="_blank" rel="noopener noreferrer" style="--d:5">
-  <div class="card-num">50</div>
+<a class="card" href="https://huggingface.co/blog/multi-vector-encoder" target="_blank" rel="noopener noreferrer" style="--d:4">
+  <div class="card-num">64</div>
   <div class="card-body">
     <span class="chip">Hugging Face：Blog（RSS）</span>
     <h3 class="card-title">Sentence Transformers v6.0 新增 MultiVectorEncoder，支持 ColBERT 风格多向量模型</h3>
@@ -1693,8 +1803,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.modular.com/blog/mojo-open-source" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">51</div>
+<a class="card" href="https://www.modular.com/blog/mojo-open-source" target="_blank" rel="noopener noreferrer" style="--d:5">
+  <div class="card-num">65</div>
   <div class="card-body">
     <span class="chip">Hacker News 热门（buzzing.cc 中文翻译）</span>
     <h3 class="card-title">Mojo 语言正式开源，编译器与工具链全面开放</h3>
@@ -1702,8 +1812,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://x.com/claudeai/status/2089806039088517356" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">52</div>
+<a class="card" href="https://x.com/claudeai/status/2089806039088517356" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">66</div>
   <div class="card-body">
     <span class="chip">X：Claude (@claudeai)</span>
     <h3 class="card-title">Claude 现已支持 Gmail 邮件与 Google Drive 文件管理</h3>
@@ -1711,8 +1821,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://openai.com/index/chatgpt-for-teens" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">53</div>
+<a class="card" href="https://openai.com/index/chatgpt-for-teens" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">67</div>
   <div class="card-body">
     <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
     <h3 class="card-title">OpenAI 推出 ChatGPT for Teens：面向青少年的学习体验与更强安全保护</h3>
@@ -1720,8 +1830,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://cursor.com/blog/git-at-any-scale" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">54</div>
+<a class="card" href="https://cursor.com/blog/git-at-any-scale" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">68</div>
   <div class="card-body">
     <span class="chip">Cursor Blog</span>
     <h3 class="card-title">Git 大规模托管为何如此困难</h3>
@@ -1729,57 +1839,12 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://claude.com/blog/the-claude-science-product-guide" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">55</div>
+<a class="card" href="https://claude.com/blog/the-claude-science-product-guide" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">69</div>
   <div class="card-body">
     <span class="chip">Claude：Blog（网页）</span>
     <h3 class="card-title">Claude Science 产品指南：面向生命科学研究的 AI 工作台</h3>
     <p class="card-summary">Anthropic 发布 Claude Science（测试版），一个覆盖生命科学数字化流程的 AI 工作台，支持数据分析、图表生成与结果产出，并可通过本地守护进程将重任务调度至自有 GPU、SLURM 集群或云账户。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://cursor.com/changelog/origin-code-hosting" target="_blank" rel="noopener noreferrer" style="--d:5">
-  <div class="card-num">66</div>
-  <div class="card-body">
-    <span class="chip">Hacker News 热门（buzzing.cc 中文翻译）</span>
-    <h3 class="card-title">Cursor 推出 Origin 代码托管服务，作为 GitHub 的替代方案</h3>
-    <p class="card-summary">Cursor 今日起向所有付费计划用户开放 Origin 代码托管的早期测试版，提供仓库、拉取请求、代码浏览及 GitHub 同步功能。用户可创建以 cursor.com/codebase/ 为前缀的仓库，或将 GitHub 仓库同步至 Origin，双向同步评论与审查。Vercel、Depot 和 Buildkite 集成已可用，智能体功能即将推出。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://openrouter.ai/blog/announcements/activity-dashboard" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">67</div>
-  <div class="card-body">
-    <span class="chip">OpenRouter：Announcements（RSS）</span>
-    <h3 class="card-title">OpenRouter 推出 Activity 仪表盘与 Analytics API：按智能体、模型、请求追踪 AI 使用成本</h3>
-    <p class="card-summary">OpenRouter 发布 Activity 仪表盘和 beta Analytics API，可按智能体、模型、请求维度查看支出、token 量、缓存命中率等指标，并支持下钻至单条请求日志。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://openrouter.ai/blog/tutorials/image-generation" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">68</div>
-  <div class="card-body">
-    <span class="chip">OpenRouter：Announcements（RSS）</span>
-    <h3 class="card-title">OpenRouter 图像生成 API：代码优先的接入教程</h3>
-    <p class="card-summary">OpenRouter 推出专用图像生成 API，通过统一请求格式和单一密钥即可调用多个提供商的图像模型。开发者向 POST /api/v1/images 发送请求，响应中的 data[0].b64_json 包含 base64 编码的图像数据，解码后即可保存为本地文件。教程演示了 Python 和 JavaScript 两种实现，并支持通过 input_references 传入参考图像生成变体。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://www.langchain.com/blog/langchain-agentcore-payments" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">69</div>
-  <div class="card-body">
-    <span class="chip">LangChain：Blog（RSS）</span>
-    <h3 class="card-title">AgentCore Payments 中间件为 LangChain 智能体提供 API 支付能力</h3>
-    <p class="card-summary">AgentCore Payments 中间件让 LangChain 智能体以确定性会话预算支付 API 费用。该中间件为 x402 支付签名，LangSmith 可追踪每一笔支付记录。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://github.com/anthropics/claude-code/releases/tag/v2.1.234" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">70</div>
-  <div class="card-body">
-    <span class="chip">Claude Code：GitHub Releases（RSS）</span>
-    <h3 class="card-title">Claude Code v2.1.234 发布：新增项目目录名变量与 GitLab MR 徽章，修复多项安全与稳定性问题</h3>
-    <p class="card-summary">Claude Code v2.1.234 新增可选 CLAUDE_CODE_PROJECT_DIR_NAME 环境变量、selection:clear 键绑定及 GitLab MR 徽章，并在用量限制重置后自动继续会话。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
@@ -1790,11 +1855,29 @@
     <div class="sec-mark">Ⅲ</div>
     <h2 class="sec-title">动态</h2>
     <div class="sec-line"></div>
-    <div class="sec-count">11<span class="count-unit">条</span></div>
+    <div class="sec-count">9<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://www.reuters.com/world/how-texas-student-blew-whistle-rogue-ai-hacking-attempt-2026-08-20" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">01</div>
+<a class="card" href="https://mistral.ai/news/mistral-x-humain" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">07</div>
+  <div class="card-body">
+    <span class="chip">Mistral AI：News（网页）</span>
+    <h3 class="card-title">Mistral 与 HUMAIN 达成战略合作，推进沙特及中东主权 AI</h3>
+    <p class="card-summary">Mistral 与 HUMAIN 宣布达成战略合作，覆盖 AI 基础设施、先进模型开发及 AI 解决方案部署，聚焦沙特阿拉伯及更广泛地区。双方将合作开发本地化 AI 模型，初期重点包括网络安全和语音，并计划开发在阿拉伯语上表现强劲的前沿模型。该合作金额达数亿欧元，Mistral 将探索使用 HUMAIN 的数据中心基础设施，并计划在沙特针对受监管行业制定联合市场策略。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://www.langchain.com/blog/how-toyota-north-america-put-enterprise-ai-on-the-balance-sheet-with-deep-agents-and-langsmith" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">08</div>
+  <div class="card-body">
+    <span class="chip">LangChain：Blog（RSS）</span>
+    <h3 class="card-title">丰田北美如何用 Deep Agents 和 LangSmith 规模化企业 AI</h3>
+    <p class="card-summary">丰田北美借助 Deep Agents 和 LangSmith 运行 50 多个生产环境 AI 智能体，将交付周期从 6 个月缩短至 4 天。文章展示了其如何通过 LangSmith 追踪 AI 投资回报率（ROI），并以此支撑企业级 AI 的规模化落地。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://www.reuters.com/world/how-texas-student-blew-whistle-rogue-ai-hacking-attempt-2026-08-20" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">15</div>
   <div class="card-body">
     <span class="chip">Hacker News 热门（buzzing.cc 中文翻译）</span>
     <h3 class="card-title">德克萨斯州一名学生如何揭发了一起恶意AI黑客攻击企图</h3>
@@ -1802,8 +1885,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.ithome.com/0/993/305.htm" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">02</div>
+<a class="card" href="https://www.ithome.com/0/993/305.htm" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">16</div>
   <div class="card-body">
     <span class="chip">IT之家（RSS）</span>
     <h3 class="card-title">OpenAI 首席全球事务官勒汉恩：公众、企业要为 AI 网络攻击做好防御准备</h3>
@@ -1811,8 +1894,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.ithome.com/0/993/105.htm" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">03</div>
+<a class="card" href="https://www.ithome.com/0/993/105.htm" target="_blank" rel="noopener noreferrer" style="--d:4">
+  <div class="card-num">17</div>
   <div class="card-body">
     <span class="chip">IT之家（RSS）</span>
     <h3 class="card-title">第二届世界人形机器人运动会开幕：2056 台机器人齐聚“冰丝带”，666 支队伍竞技 51 赛项</h3>
@@ -1820,8 +1903,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.ithome.com/0/991/886.htm" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">29</div>
+<a class="card" href="https://www.ithome.com/0/991/886.htm" target="_blank" rel="noopener noreferrer" style="--d:5">
+  <div class="card-num">43</div>
   <div class="card-body">
     <span class="chip">IT之家（RSS）</span>
     <h3 class="card-title">消息称 OpenAI 首席财务官告知员工：公司最迟将于 2027 年上市</h3>
@@ -1829,8 +1912,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://openai.com/index/pacing-model-development-cyber-capabilities" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">42</div>
+<a class="card" href="https://openai.com/index/pacing-model-development-cyber-capabilities" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">56</div>
   <div class="card-body">
     <span class="chip">Hacker News 热门（buzzing.cc 中文翻译）</span>
     <h3 class="card-title">Anthropic 在网络关键能力时代放缓模型开发：暂停 RL 训练并强化安全防护</h3>
@@ -1838,8 +1921,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://openrouter.ai/blog/announcements/openrouter-is-joining-stripe" target="_blank" rel="noopener noreferrer" style="--d:5">
-  <div class="card-num">43</div>
+<a class="card" href="https://openrouter.ai/blog/announcements/openrouter-is-joining-stripe" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">57</div>
   <div class="card-body">
     <span class="chip">OpenRouter：Announcements（RSS）</span>
     <h3 class="card-title">OpenRouter 宣布加入 Stripe</h3>
@@ -1847,48 +1930,12 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://openai.com/index/strengthening-democratic-oversight-in-national-security" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">56</div>
+<a class="card" href="https://openai.com/index/strengthening-democratic-oversight-in-national-security" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">70</div>
   <div class="card-body">
     <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
     <h3 class="card-title">OpenAI 启动新计划，强化国家安全领域 AI 的民主监督</h3>
     <p class="card-summary">OpenAI 启动新计划，帮助民主监督机构发展专业能力与工具，以理解和监督政府将 AI 用于国家安全。未来一年，OpenAI 将提供 500 万美元用于培训、技术支持和 OpenAI 积分，并与监督机构试点工具，帮助授权审查员检查 AI 辅助政府决策的相关记录。OpenAI 强调 AI 应增强而非取代人类判断，且不承担对政府的监督角色。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://blogs.nvidia.com/blog/securing-the-infrastructure-of-intelligence" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">71</div>
-  <div class="card-body">
-    <span class="chip">NVIDIA Blog（RSS）</span>
-    <h3 class="card-title">NVIDIA 与 SB Energy 合作锁定俄亥俄州 PORTS-Pike 园区电力容量，OpenAI 将入驻</h3>
-    <p class="card-summary">NVIDIA 宣布与 SB Energy 合作，锁定俄亥俄州 PORTS-Pike 科技园区的电力容量（LPS）以独家部署 NVIDIA 算力，OpenAI 将成为租户。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://www.ithome.com/0/990/812.htm" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">72</div>
-  <div class="card-body">
-    <span class="chip">IT之家（RSS）</span>
-    <h3 class="card-title">A 股迎来“人形机器人第一股”，宇树科技官宣 8 月 19 日科创板上市</h3>
-    <p class="card-summary">宇树科技宣布股票将于 2026 年 8 月 19 日在科创板上市，发行价 150.80 元/股，对应市值约 609.93 亿元，预计募资约 60.99 亿元。该公司 2023 至 2025 年营收分别为 1.59 亿元、3.93 亿元和 16.99 亿元，净利润分别为-1114.51 万元、9547.47 万元和 2.78 亿元，是全球少数实现盈利的高性能通用机器人公司。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://www.404media.co/we-tracked-a-shipment-of-rare-books-it-ended-at-an-amazon-ai-training-facility" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">73</div>
-  <div class="card-body">
-    <span class="chip">Hacker News 热门（buzzing.cc 中文翻译）</span>
-    <h3 class="card-title">404 Media 追踪珍本图书流向：亚马逊批量购书扫描用于 AI 训练后销毁</h3>
-    <p class="card-summary">404 Media 通过在一本珍本图书中放置追踪设备，首次揭露亚马逊未公开的购书行动：批量购入大量书籍，扫描用于 AI 训练数据，随后销毁。追踪显示这些书最终被送往亚马逊的一处人工智能训练中心。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://openai.com/index/new-policy-ideas-for-the-intelligence-age" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">74</div>
-  <div class="card-body">
-    <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
-    <h3 class="card-title">OpenAI 为 14 个独立项目提供资助，推动智能时代经济机遇与韧性研究</h3>
-    <p class="card-summary">OpenAI 宣布向 14 个由独立组织主导的项目提供总计 100 万美元资金及最高 100 万美元 API 额度，以推动 AI 进步下的经济机遇与社会韧性研究。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
@@ -1902,8 +1949,17 @@
     <div class="sec-count">16<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://dreadnode.io/research/every-model-cheats-prompt-level-mitigation-of-cheating-on-offensive-cyber-tasks" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">10</div>
+<a class="card" href="https://machinelearning.apple.com/research/internalized-visual-thinking" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">09</div>
+  <div class="card-body">
+    <span class="chip">Apple Machine Learning Research（RSS）</span>
+    <h3 class="card-title">Beyond Visual CoT：Internalized Visual Thinking 实现主动视频推理</h3>
+    <p class="card-summary">多模态大语言模型常用视觉思维链（Visual CoT）进行空间、时间与具身环境推理，但生成中间推理图像带来大量推理开销。新提出的后训练框架 Internalized Visual Thinking（IVT）在训练阶段内化视觉思考，推理时直接进行文本预测与优化，从而在不增加推理成本的前提下实现主动视频推理。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://dreadnode.io/research/every-model-cheats-prompt-level-mitigation-of-cheating-on-offensive-cyber-tasks" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">24</div>
   <div class="card-body">
     <span class="chip">Hacker News 热门（buzzing.cc 中文翻译）</span>
     <h3 class="card-title">每个模型都会作弊：针对攻击性网络任务作弊的提示词缓解研究</h3>
@@ -1911,8 +1967,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://huggingface.co/blog/asr-benchmark-optimization" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">11</div>
+<a class="card" href="https://huggingface.co/blog/asr-benchmark-optimization" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">25</div>
   <div class="card-body">
     <span class="chip">Hugging Face：Blog（RSS）</span>
     <h3 class="card-title">测量语音识别中的基准优化：Hugging Face 新测试揭示 ASR 模型“刷分”现象</h3>
@@ -1920,8 +1976,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.lmsys.org/blog/2026-08-21-ling3-flash-spec-decode-blackwell" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">12</div>
+<a class="card" href="https://www.lmsys.org/blog/2026-08-21-ling3-flash-spec-decode-blackwell" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">26</div>
   <div class="card-body">
     <span class="chip">LMSYS：Blog（Chatbot Arena 团队）</span>
     <h3 class="card-title">Ling-3.0-flash 在 4 块 Blackwell GPU 上如何将批处理 1 解码延迟降低 54%</h3>
@@ -1929,8 +1985,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://transformer-circuits.pub/2026/interference_effectiveness_helpfulness/index.html" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">13</div>
+<a class="card" href="https://transformer-circuits.pub/2026/interference_effectiveness_helpfulness/index.html" target="_blank" rel="noopener noreferrer" style="--d:4">
+  <div class="card-num">27</div>
   <div class="card-body">
     <span class="chip">Anthropic：Transformer Circuits（可解释性研究）</span>
     <h3 class="card-title">微型语言模型中干扰权重的特征刻画</h3>
@@ -1938,8 +1994,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://research.google/blog/an-ai-tool-for-prioritizing-candidate-biomarkers-from-wearable-sensor-data" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">14</div>
+<a class="card" href="https://research.google/blog/an-ai-tool-for-prioritizing-candidate-biomarkers-from-wearable-sensor-data" target="_blank" rel="noopener noreferrer" style="--d:5">
+  <div class="card-num">28</div>
   <div class="card-body">
     <span class="chip">Google Research：Blog（网页）</span>
     <h3 class="card-title">Google 推出 Biomarker Discovery Framework：从可穿戴传感器数据中筛选候选生物标志物的多智能体系统</h3>
@@ -1947,8 +2003,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://research.google/blog/how-mobility-gives-language-models-a-deeper-understanding-of-place" target="_blank" rel="noopener noreferrer" style="--d:5">
-  <div class="card-num">15</div>
+<a class="card" href="https://research.google/blog/how-mobility-gives-language-models-a-deeper-understanding-of-place" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">29</div>
   <div class="card-body">
     <span class="chip">Google Research：Blog（网页）</span>
     <h3 class="card-title">移动性如何让语言模型更深入地理解地点</h3>
@@ -1956,8 +2012,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://machinelearning.apple.com/research/multilingual-knowledge-transfer-lexical-interventions" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">30</div>
+<a class="card" href="https://machinelearning.apple.com/research/multilingual-knowledge-transfer-lexical-interventions" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">44</div>
   <div class="card-body">
     <span class="chip">Apple Machine Learning Research（RSS）</span>
     <h3 class="card-title">数据受限下的多语言知识迁移：Apple 提出基于词汇干预的新方法</h3>
@@ -1965,8 +2021,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://machinelearning.apple.com/research/scaling-laws-mixture-pretraining" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">31</div>
+<a class="card" href="https://machinelearning.apple.com/research/scaling-laws-mixture-pretraining" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">45</div>
   <div class="card-body">
     <span class="chip">Apple Machine Learning Research（RSS）</span>
     <h3 class="card-title">数据约束下的混合预训练缩放定律</h3>
@@ -1974,8 +2030,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.lmsys.org/blog/2026-08-19-deepseek-v4-pro-engine-optimization-h20" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">44</div>
+<a class="card" href="https://www.lmsys.org/blog/2026-08-19-deepseek-v4-pro-engine-optimization-h20" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">58</div>
   <div class="card-body">
     <span class="chip">LMSYS：Blog（Chatbot Arena 团队）</span>
     <h3 class="card-title">突破 DeepSeek-V4-Pro 服务极限：H20 上的多场景优化方法</h3>
@@ -1983,8 +2039,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://machinelearning.apple.com/research/human-like-behaviors-llms" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">45</div>
+<a class="card" href="https://machinelearning.apple.com/research/human-like-behaviors-llms" target="_blank" rel="noopener noreferrer" style="--d:4">
+  <div class="card-num">59</div>
   <div class="card-body">
     <span class="chip">Apple Machine Learning Research（RSS）</span>
     <h3 class="card-title">苹果研究：LLM 类人行为的多维度分析——模型行为、用户因素与系统提示词的影响</h3>
@@ -1992,8 +2048,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://machinelearning.apple.com/research/the-p-completeness-of-inverted-index-traversal" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">46</div>
+<a class="card" href="https://machinelearning.apple.com/research/the-p-completeness-of-inverted-index-traversal" target="_blank" rel="noopener noreferrer" style="--d:5">
+  <div class="card-num">60</div>
   <div class="card-body">
     <span class="chip">Apple Machine Learning Research（RSS）</span>
     <h3 class="card-title">倒排索引遍历的 P-完全性：布尔查询 DAG 的复杂度评估</h3>
@@ -2001,8 +2057,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.anthropic.com/research/Claude-accelerates-protein-design" target="_blank" rel="noopener noreferrer" style="--d:5">
-  <div class="card-num">57</div>
+<a class="card" href="https://www.anthropic.com/research/Claude-accelerates-protein-design" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">71</div>
   <div class="card-body">
     <span class="chip">Anthropic：Research（发表成果 · 网页）</span>
     <h3 class="card-title">Claude 如何加速蛋白质设计与分析化学研究</h3>
@@ -2010,8 +2066,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://huggingface.co/blog/ibm-research/altk-evolve-hmm" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">58</div>
+<a class="card" href="https://huggingface.co/blog/ibm-research/altk-evolve-hmm" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">72</div>
   <div class="card-body">
     <span class="chip">Hugging Face：Blog（RSS）</span>
     <h3 class="card-title">智能体记忆并非越多越好：八款模型评测显示剂量需按能力校准</h3>
@@ -2019,8 +2075,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://machinelearning.apple.com/research/grpo-beyond-english" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">59</div>
+<a class="card" href="https://machinelearning.apple.com/research/grpo-beyond-english" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">73</div>
   <div class="card-body">
     <span class="chip">Apple Machine Learning Research（RSS）</span>
     <h3 class="card-title">GRPO 超越英语：多语言与非英语环境下的大规模研究</h3>
@@ -2028,21 +2084,12 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://machinelearning.apple.com/research/mvicad2-delays-dilations" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">60</div>
+<a class="card" href="https://machinelearning.apple.com/research/mvicad2-delays-dilations" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">74</div>
   <div class="card-body">
     <span class="chip">Apple Machine Learning Research（RSS）</span>
     <h3 class="card-title">MVICAD2：引入延迟与膨胀的多视图独立成分分析</h3>
     <p class="card-summary">巴黎-萨克雷大学等机构提出MVICAD2，允许不同被试的脑源在时间延迟和膨胀两方面存在差异，以解决MVICA假设过于严格、仅估计延迟不足以刻画听觉刺激等脑动态的问题。该模型源可识别，似然有闭式近似，并通过正则化与优化提升性能。模拟显示其优于现有方法，Cam-CAN数据集验证了延迟和膨胀与衰老相关。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://research.google/blog/seeing-beyond-bmi-estimating-cardiometabolic-risk-with-smartphone-imagery" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">75</div>
-  <div class="card-body">
-    <span class="chip">Google Research：Blog（网页）</span>
-    <h3 class="card-title">PhotoScan：用智能手机照片估算胰岛素抵抗，精度接近DXA</h3>
-    <p class="card-summary">Google Research 推出 PhotoScan，一种从智能手机 2D 照片直接估算三维身体成分的深度学习框架，可预测胰岛素抵抗，在临床研究中精度接近 DXA 扫描。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
@@ -2053,11 +2100,56 @@
     <div class="sec-mark">Ⅴ</div>
     <h2 class="sec-title">观点</h2>
     <div class="sec-line"></div>
-    <div class="sec-count">23<span class="count-unit">条</span></div>
+    <div class="sec-count">20<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://claude.com/blog/the-ai-native-sdlc-playbook" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">16</div>
+<a class="card" href="https://techcrunch.com/2026/08/24/openai-is-building-an-ai-agent-for-everything-will-everyone-use-them" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">10</div>
+  <div class="card-body">
+    <span class="chip">TechCrunch：AI（RSS）</span>
+    <h3 class="card-title">OpenAI 正为一切构建 AI 智能体，但用户会愿意交出控制权吗？</h3>
+    <p class="card-summary">OpenAI 推出 ChatGPT Work，将 Codex 改造为面向非工程师的智能体产品，最低订阅档每月 20 美元即可使用，旨在让白领通过 LLM 自主完成多步骤工作。OpenAI 内部 6 月有 98% 员工使用 Codex，但组织订阅者仅 17%、个人订阅者不足 1%。公司正通过简化界面扩大采用，以支撑其巨额训练投入。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://developers.googleblog.com/how-to-evaluate-live-voice-agents-in-adk" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">11</div>
+  <div class="card-body">
+    <span class="chip">Google Developers Blog（RSS）</span>
+    <h3 class="card-title">ADK 如何评估实时语音智能体</h3>
+    <p class="card-summary">Google 为 ADK 带来原生实时评估能力，可用模拟用户以音频驱动实时语音智能体、对语音回复打分，并在与文本智能体相同的评估循环中完成。示例采用三个基于 gemini-live-2.5-flash-native-audio 的智能体组成工作流，支持对话场景与固定对话两种测试用例，内置 NOVICE 等用户人设，并以 max_allowed_invocations 限制总轮数。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://www.databricks.com/blog/run-debug-and-scale-databricks-workloads-your-local-ide" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">12</div>
+  <div class="card-body">
+    <span class="chip">Databricks：Blog（RSS）</span>
+    <h3 class="card-title">Databricks 如何从本地 IDE 运行、调试和扩展工作负载</h3>
+    <p class="card-summary">Databricks 工作区专为数据分析和数据工程而构建，现支持从本地 IDE 直接运行、调试和扩展工作负载。该功能旨在弥合本地开发环境与云端 Databricks 平台之间的差距，让开发者无需切换上下文即可完成编码、测试和部署。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://github.blog/engineering/user-experience/your-alt-text-passes-automated-checks-that-doesnt-mean-its-any-good" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">13</div>
+  <div class="card-body">
+    <span class="chip">GitHub Blog</span>
+    <h3 class="card-title">你的alt文本能通过自动化检查，不代表它真的合格</h3>
+    <p class="card-summary">WebAIM Million报告显示，主流网页中16.2%的图片缺少alt文本，另有10.8%的alt文本模糊或重复。GitHub为Accessibility Scanner构建了alt文本插件，采用五条确定性规则检测缺失、文件名、占位符、泛化词及相邻重复，并引入基于布局的重复检测和可选视觉模型审查，以平衡误报率与实用性。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://claude.com/blog/how-an-anthropic-field-marketer-uses-claude-code-to-send-weekly-personalized-updates-to-every-sales-rep" target="_blank" rel="noopener noreferrer" style="--d:4">
+  <div class="card-num">14</div>
+  <div class="card-body">
+    <span class="chip">Claude：Blog（网页）</span>
+    <h3 class="card-title">Anthropic 市场人员如何用 Claude Code 每周为每位销售代表发送个性化更新</h3>
+    <p class="card-summary">Anthropic 市场团队成员 Adam Ward 分享如何用 Claude Code 将每周销售报告转化为每位客户经理的个性化周一简报。他通过 MCP 连接 BigQuery 和 CRM 数据，并依据销售与经理反馈迭代提示词，加入“绝不编造 URL”等九条内容规则。该简报现已推广至所有销售团队，每周一自动发送三条优先行动项及账户相关活动。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://claude.com/blog/the-ai-native-sdlc-playbook" target="_blank" rel="noopener noreferrer" style="--d:5">
+  <div class="card-num">30</div>
   <div class="card-body">
     <span class="chip">Claude：Blog（网页）</span>
     <h3 class="card-title">AI 原生 SDLC 实战手册：Anthropic 如何用 Claude 重塑软件开发生命周期</h3>
@@ -2065,8 +2157,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.tomtunguz.com/intelligence-per-watt" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">17</div>
+<a class="card" href="https://www.tomtunguz.com/intelligence-per-watt" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">31</div>
   <div class="card-body">
     <span class="chip">Tomer Tunguz 博客（VC 分析）</span>
     <h3 class="card-title">本地 AI 模型已能媲美云端前沿模型，数据中心将走向个人化</h3>
@@ -2074,8 +2166,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://garymarcus.substack.com/p/data-center-madness" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">18</div>
+<a class="card" href="https://garymarcus.substack.com/p/data-center-madness" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">32</div>
   <div class="card-body">
     <span class="chip">Gary Marcus：The Road to AI We Can Trust（RSS）</span>
     <h3 class="card-title">数据中心狂热：AI 行业的经济账与政治反噬</h3>
@@ -2083,8 +2175,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://claude.com/blog/claude-code-guide-for-startups" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">32</div>
+<a class="card" href="https://claude.com/blog/claude-code-guide-for-startups" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">46</div>
   <div class="card-body">
     <span class="chip">Claude：Blog（网页）</span>
     <h3 class="card-title">Claude Code 初创公司指南：五大规则与创始人洞见</h3>
@@ -2092,8 +2184,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://openai.com/index/introducing-ai-futures" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">33</div>
+<a class="card" href="https://openai.com/index/introducing-ai-futures" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">47</div>
   <div class="card-body">
     <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
     <h3 class="card-title">OpenAI 推出 AI Futures 博客，探讨自由社会如何应对变革性 AI</h3>
@@ -2101,8 +2193,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://garymarcus.substack.com/p/leopolds-folly" target="_blank" rel="noopener noreferrer" style="--d:5">
-  <div class="card-num">34</div>
+<a class="card" href="https://garymarcus.substack.com/p/leopolds-folly" target="_blank" rel="noopener noreferrer" style="--d:4">
+  <div class="card-num">48</div>
   <div class="card-body">
     <span class="chip">Gary Marcus：The Road to AI We Can Trust（RSS）</span>
     <h3 class="card-title">Leopold 的愚蠢：一个年轻人如何象征一个时代</h3>
@@ -2110,8 +2202,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://garymarcus.substack.com/p/breaking-the-republican-party-is" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">35</div>
+<a class="card" href="https://garymarcus.substack.com/p/breaking-the-republican-party-is" target="_blank" rel="noopener noreferrer" style="--d:5">
+  <div class="card-num">49</div>
   <div class="card-body">
     <span class="chip">Gary Marcus：The Road to AI We Can Trust（RSS）</span>
     <h3 class="card-title">共和党因与大型科技公司关系陷入恐慌</h3>
@@ -2119,8 +2211,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://github.blog/ai-and-ml/github-copilot/github-copilot-app-for-beginners-managing-your-work" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">47</div>
+<a class="card" href="https://github.blog/ai-and-ml/github-copilot/github-copilot-app-for-beginners-managing-your-work" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">61</div>
   <div class="card-body">
     <span class="chip">GitHub Blog</span>
     <h3 class="card-title">GitHub Copilot app 初学者教程：用 My work 面板管理你的工作</h3>
@@ -2128,8 +2220,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://claude.com/blog/turning-conversation-into-knowledge-how-slack-builds-human-agent-teams" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">48</div>
+<a class="card" href="https://claude.com/blog/turning-conversation-into-knowledge-how-slack-builds-human-agent-teams" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">62</div>
   <div class="card-body">
     <span class="chip">Claude：Blog（网页）</span>
     <h3 class="card-title">Slack 如何构建人机智能体团队：对话即知识</h3>
@@ -2137,8 +2229,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.databricks.com/blog/designing-effective-genie-agents-single-prompt" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">49</div>
+<a class="card" href="https://www.databricks.com/blog/designing-effective-genie-agents-single-prompt" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">63</div>
   <div class="card-body">
     <span class="chip">Databricks：Blog（RSS）</span>
     <h3 class="card-title">Databricks 如何从单一提示词设计高效的 Genie Agents</h3>
@@ -2146,8 +2238,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://dev.to/googleai/designing-ai-evals-clarity-now-and-visualization-next-4eii" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">61</div>
+<a class="card" href="https://dev.to/googleai/designing-ai-evals-clarity-now-and-visualization-next-4eii" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">75</div>
   <div class="card-body">
     <span class="chip">Google AI：DEV 作者专属（RSS）</span>
     <h3 class="card-title">设计 AI 评测：先求清晰，再谈可视化</h3>
@@ -2155,8 +2247,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://openai.com/index/pacing-model-development-cyber-capabilities" target="_blank" rel="noopener noreferrer" style="--d:5">
-  <div class="card-num">62</div>
+<a class="card" href="https://openai.com/index/pacing-model-development-cyber-capabilities" target="_blank" rel="noopener noreferrer" style="--d:4">
+  <div class="card-num">76</div>
   <div class="card-body">
     <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
     <h3 class="card-title">OpenAI 在“关键网络能力”时代放缓模型开发节奏</h3>
@@ -2164,8 +2256,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://claude.com/blog/ai-ci-cd-on-call" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">63</div>
+<a class="card" href="https://claude.com/blog/ai-ci-cd-on-call" target="_blank" rel="noopener noreferrer" style="--d:5">
+  <div class="card-num">77</div>
   <div class="card-body">
     <span class="chip">Claude：Blog（网页）</span>
     <h3 class="card-title">Claude Tag 如何担任 Anthropic CI/CD 故障的一线响应者</h3>
@@ -2173,8 +2265,8 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://www.tomtunguz.com/birds-dont-fly-like-planes-neither-does-ai" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">64</div>
+<a class="card" href="https://www.tomtunguz.com/birds-dont-fly-like-planes-neither-does-ai" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">78</div>
   <div class="card-body">
     <span class="chip">Tomer Tunguz 博客（VC 分析）</span>
     <h3 class="card-title">笔记本模型也能媲美云端前沿模型：Qwen3.8-27B 登顶智能指数</h3>
@@ -2182,84 +2274,12 @@
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://runwayml.com/news/customers/populous" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">65</div>
+<a class="card" href="https://runwayml.com/news/customers/populous" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">79</div>
   <div class="card-body">
     <span class="chip">Runway：News（网页）</span>
     <h3 class="card-title">Populous 如何用 Runway 呈现全球标志性场馆设计</h3>
     <p class="card-summary">全球设计公司 Populous 高级建筑师 Georgina Myers 介绍团队用 Runway 辅助体育场馆概念设计：过去完整视频需外部渲染团队至少三周，且提交前两周须冻结设计模型；如今 Runway 能生成传达尺度感的完整渲染和航拍图，将视觉制作时间缩短，让设计师把时间还给设计本身。该工具已用于利雅得 MBS 体育场等中东项目，支持 9 种不同活动模式的场景迭代。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://openai.com/index/the-defenders-window" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">76</div>
-  <div class="card-body">
-    <span class="chip">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
-    <h3 class="card-title">OpenAI 如何用前沿智能加固自身防御：The Defender’s Window</h3>
-    <p class="card-summary">OpenAI 在 OpenAI-Hugging Face 事件后反思低估了模型真实网络攻击能力，正通过四大支柱强化自身安全：用 Codex 验证代码漏洞、用智能体优先分流安全告警、持续枚举攻击路径，并仅向可信防御者开放网络能力。文中演示 ChatGPT Work（基于 GPT-5.6 Sol）15 分钟发现个人网站 13 个问题并在一小时内完成修复。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://www.librarian.net/notoai" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">77</div>
-  <div class="card-body">
-    <span class="chip">Hacker News 热门（buzzing.cc 中文翻译）</span>
-    <h3 class="card-title">如何禁用或避免侵入式 AI：一份覆盖 Windows、Chrome、Edge、Firefox 及主流应用的实用指南</h3>
-    <p class="card-summary">一份面向希望减少技术环境中侵入式 AI 的用户的操作指南，涵盖 Adobe Acrobat、Android/Gemini、Apple Intelligence、Chrome、Edge、Firefox、DuckDuckGo、Google Workspace、Slack、WhatsApp 及 Windows 11/Copilot 等平台。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://developers.googleblog.com/build-zero-trust-ai-agents-with-googles-agent-development-kit" target="_blank" rel="noopener noreferrer" style="--d:5">
-  <div class="card-num">78</div>
-  <div class="card-body">
-    <span class="chip">Google Developers Blog（RSS）</span>
-    <h3 class="card-title">用 Google 的 Agent Development Kit 构建零信任 AI 智能体</h3>
-    <p class="card-summary">Google 开源了基于 ADK 和 Gemini 的零信任客服与退货智能体示例，演示如何防御提示注入等攻击。该架构在 LLM 上下文之外通过三层硬性安全机制保障：硬件支持的加密签名确保数据库写入不可抵赖、gVisor 沙箱隔离动态代码执行、确定性语义网关校验业务逻辑。系统提示词只是软约束，无法作为安全边界。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://www.interconnects.ai/p/teaching-everyone-to-fish-for-tokens" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">79</div>
-  <div class="card-body">
-    <span class="chip">Nathan Lambert：Interconnects（RSS）</span>
-    <h3 class="card-title">开源模型生态的未来：Nvidia 押注“教所有人炼 token”</h3>
-    <p class="card-summary">开源模型生态正日益依赖 Nvidia 的资助，其已投入 260 亿美元推动近乎开源的模型开发，以扩大推理芯片需求。若此路径不奏效，开源模型将转向效率、可修改性等长尾场景，与闭源模型分化。同时，基础模型训练门槛升高，开源社区兴趣正从全量训练转向对 DeepSeek V4 Flash、GLM 5.X 等模型的微调。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://huggingface.co/blog/Dharma-AI/gpu-management-pt2" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">80</div>
-  <div class="card-body">
-    <span class="chip">Hugging Face：Blog（RSS）</span>
-    <h3 class="card-title">同一集群利用率提升 33 个百分点：改变的是分配顺序</h3>
-    <p class="card-summary">Hugging Face 构建了一个约束感知的 GPU 分配器，并在七个基准场景中与 FIFO 调度器对比。在相同硬件和负载下，GPU 利用率最高提升 33 个百分点，优先级加权输出在全部场景中均上升，最高达 105%。分配器将实时推理需求按曲线而非峰值处理，批量任务按优先级跨整个调度周期排序，从而回收了预留闲置容量。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://claude.com/blog/how-abc-legal-turned-every-employee-into-a-builder-with-claude-managed-agents" target="_blank" rel="noopener noreferrer" style="--d:2">
-  <div class="card-num">81</div>
-  <div class="card-body">
-    <span class="chip">Claude：Blog（网页）</span>
-    <h3 class="card-title">ABC Legal 如何借助 Claude Managed Agents 让每位员工成为构建者</h3>
-    <p class="card-summary">ABC Legal 为 1,100 名员工部署 Claude Enterprise 后，通过 Claude Managed Agents 将零散实验转变为受治理的智能体体系，截至 2026 年 7 月已上线 50 多个生产级智能体，部分覆盖的人工任务成本降低约 50%，约 310 名员工日常使用 Claude。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://www.tomtunguz.com/test-time-training-impact" target="_blank" rel="noopener noreferrer" style="--d:3">
-  <div class="card-num">82</div>
-  <div class="card-body">
-    <span class="chip">Tomer Tunguz 博客（VC 分析）</span>
-    <h3 class="card-title">当模型持续学习：测试时训练如何改变 AI 的记忆与成本</h3>
-    <p class="card-summary">测试时训练（Test-time training）让模型在使用中持续更新权重，而非训练结束后冻结。相比标准 Transformer，其内存需求从随上下文线性增长变为恒定，斯坦福研究显示推理速度最高可提升 2.7 倍，且 In-Place TTT 无需重训即可将 4B 模型提升至 128k 上下文性能。但代价是每个用户需独立模型副本，服务成本转向算力与芯片，更适合编码助手等个性化场景。</p>
-  </div>
-  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
-</a>
-<a class="card" href="https://www.lmsys.org/blog/2026-08-17-advanced-cuda-graph" target="_blank" rel="noopener noreferrer" style="--d:4">
-  <div class="card-num">83</div>
-  <div class="card-body">
-    <span class="chip">LMSYS：Blog（Chatbot Arena 团队）</span>
-    <h3 class="card-title">SGLang 重构 CUDA Graph 支持，Breakable CUDA Graph 成 prefill 默认方案</h3>
-    <p class="card-summary">SGLang 重构 CUDA Graph 支持，通过 runner/backend 接口拆分使不同捕获策略可复用。其社区首创的 Breakable CUDA Graph（BCG）现为 prefill 默认方案，代码量仅为 torch.compile 方案的约四分之一（521 行对比 1,771 行），构建速度快 3.8–5.2 倍。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
@@ -2271,7 +2291,7 @@
   <footer class="footer">
     <!-- 1 本期共 -->
     <div class="footer-meta">
-      本期共 <span class="num">83</span> 条 · 5 个版块 · 2026-08-18 ~ 2026-08-24
+      本期共 <span class="num">79</span> 条 · 5 个版块 · 2026-08-19 ~ 2026-08-25
     </div>
     <!-- 2 数据源 -->
     <div class="footer-source">
@@ -2672,10 +2692,16 @@
     // _fix_report_003（v1.10.21）：报告页 nav.top=calc(safe-area+78px) 让 sticky 边界为 78px，
     // 旧的 `<= 0` 恒假导致报告页永远不吸顶（主页 nav.top=0 巧合能 work）。
     // 现在读 nav 的 cssTop 作为阈值，兼容主页 0 / 报告页 78 / 移动端各 top 值。
+    // _fix_vision_04：共x条「渐隐提前」——nav 接近吸顶（提前 FADE_AHEAD px）就开始淡出，
+    // 不等完全吸顶，避免到站才突兀消失。is-stuck 仍按 cssTop 触发（金线/胶囊搬运）。
+    const FADE_AHEAD = 80;
     function updateStuck() {
       const cssTop = parseFloat(getComputedStyle(navEl).top) || 0;
-      const stuck = navEl.getBoundingClientRect().top <= cssTop;
+      const rectTop = navEl.getBoundingClientRect().top;
+      const stuck = rectTop <= cssTop;
+      const fading = rectTop <= cssTop + FADE_AHEAD;
       navEl.classList.toggle('is-stuck', stuck);
+      navEl.classList.toggle('fading', fading);
       placeActions();
     }
         let stuckTicking = false;

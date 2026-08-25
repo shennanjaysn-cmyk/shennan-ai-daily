@@ -827,10 +827,7 @@
     margin-left: auto;            /* flex-spacer 把右侧三胶囊推到底 */
     align-self: center;
   }
-  /* _fix_vision_02：主页 nav 右区显示"共X条"指示器
-   * _fix_vision_03：报告页也加（共X条 嵌入 nav-actions 内 [周/月] 之后、sep 之前）
-   * _fix_vision_03：吸顶触发淡出+收窄（不瞬时 display:none，给 0.4s 渐隐）
-   */
+  /* _fix_vision_02：主页 nav 右区显示"共X条"指示器；吸顶后隐藏（让位给 nav-actions 的报告/历史日报/导出） */
   .nav-total-count {
     display: inline-flex;
     align-items: center;
@@ -846,11 +843,6 @@
     border: 1px solid rgba(205, 200, 255, 0.30);
     border-radius: 999px;
     background: rgba(205, 200, 255, 0.06);
-    /* 渐隐过渡 */
-    max-width: 120px;
-    overflow: hidden;
-    transition: opacity .4s ease, transform .4s ease,
-                max-width .4s ease, padding .4s ease, border-width .4s ease;
   }
   .nav-total-count .num {
     color: var(--gold);
@@ -858,18 +850,7 @@
     font-family: var(--font-num);
     font-size: 13px;
   }
-  /* 吸顶/接近吸顶即触发渐隐 + 收窄——提前启动、不瞬时 display:none */
-  .nav.is-stuck .nav-total-count,
-  .nav.fading .nav-total-count {
-    opacity: 0;
-    transform: translateY(-4px);
-    max-width: 0;
-    padding-left: 0;
-    padding-right: 0;
-    border-left-width: 0;
-    border-right-width: 0;
-    pointer-events: none;
-  }
+  .nav.is-stuck .nav-total-count { display: none; }
   /* 移动端：5 胶囊已可横滑，3 工具胶囊继续在右（不参与滑动条） */
   @media (max-width: 767.98px) {
     .nav-actions { flex-shrink: 0; padding-left: 8px; background: var(--ink-card); }
@@ -879,17 +860,8 @@
   [data-page-period] .topbar { display: none; }
   /* fix_report_01（v1.10.10）：首页 nav 吸顶到页面最顶（safe-area），置顶后 .is-stuck 渐显金边做视觉分割 */
   [data-page-period] .nav { top: env(safe-area-inset-top, 0); }
-  /* _fix_vision_02：主页 hero 右栏底对齐到绿线（与大日期底齐平），报告页保持 -60px 不动
-   * _fix_vision_03：主页精调——hero-meta 顶对齐大号日期上边、hero-lead 底对齐大号日期下边（flex column + space-between）
-   * 报告页不匹配 [data-page-period]，保持 .hero-info-col 基类 margin-top -60px 不变
-   */
-  [data-page-period] .hero-info-col {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-top: 0;
-    align-self: stretch;
-  }
+  /* _fix_vision_02：主页 hero 右栏底对齐到绿线（与大日期底齐平），报告页保持 -60px 不动 */
+  [data-page-period] .hero-info-col { margin-top: 0; align-self: flex-end; }
   /* _fix_report_002：报告页所有工具胶囊都在 nav-actions 里，topbar 完全留空并隐藏；同时 nav 提到 ticker 之下、紧贴可视顶部 */
   [data-page-report] .topbar { display: none; }
   [data-page-report] .nav { top: env(safe-area-inset-top, 0); }
@@ -2179,16 +2151,10 @@
     // _fix_report_003（v1.10.21）：报告页 nav.top=calc(safe-area+78px) 让 sticky 边界为 78px，
     // 旧的 `<= 0` 恒假导致报告页永远不吸顶（主页 nav.top=0 巧合能 work）。
     // 现在读 nav 的 cssTop 作为阈值，兼容主页 0 / 报告页 78 / 移动端各 top 值。
-    // _fix_vision_04：共x条「渐隐提前」——nav 接近吸顶（提前 FADE_AHEAD px）就开始淡出，
-    // 不等完全吸顶，避免到站才突兀消失。is-stuck 仍按 cssTop 触发（金线/胶囊搬运）。
-    const FADE_AHEAD = 80;
     function updateStuck() {
       const cssTop = parseFloat(getComputedStyle(navEl).top) || 0;
-      const rectTop = navEl.getBoundingClientRect().top;
-      const stuck = rectTop <= cssTop;
-      const fading = rectTop <= cssTop + FADE_AHEAD;
+      const stuck = navEl.getBoundingClientRect().top <= cssTop;
       navEl.classList.toggle('is-stuck', stuck);
-      navEl.classList.toggle('fading', fading);
       placeActions();
     }
         let stuckTicking = false;

@@ -53,7 +53,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.22"
+VERSION = "1.10.25"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -476,11 +476,16 @@ def render_html(info, page_info):
 
     # fix_report_01（v1.10.10）：三工具胶囊（报告/历史日报/导出）合并回导航条 nav-actions，与 5 分类胶囊同一行对齐；
     # 首页 topbar 隐藏，nav 吸顶到页面最顶（safe-area），置顶后 .is-stuck 渐显金边
+    # _fix_vision_02：主页 nav 右区"共X条"指示器（报告页留空）
+    # _fix_vision_03：报告页 nav 也加"共X条"，嵌入 nav-actions 内 [周/月] 之后、sep 之前（数据组 [周/月|共X条]，操作组 [sep|返回今日]）
     if is_report:
         # _fix_report_002：所有工具胶囊（周报/月报切换 + 返回今日）都合并进 nav-actions
         # 报告页 topbar 完全留空 — 不再需要 fixed topbar
-        nav_actions_html = report_switch_html
         topbar_tools_html = ""
+        nav_actions_html = report_switch_html
+        # _fix_vision_04：报告页「共X条」与主页保持一致——作为 nav-inner 直接子元素输出，
+        # 由下方 {nav_total_html} 统一渲染，位置与主页 nav-actions 之后一致（不再嵌在 report-range 内）
+        nav_total_html = f'<div class="nav-total-count">共<span class="num">{total}</span>条</div>'
     else:
         nav_actions_html = f'''<div class="nav-actions">
   {report_dropdown_html}
@@ -514,6 +519,8 @@ def render_html(info, page_info):
   </div>
 </div>'''
         topbar_tools_html = ""
+        # _fix_vision_02：主页 nav 右区显示"共X条"指示器
+        nav_total_html = f'<div class="nav-total-count">共<span class="num">{total}</span>条</div>'
 
     if is_report:
         if report_range == "week":
@@ -1318,14 +1325,69 @@ def render_html(info, page_info):
     margin-left: auto;            /* flex-spacer 把右侧三胶囊推到底 */
     align-self: center;
   }}
+  /* _fix_vision_02：主页 nav 右区显示"共X条"指示器
+   * _fix_vision_03：报告页也加（共X条 嵌入 nav-actions 内 [周/月] 之后、sep 之前）
+   * _fix_vision_03：吸顶触发淡出+收窄（不瞬时 display:none，给 0.4s 渐隐）
+   */
+  .nav-total-count {{
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--mist-body);
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+    white-space: nowrap;
+    border: 1px solid rgba(205, 200, 255, 0.30);
+    border-radius: 999px;
+    background: rgba(205, 200, 255, 0.06);
+    /* 渐隐过渡 */
+    max-width: 120px;
+    overflow: hidden;
+    transition: opacity .4s ease, transform .4s ease,
+                max-width .4s ease, padding .4s ease, border-width .4s ease;
+  }}
+  .nav-total-count .num {{
+    color: var(--gold);
+    font-weight: 700;
+    font-family: var(--font-num);
+    font-size: 13px;
+  }}
+  /* 吸顶/接近吸顶即触发渐隐 + 收窄——提前启动、不瞬时 display:none */
+  .nav.is-stuck .nav-total-count,
+  .nav.fading .nav-total-count {{
+    opacity: 0;
+    transform: translateY(-4px);
+    max-width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    pointer-events: none;
+  }}
   /* 移动端：5 胶囊已可横滑，3 工具胶囊继续在右（不参与滑动条） */
   @media (max-width: 767.98px) {{
     .nav-actions {{ flex-shrink: 0; padding-left: 8px; background: var(--ink-card); }}
+    .nav-total-count {{ display: none; }}
   }}
   /* fix_report_01（v1.10.10）：首页三工具胶囊已合并进 nav-actions（与 5 分类同一行），topbar 在首页隐藏 */
   [data-page-period] .topbar {{ display: none; }}
   /* fix_report_01（v1.10.10）：首页 nav 吸顶到页面最顶（safe-area），置顶后 .is-stuck 渐显金边做视觉分割 */
   [data-page-period] .nav {{ top: env(safe-area-inset-top, 0); }}
+  /* _fix_vision_02：主页 hero 右栏底对齐到绿线（与大日期底齐平），报告页保持 -60px 不动
+   * _fix_vision_03：主页精调——hero-meta 顶对齐大号日期上边、hero-lead 底对齐大号日期下边（flex column + space-between）
+   * 报告页不匹配 [data-page-period]，保持 .hero-info-col 基类 margin-top -60px 不变
+   */
+  [data-page-period] .hero-info-col {{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 0;
+    align-self: stretch;
+  }}
   /* _fix_report_002：报告页所有工具胶囊都在 nav-actions 里，topbar 完全留空并隐藏；同时 nav 提到 ticker 之下、紧贴可视顶部 */
   [data-page-report] .topbar {{ display: none; }}
   [data-page-report] .nav {{ top: env(safe-area-inset-top, 0); }}
@@ -1942,6 +2004,7 @@ def render_html(info, page_info):
   <div class="nav-inner">
     {nav_html}
     {nav_actions_html}
+    {nav_total_html}
   </div>
 </nav>
 
@@ -2355,10 +2418,16 @@ def render_html(info, page_info):
     // _fix_report_003（v1.10.21）：报告页 nav.top=calc(safe-area+78px) 让 sticky 边界为 78px，
     // 旧的 `<= 0` 恒假导致报告页永远不吸顶（主页 nav.top=0 巧合能 work）。
     // 现在读 nav 的 cssTop 作为阈值，兼容主页 0 / 报告页 78 / 移动端各 top 值。
+    // _fix_vision_04：共x条「渐隐提前」——nav 接近吸顶（提前 FADE_AHEAD px）就开始淡出，
+    // 不等完全吸顶，避免到站才突兀消失。is-stuck 仍按 cssTop 触发（金线/胶囊搬运）。
+    const FADE_AHEAD = 80;
     function updateStuck() {{
       const cssTop = parseFloat(getComputedStyle(navEl).top) || 0;
-      const stuck = navEl.getBoundingClientRect().top <= cssTop;
+      const rectTop = navEl.getBoundingClientRect().top;
+      const stuck = rectTop <= cssTop;
+      const fading = rectTop <= cssTop + FADE_AHEAD;
       navEl.classList.toggle('is-stuck', stuck);
+      navEl.classList.toggle('fading', fading);
       placeActions();
     }}
         let stuckTicking = false;

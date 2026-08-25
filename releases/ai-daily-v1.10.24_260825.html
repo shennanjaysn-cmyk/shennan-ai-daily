@@ -858,9 +858,8 @@
     font-family: var(--font-num);
     font-size: 13px;
   }
-  /* 吸顶/接近吸顶即触发渐隐 + 收窄——提前启动、不瞬时 display:none */
-  .nav.is-stuck .nav-total-count,
-  .nav.fading .nav-total-count {
+  /* 吸顶触发渐隐 + 收窄——早期启动、不瞬时 display:none */
+  .nav.is-stuck .nav-total-count {
     opacity: 0;
     transform: translateY(-4px);
     max-width: 0;
@@ -2179,16 +2178,10 @@
     // _fix_report_003（v1.10.21）：报告页 nav.top=calc(safe-area+78px) 让 sticky 边界为 78px，
     // 旧的 `<= 0` 恒假导致报告页永远不吸顶（主页 nav.top=0 巧合能 work）。
     // 现在读 nav 的 cssTop 作为阈值，兼容主页 0 / 报告页 78 / 移动端各 top 值。
-    // _fix_vision_04：共x条「渐隐提前」——nav 接近吸顶（提前 FADE_AHEAD px）就开始淡出，
-    // 不等完全吸顶，避免到站才突兀消失。is-stuck 仍按 cssTop 触发（金线/胶囊搬运）。
-    const FADE_AHEAD = 80;
     function updateStuck() {
       const cssTop = parseFloat(getComputedStyle(navEl).top) || 0;
-      const rectTop = navEl.getBoundingClientRect().top;
-      const stuck = rectTop <= cssTop;
-      const fading = rectTop <= cssTop + FADE_AHEAD;
+      const stuck = navEl.getBoundingClientRect().top <= cssTop;
       navEl.classList.toggle('is-stuck', stuck);
-      navEl.classList.toggle('fading', fading);
       placeActions();
     }
         let stuckTicking = false;
