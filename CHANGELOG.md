@@ -22,6 +22,29 @@
 - **card 加 max-height 节奏**：保留 .85s 展开 + 3.4s 收起，让卡片有明显周期感
 - **card-title / card-summary 加 opacity 渐显**（基类 .92/.85 → hover 1.0，.85s/1s）让文字也参与节奏
 
+## v1.10.31_260826 — 留言 icon 右移 + 字数限制（_fix_message）
+
+**类型**：修订 +1（交互细节打磨）
+**日期**：2026-08-26
+
+- **fab-contact icon 再右移 5px**：`transform: translateY(-1.5px)` → `translate(5px, -1.5px)` 复合偏移，让 icon 在 40px 圆按钮内视觉居中
+- **留言 textarea 字数限制 1000**：`maxlength="1000"` + 外裹 `.field-wrap` 相对定位容器——避免恶意无限字数占 GitHub Issue 空间
+- **右下角计数器 0/1000**：`aria-live="polite"` 无障碍 + `font-variant-numeric: tabular-nums` 等宽防抖；90% 触发暗黄警告、100% 触发暗红加粗 + 发送按钮自动 disable
+- **0 字禁用发送**：JS 监听 input 事件，`len === 0` 时 `send.disabled = true`；disabled 态 opacity .45 + cursor not-allowed + 取消 hover 上移
+
+## v1.10.30_260826 — 留言组件视觉打磨（_fix_message）
+
+**类型**：修订 +1（视觉细节打磨）
+**日期**：2026-08-26
+
+- **fab-contact icon 视觉居中**：chat-circle-dots 尾巴偏下导致 icon 重心下沉，`.fab-contact .fab-icon { transform: translateY(-1.5px) }` 上移对冲（SVG box 居中 ≠ path 居中是两回事）
+- **底色、透明度与 .fab 一致**：原 `background: rgba(.50) + border 描边` → 改为 `background: rgba(.32) + border: transparent`（与下方 .fab 同款）；hover 紫色 rgba(.28) 保留
+- **tip 文字精简**：删「天然过滤垃圾信息」+「不会公开你的邮箱」半句干扰文字，保留核心提交说明
+- **输入框 hover/focus 改品牌蓝（非金色）**：hover 边框 brand-cn 透明；focus 时 brand-cn 实底 + 3px box-shadow 聚焦环（不再是金色丑边框）
+- **取消按钮加深底色 + 描边亮 + hover 中性红**：基类 `rgba(15,20,36,.72)` + brand-cn 描边；hover muted red `#A85460` + 提亮描边 + `#FFE8EB` 字
+- **发送留言模仿 .card-cta「阅读原文」紫按钮**：基类 `var(--btn)` + 浅字 + transparent；hover `var(--btn-hi)` + 紫光晕
+- **两按钮高度/圆角统一**：padding `11px 20px` + `8px` 圆角 + font-weight `500`（之前 font-weight 不一致导致视觉错位）
+
 ## v1.10.28_260826 — 共X条回滚修复尝试 + card 加码（_fix_vision_010）
 
 **类型**：修订 +1（被部分回退）
