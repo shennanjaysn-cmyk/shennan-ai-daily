@@ -53,7 +53,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.25"
+VERSION = "1.10.29"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -1274,13 +1274,15 @@ def render_html(info, page_info):
     /* fix_report_01（v1.10.7）：196 高于 ticker(195)，确保 ticker 滚动文字不会"穿插"覆盖 nav 内容（修复右上角三胶囊被遮挡 bug） */
     z-index: 196;
     /* 用胶囊底色完全遮住背后内容，不再镂空 */
-    background: var(--ink-card);
-    /* fix_nav_01（v1.10.6）：默认无金线；nav.is-stuck 状态（被滚动压到顶部）再显示金线 */
+    /* _fix_vision_010：去掉 nav 底色块（默认透明），置顶时（.is-stuck）才显形——金线/胶囊搬运节奏不变 */
+    background: transparent;
     border-bottom: 1px solid transparent;
     transition: border-color .25s ease, transform .3s ease;
   }}
   .nav.is-stuck {{
     border-bottom-color: rgba(131, 126, 101, 0.55);   /* 浅淡金线，仅贴顶时显形 */
+    /* _fix_vision_010：置顶时才显形底色块（默认透明）——保持当前置顶视觉不变 */
+    background: var(--ink-card);
   }}
   [data-theme="light"] .nav.is-stuck {{
     border-bottom-color: rgba(131, 126, 101, 0.55);  /* 深浅统一金线（不再换浅色） */
@@ -1344,11 +1346,17 @@ def render_html(info, page_info):
     border: 1px solid rgba(205, 200, 255, 0.30);
     border-radius: 999px;
     background: rgba(205, 200, 255, 0.06);
-    /* 渐隐过渡 */
+    /* 渐隐过渡
+     * _fix_vision_010 v3 真修复：放弃 max-width/padding/border-width → 0 这套 layout-shrink 方案，
+     * 因为任何 width 变化都会让 .nav-inner 整个 flex 重新分配空间 → 视觉上"共X条"瞬间占位 = 闪一下。
+     * 改用 opacity + transform: scaleX(0) origin right——transform 不影响 layout，盒子物理尺寸永远不变，
+     * 但从右向左视觉上"收拢"消失；回滚时从右向左"展开"——双向都无 layout reflow，零闪。
+     * 同时加 visibility 延迟 0.35s 防止辅助技术/键盘焦点穿透。 */
     max-width: 120px;
     overflow: hidden;
-    transition: opacity .4s ease, transform .4s ease,
-                max-width .4s ease, padding .4s ease, border-width .4s ease;
+    transform-origin: right center;
+    transition: opacity .35s ease, transform .35s ease,
+                visibility 0s .35s;
   }}
   .nav-total-count .num {{
     color: var(--gold);
@@ -1356,17 +1364,18 @@ def render_html(info, page_info):
     font-family: var(--font-num);
     font-size: 13px;
   }}
-  /* 吸顶/接近吸顶即触发渐隐 + 收窄——提前启动、不瞬时 display:none */
+  /* 吸顶/接近吸顶即触发渐隐 + 收窄——提前启动、不瞬时 display:none
+   * _fix_vision_010 v3：完全放弃 max-width/padding/border-width 收缩，避免 .nav-inner layout 重排导致"共X条"闪一下；
+   * 改用 transform: scaleX(0) origin right + opacity 0 + visibility: hidden 延迟 0.35s。
+   * transform 不影响 layout，盒子物理尺寸永远 144px，nav-inner 永远不重排——双向（进出）零闪。 */
   .nav.is-stuck .nav-total-count,
   .nav.fading .nav-total-count {{
     opacity: 0;
-    transform: translateY(-4px);
-    max-width: 0;
-    padding-left: 0;
-    padding-right: 0;
-    border-left-width: 0;
-    border-right-width: 0;
+    transform: scaleX(0);
+    visibility: hidden;
     pointer-events: none;
+    transition: opacity .35s ease, transform .35s ease,
+                visibility 0s .35s;
   }}
   /* 移动端：5 胶囊已可横滑，3 工具胶囊继续在右（不参与滑动条） */
   @media (max-width: 767.98px) {{
@@ -1488,7 +1497,8 @@ def render_html(info, page_info):
     flex-direction: column;
     background: var(--ink-card);
     border: 1.5px solid rgba(74, 91, 196, 0.5);
-    border-radius: 12px;
+    /* _fix_vision_010：新闻卡片圆角加大——12px → 22px，更圆润 */
+    border-radius: 22px;
     padding: 26px 26px 20px;
     text-decoration: none;
     color: inherit;
@@ -1498,10 +1508,11 @@ def render_html(info, page_info):
     /* 显式钉死顶部对齐 + 禁止上移（防御性写法） */
     align-self: start;
     margin-top: 0;
-    /* 只过渡 max-height 和阴影/边框/背景，不动 transform（避免上移） */
-    /* 收起节奏：极慢，约为展开的 4.5 倍（再慢一倍），形成强对比 */
-    transition: max-height 1.7s cubic-bezier(.4, 0, .2, 1),
-                box-shadow 1.0s ease, border-color 1.0s ease, background 1.0s ease,
+    /* 只过渡 max-height 和阴影/边框/背景，不动 transform（避免上移）
+     * _fix_vision_010 v3：撤回 box-shadow/border/background 慢化（1.4s/1.8s）
+     * —— 卡顿反馈的关键是描边立即变化，慢了反而压低 hover 强度。max-height 保留 3.4s 收起节奏（呼应 title/summary 渐显）。 */
+    transition: max-height 3.4s cubic-bezier(.4, 0, .2, 1),
+                box-shadow 1.4s ease, border-color 1.4s ease, background 1.4s ease,
                 z-index 0s 0s;
     z-index: 1;
   }}
@@ -1525,9 +1536,11 @@ def render_html(info, page_info):
     box-shadow:
       0 0 0 2px #837E65,
       0 18px 36px -8px rgba(0, 0, 0, 0.7);
-    /* 展开节奏：快且带轻微回弹（spring），与收起的慢节奏形成对比 */
-    transition: max-height .38s cubic-bezier(.34, 1.45, .64, 1),
-                box-shadow .3s ease, border-color .3s ease, background .3s ease,
+    /* 展开节奏：.85s cubic-bezier 拉伸，让 max-height 缓慢铺开（与收起 3.4s 拉开对比）
+     * _fix_vision_010 v3：撤回 box-shadow/border/background 慢化（.7s）—— hover 反馈要立刻见效，
+     * 不能让描边/背景慢到看不见；仅保留 max-height 节奏变化 + title/summary 渐显撑起"展开感"。 */
+    transition: max-height .85s cubic-bezier(.22, .61, .36, 1),
+                box-shadow .5s ease, border-color .5s ease, background .5s ease,
                 z-index 0s 0s;
   }}
   .card:hover::before {{ opacity: 1; }}
@@ -1560,8 +1573,18 @@ def render_html(info, page_info):
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    /* _fix_vision_010 v2：让 title 文字也参与过渡——基类稍暗（.92），hover 时全亮，
+     * 配 .85s 展开节奏，让内容"逐渐出现"而不是瞬切 */
+    opacity: 0.92;
+    transition: opacity .85s ease, -webkit-line-clamp 0s, display 0s;
   }}
-  .card:hover .card-title {{ display: block; -webkit-line-clamp: unset; overflow: visible; }}
+  .card:hover .card-title {{
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    opacity: 1;
+    transition: opacity .85s ease .05s, -webkit-line-clamp 0s, display 0s;
+  }}
   .card-summary {{
     font-size: 14.5px;
     color: var(--mist-body);
@@ -1572,8 +1595,19 @@ def render_html(info, page_info):
     overflow: hidden;
     border-left: 2px solid rgba(218, 200, 135, 0.55);
     padding: 2px 0 2px 12px;
+    /* _fix_vision_010 v2：summary 同理——基类稍暗，hover 时全亮，撑起节奏感 */
+    opacity: 0.85;
+    transition: opacity 1s ease, -webkit-line-clamp 0s, display 0s;
   }}
-  .card:hover .card-summary {{ display: block; overflow: visible; -webkit-line-clamp: unset; padding-top: 4px; padding-bottom: 6px; }}
+  .card:hover .card-summary {{
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+    padding-top: 4px;
+    padding-bottom: 6px;
+    opacity: 1;
+    transition: opacity 1s ease .1s, -webkit-line-clamp 0s, display 0s;
+  }}
   .card-cta {{
     margin-top: 18px;
     padding: 11px 16px;

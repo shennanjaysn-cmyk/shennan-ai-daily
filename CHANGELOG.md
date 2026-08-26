@@ -12,6 +12,45 @@
 
 ---
 
+## v1.10.29_260826 — 共X条终极修复 + card 描边恢复（_fix_vision_010）
+
+**类型**：修订 +1（视觉细节打磨）
+**日期**：2026-08-26
+
+- **共X条 终极修复**：放弃 width 类变换（v1.10.27/28 都没彻底解决，因 max-width/padding/border 影响 layout → reflow 引闪），改用 `transform: scaleX(0) origin right + opacity 0 + visibility hidden 延迟 0.35s`。transform 不参与 layout 重排，盒子物理尺寸永远 144px → 双向零闪
+- **card 描边恢复**：v1.10.28 把 box-shadow/border/background 慢化（.7s/1.8s）反而压低了 hover 反馈强度被用户叫停；撤回至 .5s/1.4s，让描边/背景立即响应 hover
+- **card 加 max-height 节奏**：保留 .85s 展开 + 3.4s 收起，让卡片有明显周期感
+- **card-title / card-summary 加 opacity 渐显**（基类 .92/.85 → hover 1.0，.85s/1s）让文字也参与节奏
+
+## v1.10.28_260826 — 共X条回滚修复尝试 + card 加码（_fix_vision_010）
+
+**类型**：修订 +1（被部分回退）
+**日期**：2026-08-26
+
+- 共X条基类 transition 也改瞬切（双向修复），但仍因 layout reflow 引发闪——未彻底
+- card hover 加码 + box-shadow/border/background 慢化——描边慢化压低反馈强度，被用户叫停
+
+## v1.10.27_260826 — nav 默认去底色块 + 共X条初修 + 卡片圆角加大（_fix_vision_010）
+
+**类型**：修订 +1（视觉细节打磨）
+**日期**：2026-08-26
+
+- nav 默认 `background: transparent`（去掉底色块），置顶时（.is-stuck）才显形 `var(--ink-card)`——金线和胶囊搬运节奏不变
+- 共X条 首次渐隐修复：opacity/transform 先 .35s 渐隐到 0，max-width/padding/border 延迟 0.35s 后瞬切（仍未彻底）
+- news 卡片 `border-radius: 12px → 22px`（更圆润）
+- card hover 展开 .38s → .6s、收起 1.7s → 2.6s（+2 等级，4.3 倍对比）
+
+## v1.10.26_260825 — 报告页导出功能（_fix_download_01）
+
+**类型**：次版本 +1（新增功能，未上云）
+**日期**：2026-08-25
+
+> ⚠️ **状态**：本分支改动仅备份在 `T:/TEMP/WorkBuddy_Backups/v11026_pending/`，因 2026-08-26 上午 .git refs 丢失事故，未随当前分支上云；后续在 `_fix_download_01_re` 分支重做或 cherry-pick 合并。
+- 报告页（周报/月报）新增导出 dropdown——仅 5 个格式项（PNG/HTML/MD/CSV/PDF），自动绑定当前报告数据（report_week/report_month），不沿用主页的范围项
+- `exports.js` 注入 `report_week` / `report_month` 两份数据，分别基于报告页聚合逻辑
+- 报告页 nav 右区添加导出按钮，与主页导出 dropdown 视觉一致
+- 主页导出范围项不变（today/week/month）
+
 ## v1.10.25_260825 — 共X条渐隐提前 + 报告页位置统一（_fix_vision_02）
 
 **类型**：修订 +1（视觉细节打磨）
