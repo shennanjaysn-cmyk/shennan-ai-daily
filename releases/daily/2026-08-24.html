@@ -382,7 +382,10 @@
     height: 34px;
   }
   .top-btn:hover { border-color: var(--brand-cn); color: var(--text-primary); background: rgba(205, 200, 255, 0.12); }
-  .dropdown { position: relative; }
+  .dropdown {
+    position: relative;
+  }
+  .dropdown.open { z-index: 220; }
   .dropdown-menu {
     position: absolute;
     top: calc(100% + 8px);
@@ -390,7 +393,9 @@
     min-width: 160px;
     max-height: 320px;
     overflow-y: auto;
-    background: var(--surface-modal);
+    /* _fix_vision_011 v3（v1.10.34）：放弃 backdrop-filter（GPU 关闭/节能模式下被静默禁用 →
+     * 磨砂失效、背景文字看穿）。改用实色底 rgba(15,20,36,1) + 实色 border，跨浏览器一致 */
+    background: rgba(15, 20, 36, 1);
     border: 1px solid var(--line);
     border-radius: 10px;
     padding: 6px;
@@ -400,6 +405,23 @@
     transform: translateY(-6px);
     transition: all .18s ease;
     scrollbar-width: thin;
+    scrollbar-color: rgba(95, 110, 230, 0.55) transparent;
+    overscroll-behavior: contain;
+  }
+  /* _fix_vision_011：dropdown 蓝色滚动条（dark 主题——亮蓝/中蓝双色，hover 提亮） */
+  .dropdown-menu::-webkit-scrollbar { width: 6px; height: 6px; }
+  .dropdown-menu::-webkit-scrollbar-track { background: transparent; }
+  .dropdown-menu::-webkit-scrollbar-thumb {
+    background: rgba(95, 110, 230, 0.55);
+    border-radius: 3px;
+  }
+  .dropdown-menu::-webkit-scrollbar-thumb:hover { background: rgba(120, 135, 245, 0.75); }
+  .dropdown-menu::-webkit-scrollbar-corner { background: transparent; }
+  /* _fix_vision_011：light 主题滚动条用品牌主色 */
+  [data-theme="light"] .dropdown-menu::-webkit-scrollbar-thumb { background: rgba(74, 91, 196, 0.55); }
+  [data-theme="light"] .dropdown-menu::-webkit-scrollbar-thumb:hover { background: rgba(74, 91, 196, 0.75); }
+  [data-theme="light"] .dropdown-menu {
+    background: rgba(255, 255, 255, 1);
   }
   .dropdown.open .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
 
@@ -634,7 +656,7 @@
     appearance: none;
     font-family: var(--font-mono);
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 700;   /* _fix_report_button：周报/月报 字体改黑体（更重） */
     line-height: 1;
     color: var(--mist-dim);
     background: transparent;
@@ -656,9 +678,15 @@
     background: rgba(205, 200, 255, 0.10);
   }
   .time-chip.active {
-    color: var(--brand-brief);
-    background: rgba(218, 200, 135, 0.18);
-    box-shadow: inset 0 0 8px rgba(218, 200, 135, 0.12);
+    /* _fix_report_button：进来即持久强高亮（金色实底+深字），并放大如「返回今日」 */
+    color: #1A1405;
+    background: linear-gradient(180deg, rgba(232,217,160,0.96), rgba(214,196,128,0.88));
+    border: 1px solid rgba(255,243,214,0.85);
+    box-shadow: 0 3px 12px rgba(218,200,135,0.50), inset 0 1px 0 rgba(255,255,255,0.35);
+    font-weight: 800;
+    transform: scale(1.07);
+    letter-spacing: 0.04em;
+    z-index: 1;
   }
   .time-chip:disabled {
     opacity: 0.35;
@@ -675,7 +703,7 @@
     flex-wrap: wrap;
   }
   .hero-date-col { flex-shrink: 0; padding-top: 12px; }
-  .hero-info-col { flex: 1 1 320px; min-width: 320px; }
+  .hero-info-col { flex: 1 1 320px; min-width: 320px; margin-top: -60px; }
   .hero-date {
     font-family: var(--font-num);
     font-weight: 300;
@@ -770,13 +798,15 @@
     /* fix_report_01（v1.10.7）：196 高于 ticker(195)，确保 ticker 滚动文字不会"穿插"覆盖 nav 内容（修复右上角三胶囊被遮挡 bug） */
     z-index: 196;
     /* 用胶囊底色完全遮住背后内容，不再镂空 */
-    background: var(--ink-card);
-    /* fix_nav_01（v1.10.6）：默认无金线；nav.is-stuck 状态（被滚动压到顶部）再显示金线 */
+    /* _fix_vision_010：去掉 nav 底色块（默认透明），置顶时（.is-stuck）才显形——金线/胶囊搬运节奏不变 */
+    background: transparent;
     border-bottom: 1px solid transparent;
     transition: border-color .25s ease, transform .3s ease;
   }
   .nav.is-stuck {
     border-bottom-color: rgba(131, 126, 101, 0.55);   /* 浅淡金线，仅贴顶时显形 */
+    /* _fix_vision_010：置顶时才显形底色块（默认透明）——保持当前置顶视觉不变 */
+    background: var(--ink-card);
   }
   [data-theme="light"] .nav.is-stuck {
     border-bottom-color: rgba(131, 126, 101, 0.55);  /* 深浅统一金线（不再换浅色） */
@@ -821,14 +851,108 @@
     margin-left: auto;            /* flex-spacer 把右侧三胶囊推到底 */
     align-self: center;
   }
+  /* _fix_vision_02：主页 nav 右区显示"共X条"指示器
+   * _fix_vision_03：报告页也加（共X条 嵌入 nav-actions 内 [周/月] 之后、sep 之前）
+   * _fix_vision_03：吸顶触发淡出+收窄（不瞬时 display:none，给 0.4s 渐隐）
+   */
+  .nav-total-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--mist-body);
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+    white-space: nowrap;
+    border: 1px solid rgba(205, 200, 255, 0.30);
+    border-radius: 999px;
+    background: rgba(205, 200, 255, 0.06);
+    /* 渐隐过渡
+     * _fix_vision_010 v3 真修复：放弃 max-width/padding/border-width → 0 这套 layout-shrink 方案，
+     * 因为任何 width 变化都会让 .nav-inner 整个 flex 重新分配空间 → 视觉上"共X条"瞬间占位 = 闪一下。
+     * 改用 opacity + transform: scaleX(0) origin right——transform 不影响 layout，盒子物理尺寸永远不变，
+     * 但从右向左视觉上"收拢"消失；回滚时从右向左"展开"——双向都无 layout reflow，零闪。
+     * 同时加 visibility 延迟 0.35s 防止辅助技术/键盘焦点穿透。 */
+    max-width: 120px;
+    overflow: hidden;
+    transform-origin: right center;
+    transition: opacity .35s ease, transform .35s ease,
+                visibility 0s .35s;
+  }
+  .nav-total-count .num {
+    color: var(--gold);
+    font-weight: 700;
+    font-family: var(--font-num);
+    font-size: 13px;
+  }
+  /* 吸顶/接近吸顶即触发渐隐 + 收窄——提前启动、不瞬时 display:none
+   * _fix_vision_010 v3：完全放弃 max-width/padding/border-width 收缩，避免 .nav-inner layout 重排导致"共X条"闪一下；
+   * 改用 transform: scaleX(0) origin right + opacity 0 + visibility: hidden 延迟 0.35s。
+   * transform 不影响 layout，盒子物理尺寸永远 144px，nav-inner 永远不重排——双向（进出）零闪。 */
+  .nav.is-stuck .nav-total-count,
+  .nav.fading .nav-total-count {
+    opacity: 0;
+    transform: scaleX(0);
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .35s ease, transform .35s ease,
+                visibility 0s .35s;
+  }
   /* 移动端：5 胶囊已可横滑，3 工具胶囊继续在右（不参与滑动条） */
   @media (max-width: 767.98px) {
     .nav-actions { flex-shrink: 0; padding-left: 8px; background: var(--ink-card); }
+    .nav-total-count { display: none; }
   }
   /* fix_report_01（v1.10.10）：首页三工具胶囊已合并进 nav-actions（与 5 分类同一行），topbar 在首页隐藏 */
   [data-page-period] .topbar { display: none; }
   /* fix_report_01（v1.10.10）：首页 nav 吸顶到页面最顶（safe-area），置顶后 .is-stuck 渐显金边做视觉分割 */
   [data-page-period] .nav { top: env(safe-area-inset-top, 0); }
+  /* _fix_vision_02：主页 hero 右栏底对齐到绿线（与大日期底齐平），报告页保持 -60px 不动
+   * _fix_vision_03：主页精调——hero-meta 顶对齐大号日期上边、hero-lead 底对齐大号日期下边（flex column + space-between）
+   * 报告页不匹配 [data-page-period]，保持 .hero-info-col 基类 margin-top -60px 不变
+   */
+  [data-page-period] .hero-info-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 0;
+    align-self: stretch;
+  }
+  /* _fix_report_002：报告页所有工具胶囊都在 nav-actions 里，topbar 完全留空并隐藏；同时 nav 提到 ticker 之下、紧贴可视顶部 */
+  [data-page-report] .topbar { display: none; }
+  [data-page-report] .nav { top: env(safe-area-inset-top, 0); }
+  /* _fix_report_002：返回今日按钮在 nav 行内 (与 .time-chip 同一行)，样式紧凑——胶囊风格统一 */
+  .back-today-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(205, 200, 255, 0.50);   /* _fix_report_button：色块更显眼 */
+    background: rgba(205, 200, 255, 0.12);
+    color: var(--mist-body);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all .18s ease;
+  }
+  .back-today-nav:hover {
+    color: var(--text-title);
+    border-color: rgba(205, 200, 255, 0.65);
+    background: rgba(205, 200, 255, 0.14);
+  }
+  .nav-actions-sep {
+    width: 1px;
+    height: 16px;
+    background: rgba(205, 200, 255, 0.20);
+    margin: 0 4px;
+    flex-shrink: 0;
+  }
   .nav-inner::-webkit-scrollbar { display: none; }
   .nav-chip {
     display: inline-flex;
@@ -897,7 +1021,8 @@
     flex-direction: column;
     background: var(--ink-card);
     border: 1.5px solid rgba(74, 91, 196, 0.5);
-    border-radius: 12px;
+    /* _fix_vision_010：新闻卡片圆角加大——12px → 22px，更圆润 */
+    border-radius: 22px;
     padding: 26px 26px 20px;
     text-decoration: none;
     color: inherit;
@@ -907,10 +1032,11 @@
     /* 显式钉死顶部对齐 + 禁止上移（防御性写法） */
     align-self: start;
     margin-top: 0;
-    /* 只过渡 max-height 和阴影/边框/背景，不动 transform（避免上移） */
-    /* 收起节奏：极慢，约为展开的 4.5 倍（再慢一倍），形成强对比 */
-    transition: max-height 1.7s cubic-bezier(.4, 0, .2, 1),
-                box-shadow 1.0s ease, border-color 1.0s ease, background 1.0s ease,
+    /* 只过渡 max-height 和阴影/边框/背景，不动 transform（避免上移）
+     * _fix_vision_010 v3：撤回 box-shadow/border/background 慢化（1.4s/1.8s）
+     * —— 卡顿反馈的关键是描边立即变化，慢了反而压低 hover 强度。max-height 保留 3.4s 收起节奏（呼应 title/summary 渐显）。 */
+    transition: max-height 3.4s cubic-bezier(.4, 0, .2, 1),
+                box-shadow 1.4s ease, border-color 1.4s ease, background 1.4s ease,
                 z-index 0s 0s;
     z-index: 1;
   }
@@ -934,9 +1060,11 @@
     box-shadow:
       0 0 0 2px #837E65,
       0 18px 36px -8px rgba(0, 0, 0, 0.7);
-    /* 展开节奏：快且带轻微回弹（spring），与收起的慢节奏形成对比 */
-    transition: max-height .38s cubic-bezier(.34, 1.45, .64, 1),
-                box-shadow .3s ease, border-color .3s ease, background .3s ease,
+    /* 展开节奏：.85s cubic-bezier 拉伸，让 max-height 缓慢铺开（与收起 3.4s 拉开对比）
+     * _fix_vision_010 v3：撤回 box-shadow/border/background 慢化（.7s）—— hover 反馈要立刻见效，
+     * 不能让描边/背景慢到看不见；仅保留 max-height 节奏变化 + title/summary 渐显撑起"展开感"。 */
+    transition: max-height .85s cubic-bezier(.22, .61, .36, 1),
+                box-shadow .5s ease, border-color .5s ease, background .5s ease,
                 z-index 0s 0s;
   }
   .card:hover::before { opacity: 1; }
@@ -969,8 +1097,18 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    /* _fix_vision_010 v2：让 title 文字也参与过渡——基类稍暗（.92），hover 时全亮，
+     * 配 .85s 展开节奏，让内容"逐渐出现"而不是瞬切 */
+    opacity: 0.92;
+    transition: opacity .85s ease, -webkit-line-clamp 0s, display 0s;
   }
-  .card:hover .card-title { display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .card:hover .card-title {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    opacity: 1;
+    transition: opacity .85s ease .05s, -webkit-line-clamp 0s, display 0s;
+  }
   .card-summary {
     font-size: 14.5px;
     color: var(--mist-body);
@@ -981,8 +1119,19 @@
     overflow: hidden;
     border-left: 2px solid rgba(218, 200, 135, 0.55);
     padding: 2px 0 2px 12px;
+    /* _fix_vision_010 v2：summary 同理——基类稍暗，hover 时全亮，撑起节奏感 */
+    opacity: 0.85;
+    transition: opacity 1s ease, -webkit-line-clamp 0s, display 0s;
   }
-  .card:hover .card-summary { display: block; overflow: visible; -webkit-line-clamp: unset; padding-top: 4px; padding-bottom: 6px; }
+  .card:hover .card-summary {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+    padding-top: 4px;
+    padding-bottom: 6px;
+    opacity: 1;
+    transition: opacity 1s ease .1s, -webkit-line-clamp 0s, display 0s;
+  }
   .card-cta {
     margin-top: 18px;
     padding: 11px 16px;
@@ -1097,16 +1246,67 @@
     width: 100%; box-sizing: border-box; background: rgba(10, 14, 26, 0.6);
     border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
     color: var(--text-primary); font-family: var(--font-base); font-size: 14px;
+    /* _fix_message：hover 边框略亮、focus 保持高亮但不用金色——品牌蓝 var(--brand-cn) */
+    transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+    outline: none;
+  }
+  .contact-card input:hover, .contact-card textarea:hover {
+    border-color: rgba(95, 110, 230, 0.55);
+    background: rgba(10, 14, 26, 0.72);
+  }
+  .contact-card input:focus, .contact-card textarea:focus,
+  .contact-card input:focus-visible, .contact-card textarea:focus-visible {
+    border-color: var(--brand-cn);
+    background: rgba(10, 14, 26, 0.78);
+    box-shadow: 0 0 0 3px rgba(95, 110, 230, 0.18);
   }
   .contact-card textarea { min-height: 120px; resize: vertical; }
   .contact-card .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-  .contact-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
-  .contact-actions button {
-    padding: 9px 18px; border-radius: 8px; font-family: var(--font-base);
-    font-size: 13px; cursor: pointer; border: 1px solid var(--line);
+  /* _fix_message v2：留言字数限制 — 1000 字上限 + 右下角计数（90% 黄 / 100% 红 + 发送禁用） */
+  .contact-card .field-wrap { position: relative; }
+  .contact-card .char-count {
+    font-family: var(--font-num);
+    font-size: 11px;
+    color: var(--mist-dim);
+    text-align: right;
+    margin-top: 4px;
+    font-variant-numeric: tabular-nums;
+    transition: color .2s ease;
   }
-  .contact-actions .send { background: var(--btn-hi); color: #0A0E1A; border-color: transparent; font-weight: 600; }
-  .contact-actions .cancel { background: transparent; color: var(--text-primary); }
+  .contact-card .char-count.warn { color: rgba(214, 180, 80, .95); }
+  .contact-card .char-count.over { color: rgba(220, 90, 100, .95); font-weight: 600; }
+  .contact-actions button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+  .contact-actions button:disabled:hover { transform: none; }
+  .contact-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+  /* _fix_message：取消/发送按钮高度、圆角、padding 统一为 11px 18px + 8px 圆角 */
+  .contact-actions button {
+    padding: 11px 20px; border-radius: 8px; font-family: var(--font-base);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: background .25s ease, border-color .25s ease, color .25s ease, transform .15s ease;
+  }
+  .contact-actions button:hover { transform: translateY(-1px); }
+  /* _fix_message：发送留言——模仿 .card-cta「阅读原文」紫色按钮：基类 var(--btn)，hover 高亮 var(--btn-hi) */
+  .contact-actions .send {
+    background: var(--btn); color: var(--text-primary); border: 1px solid transparent;
+  }
+  .contact-actions .send:hover {
+    background: var(--btn-hi);
+    box-shadow: 0 6px 18px -8px rgba(95, 110, 230, 0.55);
+  }
+  /* _fix_message：取消按钮——底色加深、描边更亮、hover 中性红（muted red，不刺眼） */
+  .contact-actions .cancel {
+    background: rgba(15, 20, 36, 0.72); color: var(--text-primary);
+    border: 1px solid rgba(95, 110, 230, 0.55);
+  }
+  .contact-actions .cancel:hover {
+    background: rgba(168, 84, 96, 0.55);    /* muted red */
+    border-color: rgba(220, 130, 140, 0.75);
+    color: #FFE8EB;
+  }
   .contact-close {
     position: absolute; top: 12px; right: 14px; background: none; border: none;
     color: var(--mist-faint); font-size: 22px; line-height: 1; cursor: pointer;
@@ -1220,7 +1420,10 @@
   }
   .fab-icon { width: 18px; height: 18px; }
 
-  /* 留言/反馈 FAB（v1.10.1 上移，换 chat-circle-dots 图标） */
+  /* 留言/反馈 FAB（v1.10.1 上移，换 chat-circle-dots 图标）
+   * _fix_message：底色、透明度、border 与右上 .fab 三件套一致（rgba(.32) / border-transparent），
+   * icon 加 transform: translateY(-2px) 视觉居中——chat-circle-dots 的尾巴偏下让重心下移，
+   * 不上移的话 icon 看起来"贴底"不居中。 */
   .fab-contact {
     position: fixed;
     right: 24px;
@@ -1229,11 +1432,11 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.10);
-    background: rgba(13, 18, 36, 0.50);
+    border: 1px solid transparent;
+    background: rgba(13, 18, 36, 0.32);
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
-    color: var(--text-primary);
+    color: var(--mist-body);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -1254,10 +1457,11 @@
       backdrop-filter .35s ease,
       transform .25s cubic-bezier(.34, 1.2, .64, 1),
       box-shadow .25s ease,
-      padding .35s ease;
+      padding .35s ease,
+      color .25s ease;
   }
   [data-theme="light"] .fab-contact {
-    background: rgba(255, 255, 255, 0.60);
+    background: rgba(255, 255, 255, 0.42);
     border-color: rgba(0,0,0,0.08);
     box-shadow: 0 6px 18px -8px rgba(46, 58, 124, 0.18);
   }
@@ -1265,6 +1469,7 @@
     width: 132px;
     border-radius: 999px;
     justify-content: flex-start;
+    color: var(--text-primary);
     background: rgba(79, 92, 199, 0.28);
     border-color: rgba(79, 92, 199, 0.55);
     backdrop-filter: blur(14px) saturate(180%);
@@ -1278,7 +1483,8 @@
     border-color: rgba(74, 91, 196, 0.55);
     box-shadow: 0 10px 26px -8px rgba(46, 58, 124, 0.25);
   }
-  .fab-contact .fab-icon { flex-shrink: 0; }
+  /* _fix_message：icon 视觉居中——chat-circle-dots 尾巴偏下，靠 transform 上移 2px 对冲 */
+  .fab-contact .fab-icon { flex-shrink: 0; transform: translate(5px, -1.5px); }
   .fab-contact .fab-label {
     opacity: 0;
     max-width: 0;
@@ -1424,6 +1630,10 @@
   <div class="nav-inner">
     <a class="nav-chip" href="#industry" data-slug="industry"><span class="nav-roman">Ⅰ</span><span class="nav-label">动态</span><span class="nav-n">2<span class="count-unit">条</span></span></a>
     <div class="nav-actions">
+  <a class="top-btn back-today" href="../index.html" title="返回今日日报">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/></svg>
+  返回今日
+</a>
   <div class="report-morph" id="reportDropdown" aria-label="报告范围">
   <div class="report-face" aria-hidden="true">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
@@ -1441,7 +1651,9 @@
       历史日报
     </button>
     <div class="dropdown-menu" role="menu">
-      <a class="dropdown-item selected" href="./2026-08-24.html">2026-08-24</a>
+      <a class="dropdown-item" href="./2026-08-26.html">2026-08-26</a>
+<a class="dropdown-item" href="./2026-08-25.html">2026-08-25</a>
+<a class="dropdown-item selected" href="./2026-08-24.html">2026-08-24</a>
 <a class="dropdown-item" href="./2026-08-23.html">2026-08-23</a>
 <a class="dropdown-item" href="./2026-08-22.html">2026-08-22</a>
 <a class="dropdown-item" href="./2026-08-21.html">2026-08-21</a>
@@ -1469,8 +1681,6 @@
 <a class="dropdown-item" href="./2026-07-30.html">2026-07-30</a>
 <a class="dropdown-item" href="./2026-07-29.html">2026-07-29</a>
 <a class="dropdown-item" href="./2026-07-28.html">2026-07-28</a>
-<a class="dropdown-item" href="./2026-07-27.html">2026-07-27</a>
-<a class="dropdown-item" href="./2026-07-26.html">2026-07-26</a>
     </div>
   </div>
   <div class="dropdown" id="exportDropdown">
@@ -1493,6 +1703,7 @@
     </div>
   </div>
 </div>
+    <div class="nav-total-count">共<span class="num">2</span>条</div>
   </div>
 </nav>
 
@@ -1562,11 +1773,15 @@
   <div class="contact-card" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
     <button class="contact-close" id="contactClose" type="button" aria-label="关闭">×</button>
     <h3 id="contactTitle">留言 / 反馈</h3>
-    <p class="tip">留言会以 GitHub Issue 形式提交（需登录 GitHub，天然过滤垃圾信息）。我会在 Issue 里收到通知并回复你，不会公开你的邮箱。</p>
+    <!-- _fix_message：去掉"天然过滤垃圾信息"和"不会公开你的邮箱"干扰文字，保留核心提交说明 -->
+    <p class="tip">留言会以 GitHub Issue 形式提交（需登录 GitHub）。我会在 Issue 里收到通知并回复你。</p>
     <label for="contactName">昵称（选填）</label>
     <input id="contactName" type="text" maxlength="40" placeholder="如何称呼你">
     <label for="contactMsg">留言内容 *</label>
-    <textarea id="contactMsg" placeholder="纠错、合作、建议、想说的……"></textarea>
+    <div class="field-wrap">
+      <textarea id="contactMsg" maxlength="1000" placeholder="纠错、合作、建议、想说的……"></textarea>
+      <div class="char-count" id="contactMsgCount" aria-live="polite">0/1000</div>
+    </div>
     <input class="hp" id="contactHp" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
     <div class="contact-actions">
       <button class="cancel" id="contactCancel" type="button">取消</button>
@@ -1594,6 +1809,40 @@
     document.addEventListener('click', () => {
       document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
     });
+
+    // _fix_vision_011 v3（v1.10.34）：滚轮永远拦截 + 手动 scrollTop。
+    // 旧版中段只 stopPropagation（不挡默认行为），Chromium 用 latched scroll 把滚轮给 body → 页面动下拉不动。
+    // 现改为 always preventDefault + 手动 scrollTop，彻底切断滚动链，跨浏览器稳。
+    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+      menu.addEventListener('wheel', (e) => {
+        e.preventDefault();                              // 永远拦：页面拿不到这个滚轮
+        const max = menu.scrollHeight - menu.clientHeight;
+        if (max <= 0) return;                            // 内容不溢出：直接吞掉
+        menu.scrollTop = Math.max(0, Math.min(max, menu.scrollTop + e.deltaY));  // 手动滚动
+      }, { passive: false });
+
+      // 兜底触摸滚动（移动端偶尔也有半透明遮罩失焦）
+      menu.addEventListener('touchmove', (e) => { e.stopPropagation(); }, { passive: true });
+    });
+  })();
+
+  // _fix_message v2：留言字数限制计数器（textarea 1000 上限 + 0 时发送禁用）
+  (function() {
+    const ta = document.getElementById('contactMsg');
+    const cnt = document.getElementById('contactMsgCount');
+    const send = document.getElementById('contactSend');
+    if (!ta || !cnt || !send) return;
+    const MAX = parseInt(ta.getAttribute('maxlength'), 10) || 1000;
+    const WARN = Math.floor(MAX * 0.9);
+    function update() {
+      const len = ta.value.length;
+      cnt.textContent = len + '/' + MAX;
+      cnt.classList.toggle('over', len >= MAX);
+      cnt.classList.toggle('warn', !cnt.classList.contains('over') && len >= WARN);
+      send.disabled = (len === 0 || len > MAX);
+    }
+    ta.addEventListener('input', update);
+    update();
   })();
 
   // Exports
@@ -1733,7 +1982,9 @@
       night: '18:30'
     };
 
-    const chips = Array.from(document.querySelectorAll('.time-chip'));
+    // _fix_report_button：只管带 data-period 的时段胶囊（早/午/晚）；报告页周报/月报胶囊无 data-period，
+    // 其 .active 由服务端按 report_range 下发，必须保留——否则会被这里 toggle('active', false) 剥掉，导致"进来不常亮、只闪一下"
+    const chips = Array.from(document.querySelectorAll('.time-chip[data-period]'));
     const body = document.body;
 
     function applyTheme(theme) {
@@ -1927,13 +2178,23 @@
     }
     // _fix_report_002：弃用 1px 哨兵 + IntersectionObserver 判定吸顶（哨兵定位依赖祖先定位上下文，
     // 初始 IO 回调在某些渲染环境/headless 下会误报 ratio=0→stuck=true，把胶囊误搬回 nav）。
-    // 改用确定性的几何判定：nav 自身是 sticky top:0，当其 getBoundingClientRect().top <= 0 时即为吸顶。
+    // 改用确定性的几何判定：nav 自身是 sticky，当其 top 等于 cssTop 时即为吸住。
+    // _fix_report_003（v1.10.21）：报告页 nav.top=calc(safe-area+78px) 让 sticky 边界为 78px，
+    // 旧的 `<= 0` 恒假导致报告页永远不吸顶（主页 nav.top=0 巧合能 work）。
+    // 现在读 nav 的 cssTop 作为阈值，兼容主页 0 / 报告页 78 / 移动端各 top 值。
+    // _fix_vision_04：共x条「渐隐提前」——nav 接近吸顶（提前 FADE_AHEAD px）就开始淡出，
+    // 不等完全吸顶，避免到站才突兀消失。is-stuck 仍按 cssTop 触发（金线/胶囊搬运）。
+    const FADE_AHEAD = 80;
     function updateStuck() {
-      const stuck = navEl.getBoundingClientRect().top <= 0;
+      const cssTop = parseFloat(getComputedStyle(navEl).top) || 0;
+      const rectTop = navEl.getBoundingClientRect().top;
+      const stuck = rectTop <= cssTop;
+      const fading = rectTop <= cssTop + FADE_AHEAD;
       navEl.classList.toggle('is-stuck', stuck);
+      navEl.classList.toggle('fading', fading);
       placeActions();
     }
-    let stuckTicking = false;
+        let stuckTicking = false;
     window.addEventListener('scroll', () => {
       if (!stuckTicking) { requestAnimationFrame(updateStuck); stuckTicking = true; setTimeout(() => stuckTicking = false, 0); }
     }, { passive: true });

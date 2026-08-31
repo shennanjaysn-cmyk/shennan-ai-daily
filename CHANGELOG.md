@@ -12,7 +12,54 @@
 
 ---
 
-## v1.10.29_260826 — 共X条终极修复 + card 描边恢复（_fix_vision_010）
+## v1.10.36_260826 — dropdown 全遮挡彻底落地：hero 全局 dim + 历史列表过滤当天（_fix_vision_011）
+
+**类型**：修订 +1（交互 bug 修复）
+**日期**：2026-08-26
+
+- **新遮挡策略**：v1.10.35 修了一个 stacking 边角，但用户实测"点选日期后"仍有内容浮出——动画中的 hero-info-col 会临时突破 stacking context。直接放弃单点 z-index 竞级，给整个 `.hero` 加全局遮罩：toggleDropdown 时给 `body` 加 `.dropdown-open` 类，CSS 把 `.hero` 和 `.wrap` 下主要内容 opacity 降到 0.12 + `pointer-events:none`——背后随便谁画在哪都不再和下拉单抢眼，关闭时同步移除
+- **历史列表过滤当天**：之前下拉单永远从最新一天（today）开头列。用户已在 daily/{today}.html 里，没有任何理由从下拉单里再点回当天。渲染侧改成 `for ds in available_dates if ds != current_date`——daily 页 & index 页同步生效（index 页 current_date 就是 today，一致过滤）
+- **保留**：选中态（`selected`）不再出现（被过滤掉后无意义），金色按钮召唤、滚轮夺权、滚轮 `preventDefault` 不动
+
+## v1.10.35_260826 — dropdown 仍看穿的真根因：hero-top/hero-grid 兄弟 stacking context 竞级（_fix_vision_011）
+
+**类型**：修订 +1（叠层 bug 真修复）
+**日期**：2026-08-26
+
+- **诊断证据**：headless Edge `--dump-dom` 抓真实页面 computed style，elementFromPoint 在下拉单中心（1040, 289）返回 `DIV.hero-lead`，菜单祖先链终点是 `.wrap`（z:1），命中祖先链终点同样是 `.wrap`——确认两棵子树在 .wrap 同一层竞级
+- **修复**：给 `.hero-top` 显式 `position:relative; z-index:10`，`.hero-grid` 显式 `position:relative; z-index:5`——hero-top 永远压过 hero-grid，下拉单从此稳定盖住上拉 60px 的 `.hero-info-col`
+- **顺手优化**："共 X 条"指示器从 `background: rgba(205,200,255,0.06)` 提到 `0.12` + 边框色 `0.42`——保留磨砂感但不再像"半消失"
+
+## v1.10.34_260826 — 历史日报 dropdown 改用近实色底 + 滚轮夺权彻底修复（_fix_vision_011）
+
+**类型**：修订 +1（交互 bug 修复）
+**日期**：2026-08-26
+
+- **放弃 backdrop-filter 磨砂**：真因 `backdrop-filter` 在 GPU 关闭 / 节能模式 / 集显 Edge 下被静默禁用 → 磨砂失效、背景文字看穿（0.82 半透明底兜不住，且 0.98 实测仍透白字——物理上需实色 1.0）。改用近实色底 `rgba(15,20,36,1)`（亮色 `rgba(255,255,255,1)`）+ 实色 border，跨浏览器完全一致，不再依赖 GPU 合成
+- **滚轮夺权彻底修复**：旧版中段只 `stopPropagation`（不挡默认行为），Chromium 用 latched scroll 把滚轮让给 body → 页面动下拉不动。新版 JS `wheel` listener **永远 `preventDefault` + 手动 `scrollTop`**，彻底切断滚动链
+- **清理**：移除 `.dropdown { isolation: isolate; z-index:1 }` 和 `-webkit-backdrop-filter` / `backdrop-filter`（皆为 backdrop-filter 服务，已无用）；保留 `.dropdown.open { z-index:220 }`（下拉仍需浮在 topbar 上）
+- **保留**：daily 页"返回今日"按钮、蓝色系滚动条、隔离 stacking（`z-index:220`）
+
+## v1.10.33_260826 — 历史日报 dropdown 遮挡 + 滚轮夺权双修复（_fix_vision_011）
+
+**类型**：修订 +1（交互 bug 修复）
+**日期**：2026-08-26
+
+- **dropdown 遮挡看穿修复**：v1.10.32 改完仍可见背后"08月26日 08:00"。真因 `.dropdown { position:relative }` 没建 stacking context，`backdrop-filter` 需祖先生 stacking 才能识别为模糊源，菜单在 topbar `z-index:200` 合层内合成 → fall-through 到背景。修法 `.dropdown { z-index:1; isolation:isolate }` + `.dropdown.open { z-index:220 }`，让菜单独立成层后模糊生效
+- **首次滚轮操控页面修复**：真因 Chrome 对 `overflow:auto` 但未真正溢出的容器向下传递 wheel 给祖先滚动位，首轮被 window capture 走。三层修法：CSS `overscroll-behavior:contain` 阻断连锁滚动 + JS `wheel` listener `{passive:false}` 强制声明 + 边界检测 `preventDefault`
+- **daily 页"返回今日"按钮**：历史 dropdown 选旧日期有时卡在那一天、按钮失效；在 daily 页 nav-actions 首位加 `.top-btn.back-today` href `../index.html`，强制跳回主页最新
+- **蓝色系滚动条**：`.dropdown-menu` 加 `scrollbar-color: rgba(95,110,230,.55) transparent` + webkit thumb 同色，统一品牌蓝
+- **致命地雷**：CSS 注释里写了 `{ position: relative }` 样例被 Python f-string 当表达式求值报错 → 改完必须用 Chrome CLI 抓 console 验证（详见 MEMORY.md JS 死脚本地雷）
+
+## v1.10.32_260826 — 历史日报 dropdown 磨砂遮挡初版（_fix_vision_011，未彻底）
+
+**类型**：修订 +1（交互细节打磨，部分未生效）
+**日期**：2026-08-26
+
+- 历史日报下拉菜单加半透明磨砂 `background: rgba(15,20,36,.78)` + `backdrop-filter: blur(14px) saturate(140%)`
+- 注：本版遮挡未生效（缺 stacking context）、滚轮仍操控页面，已在 v1.10.33 彻底修复
+
+## v1.10.31_260826 — 留言 icon 右移 + 字数限制（_fix_message）
 
 **类型**：修订 +1（视觉细节打磨）
 **日期**：2026-08-26

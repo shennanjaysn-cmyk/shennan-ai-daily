@@ -53,7 +53,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.31"
+VERSION = "1.10.36"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -404,12 +404,13 @@ def render_html(info, page_info):
         )
     period_html = "\n".join(period_buttons)
 
-    # 历史日报下拉
+    # 历史日报下拉：过滤掉当前页日期（用户已在该页打开，下拉单去别的日期就好）。
+    # _fix_vision_011 v4（v1.10.36）：之前会列出"今天"——下拉单第一条永远是最新一天，对已在看当天页的用户毫无意义。
     history_options = []
-    for ds in available_dates:
-        selected = " selected" if ds == current_date else ""
+    for ds in [d for d in available_dates if d != current_date]:
+        # 不再有 selected 行（已被过滤掉）；保持简洁。
         label = ds
-        history_options.append(f'<a class="dropdown-item{selected}" href="{history_prefix}{ds}.html">{label}</a>')
+        history_options.append(f'<a class="dropdown-item" href="{history_prefix}{ds}.html">{label}</a>')
     history_menu = "\n".join(history_options) if history_options else '<span class="dropdown-item disabled">暂无历史记录</span>'
 
     # 导出数据：今天 / 近一周 / 近一月（预生成 markdown / csv 嵌入 JS）
@@ -422,6 +423,7 @@ def render_html(info, page_info):
     scopes_js = ",\n".join(scope_js_parts)
 
     is_report = page_info.get("is_report", False)
+    is_index = page_info.get("is_index", False)  # _fix_vision_011：daily 历史页加"返回今日"，首页(index)已有今日数据故不加
     report_range = page_info.get("report_range", "week")
     if is_report:
         if report_range == "week":
@@ -487,7 +489,13 @@ def render_html(info, page_info):
         # 由下方 {nav_total_html} 统一渲染，位置与主页 nav-actions 之后一致（不再嵌在 report-range 内）
         nav_total_html = f'<div class="nav-total-count">共<span class="num">{total}</span>条</div>'
     else:
+        # _fix_vision_011：daily 历史页加"返回今日"按钮（首页 is_index=True 已有今日数据故不加）
+        home_back_html = "" if is_index else f'''<a class="top-btn back-today" href="{doc_prefix}index.html" title="返回今日日报">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/></svg>
+  返回今日
+</a>'''
         nav_actions_html = f'''<div class="nav-actions">
+  {home_back_html}
   {report_dropdown_html}
   <div class="dropdown" id="historyDropdown">
     <button class="top-btn" type="button" aria-haspopup="true" aria-expanded="false">
@@ -880,7 +888,10 @@ def render_html(info, page_info):
     height: 34px;
   }}
   .top-btn:hover {{ border-color: var(--brand-cn); color: var(--text-primary); background: rgba(205, 200, 255, 0.12); }}
-  .dropdown {{ position: relative; }}
+  .dropdown {{
+    position: relative;
+  }}
+  .dropdown.open {{ z-index: 220; }}
   .dropdown-menu {{
     position: absolute;
     top: calc(100% + 8px);
@@ -888,7 +899,9 @@ def render_html(info, page_info):
     min-width: 160px;
     max-height: 320px;
     overflow-y: auto;
-    background: var(--surface-modal);
+    /* _fix_vision_011 v3（v1.10.34）：放弃 backdrop-filter（GPU 关闭/节能模式下被静默禁用 →
+     * 磨砂失效、背景文字看穿）。改用实色底 rgba(15,20,36,1) + 实色 border，跨浏览器一致 */
+    background: rgba(15, 20, 36, 1);
     border: 1px solid var(--line);
     border-radius: 10px;
     padding: 6px;
@@ -898,6 +911,23 @@ def render_html(info, page_info):
     transform: translateY(-6px);
     transition: all .18s ease;
     scrollbar-width: thin;
+    scrollbar-color: rgba(95, 110, 230, 0.55) transparent;
+    overscroll-behavior: contain;
+  }}
+  /* _fix_vision_011：dropdown 蓝色滚动条（dark 主题——亮蓝/中蓝双色，hover 提亮） */
+  .dropdown-menu::-webkit-scrollbar {{ width: 6px; height: 6px; }}
+  .dropdown-menu::-webkit-scrollbar-track {{ background: transparent; }}
+  .dropdown-menu::-webkit-scrollbar-thumb {{
+    background: rgba(95, 110, 230, 0.55);
+    border-radius: 3px;
+  }}
+  .dropdown-menu::-webkit-scrollbar-thumb:hover {{ background: rgba(120, 135, 245, 0.75); }}
+  .dropdown-menu::-webkit-scrollbar-corner {{ background: transparent; }}
+  /* _fix_vision_011：light 主题滚动条用品牌主色 */
+  [data-theme="light"] .dropdown-menu::-webkit-scrollbar-thumb {{ background: rgba(74, 91, 196, 0.55); }}
+  [data-theme="light"] .dropdown-menu::-webkit-scrollbar-thumb:hover {{ background: rgba(74, 91, 196, 0.75); }}
+  [data-theme="light"] .dropdown-menu {{
+    background: rgba(255, 255, 255, 1);
   }}
   .dropdown.open .dropdown-menu {{ opacity: 1; visibility: visible; transform: translateY(0); }}
 
@@ -1020,6 +1050,12 @@ def render_html(info, page_info):
     gap: 16px;
     padding: 12px 0 4px;
     margin-bottom: 6px;
+    /* _fix_vision_011 v4（v1.10.34）：hero-top 有 transform 已形成 stacking context，
+     * hero-grid 同样形成 stacking context——同 z-auto 时 DOM 顺序后写的 hero-grid 天然压在上面，
+     * 下拉单 z-index:220 困在 hero-top 里无法逃出。显式给 hero-top 高于 hero-grid 的层级，
+     * 下拉单才能稳定盖住上拉 60px 的 .hero-info-col 卡片 */
+    position: relative;
+    z-index: 10;
   }}
   .brand-logo {{
     display: flex;
@@ -1177,6 +1213,31 @@ def render_html(info, page_info):
     max-width: none;
     /* fix_report_01（v1.10.9）：flex-wrap 让 info-col 在窗口不够时自然下移到日期下，与移动端一致 */
     flex-wrap: wrap;
+    /* _fix_vision_011 v4（v1.10.35）：hero-top 设了 z-index:10，hero-grid 显式低于它，
+     * 确保上拉 60px 的 .hero-info-col 不会越界画在下拉单之上 */
+    position: relative;
+    z-index: 5;
+  }}
+
+  /* _fix_vision_011 v4（v1.10.36）：dropdown 打开时把整个 .hero 区域 dim 到 0.12 + pointer-events:none。
+   * hero-top/hero-grid 的 z-index 竞级不可能百分之百覆盖动画/transform 中的边角 stacking
+   * （如 hero-info-col 的滚动入场动画、负 margin 上拉 60px），与其纠结叠层顺序，不如给整个
+   * hero 加全局遮罩层——背后随便谁画在哪都不再和下拉单抢眼。配 JS 在 toggleDropdown / 全局
+   * 点击关闭时给 body 增删 .dropdown-open 类。 */
+  body.dropdown-open .hero {{
+    opacity: 0.12;
+    pointer-events: none;
+    transition: opacity 0.18s ease-out;
+  }}
+  body.dropdown-open .wrap > .news,
+  body.dropdown-open .wrap > .dashboard,
+  body.dropdown-open .wrap > .news-grid,
+  body.dropdown-open .wrap > #news,
+  body.dropdown-open .wrap > main {{
+    /* 报告页/主页下方内容也压一层，避免下拉单范围内的元素浮上来 */
+    opacity: 0.18;
+    pointer-events: none;
+    transition: opacity 0.18s ease-out;
   }}
   .hero-date-col {{ flex-shrink: 0; padding-top: 12px; }}
   .hero-info-col {{ flex: 1 1 320px; min-width: 320px; margin-top: -60px; }}
@@ -1345,7 +1406,10 @@ def render_html(info, page_info):
     white-space: nowrap;
     border: 1px solid rgba(205, 200, 255, 0.30);
     border-radius: 999px;
-    background: rgba(205, 200, 255, 0.06);
+    /* _fix_vision_011 v4（v1.10.34）：0.06 几乎透明，混在深色背景里读着像"半消失"。
+     * 0.12 + 加深边框——保留磨砂感但能稳稳看清"共X条"三字 */
+    background: rgba(205, 200, 255, 0.12);
+    border-color: rgba(205, 200, 255, 0.42);
     /* 渐隐过渡
      * _fix_vision_010 v3 真修复：放弃 max-width/padding/border-width → 0 这套 layout-shrink 方案，
      * 因为任何 width 变化都会让 .nav-inner 整个 flex 重新分配空间 → 视觉上"共X条"瞬间占位 = 闪一下。
@@ -2165,7 +2229,16 @@ def render_html(info, page_info):
     function toggleDropdown(dropdown) {{
       const wasOpen = dropdown.classList.contains('open');
       document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
-      if (!wasOpen) dropdown.classList.add('open');
+      if (!wasOpen) {{
+        dropdown.classList.add('open');
+        // _fix_vision_011 v4（v1.10.36）：打开下拉单时给 body 加 .dropdown-open 类 → 全局 CSS 把
+        // .hero 区域 opacity 降到 0.12 + pointer-events:none，从视觉上完全压暗所有可能漏出的
+        // 信息卡/浮层文字，比 hero-top vs hero-grid 的 z-index 竞级更稳（动画中的 stacking
+        // context 会被临时抬高的边角 case 全部干掉）。
+        document.body.classList.add('dropdown-open');
+      }} else {{
+        document.body.classList.remove('dropdown-open');
+      }}
     }}
     document.querySelectorAll('.dropdown').forEach(dropdown => {{
       const btn = dropdown.querySelector('.top-btn');
@@ -2173,6 +2246,23 @@ def render_html(info, page_info):
     }});
     document.addEventListener('click', () => {{
       document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+      // _fix_vision_011 v4（v1.10.36）：关下拉时同步移除 body 类，恢复 hero 可见
+      document.body.classList.remove('dropdown-open');
+    }});
+
+    // _fix_vision_011 v3（v1.10.34）：滚轮永远拦截 + 手动 scrollTop。
+    // 旧版中段只 stopPropagation（不挡默认行为），Chromium 用 latched scroll 把滚轮给 body → 页面动下拉不动。
+    // 现改为 always preventDefault + 手动 scrollTop，彻底切断滚动链，跨浏览器稳。
+    document.querySelectorAll('.dropdown-menu').forEach(menu => {{
+      menu.addEventListener('wheel', (e) => {{
+        e.preventDefault();                              // 永远拦：页面拿不到这个滚轮
+        const max = menu.scrollHeight - menu.clientHeight;
+        if (max <= 0) return;                            // 内容不溢出：直接吞掉
+        menu.scrollTop = Math.max(0, Math.min(max, menu.scrollTop + e.deltaY));  // 手动滚动
+      }}, {{ passive: false }});
+
+      // 兜底触摸滚动（移动端偶尔也有半透明遮罩失焦）
+      menu.addEventListener('touchmove', (e) => {{ e.stopPropagation(); }}, {{ passive: true }});
     }});
   }})();
 
@@ -2813,10 +2903,12 @@ def main():
     print(f"OK -> exports.js ({len(exports_js_content)} bytes)")
 
     # Generate daily pages for all available dates (skip existing to save time)
+    # _fix_vision_011：加 --force-daily 显式标志，CSS/HTML 改动需要重生成所有 daily 时用（默认仍跳过）
+    force_daily = "--force-daily" in sys.argv
     generated_days = 0
     for ds in available_dates:
         target = DAILY_DIR / f"{ds}.html"
-        if target.exists():
+        if target.exists() and not force_daily:
             continue
         try:
             day_data = load_daily(ds)

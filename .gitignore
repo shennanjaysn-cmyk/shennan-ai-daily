@@ -24,6 +24,21 @@ ai-daily-*.html
 !dist/fonts.css
 !dist/logo.png
 
+# 临时验证产物（headless 浏览器 profile / 诊断脚本输出）——禁止入库
+# 教训（2026-08-31）：`git add -A` 会把 headless Chrome/Edge 的 --user-data-dir
+# 整目录（Cache / Local Storage / Session Storage，含登录态）卷进 commit，
+# 推到公开仓库即隐私泄露。凡 _ 开头的临时目录一律忽略。
+_*_profile/
+_*_temp/
+_verify_tmp/
+_diag*/
+_shot*/
+_real*/
+_occl*/
+_stack*/
+_dim*/
+_verify*/
+
 # WorkBuddy 本地运行数据
 .workbuddy/
 
