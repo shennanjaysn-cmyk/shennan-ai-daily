@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>深南AI日报 Daily AI Brief · 2026-08-31</title>
+<title>深南AI日报 Daily AI Brief · 2026-09-14</title>
 <script>
   // 早期初始化 + 全局 FAB 主题切换函数（必须最先定义，inline onclick 直接调用）
   (function(){
@@ -577,7 +577,13 @@
     from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .hero > * { animation: riseIn .7s cubic-bezier(.2,.7,.3,1) both; }
+  /* v1.11.0：hero 入场改纯淡入。原 riseIn 的 translateY(14px) 使首屏内容整体比跑马灯低 14px 再上滑，
+     用户感知为"每次进页面整体下移约 15px"（实测 hero-top: 56px → 70px）。section 的 riseIn 保留。 */
+  @keyframes heroFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .hero > * { animation: heroFadeIn .55s cubic-bezier(.2,.7,.3,1) both; }
   .hero > *:nth-child(2) { animation-delay: .08s; }
   .hero > *:nth-child(3) { animation-delay: .16s; }
   .reveal-sec { opacity: 0; }
@@ -1069,7 +1075,8 @@
     /* 只过渡 max-height 和阴影/边框/背景，不动 transform（避免上移）
      * _fix_vision_010 v3：撤回 box-shadow/border/background 慢化（1.4s/1.8s）
      * —— 卡顿反馈的关键是描边立即变化，慢了反而压低 hover 强度。max-height 保留 3.4s 收起节奏（呼应 title/summary 渐显）。 */
-    transition: max-height 3.4s cubic-bezier(.4, 0, .2, 1),
+    /* v1.11.0：回收延时放慢一倍——max-height 3.4s → 6.8s（鼠标离开后展开态保持更久） */
+    transition: max-height 6.8s cubic-bezier(.4, 0, .2, 1),
                 box-shadow 1.4s ease, border-color 1.4s ease, background 1.4s ease,
                 z-index 0s 0s;
     z-index: 1;
@@ -1134,7 +1141,7 @@
     /* _fix_vision_010 v2：让 title 文字也参与过渡——基类稍暗（.92），hover 时全亮，
      * 配 .85s 展开节奏，让内容"逐渐出现"而不是瞬切 */
     opacity: 0.92;
-    transition: opacity .85s ease, -webkit-line-clamp 0s, display 0s;
+    transition: opacity 1.7s ease, -webkit-line-clamp 0s, display 0s;
   }
   .card:hover .card-title {
     display: block;
@@ -1155,7 +1162,7 @@
     padding: 2px 0 2px 12px;
     /* _fix_vision_010 v2：summary 同理——基类稍暗，hover 时全亮，撑起节奏感 */
     opacity: 0.85;
-    transition: opacity 1s ease, -webkit-line-clamp 0s, display 0s;
+    transition: opacity 2s ease, -webkit-line-clamp 0s, display 0s;
   }
   .card:hover .card-summary {
     display: block;
@@ -1596,23 +1603,23 @@
   }
 </style>
 </head>
-<body data-page-period="morning" data-page-date="2026-08-31">
+<body data-page-period="morning" data-page-date="2026-09-14">
 
 <!-- 顶部 ticker：随页面滚动上移；topbar 保持固定 -->
 <div class="ticker" aria-label="站点说明">
   <div class="ticker-track">
-    <span class="ticker-item">📡 数据来源：AIHOT (aihot.virxact.com)</span>
+    <span class="ticker-item">📡 数据来源：AIHOT (aihot.news)</span>
     <span class="ticker-item">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
     <span class="ticker-item">本站为个人非盈利 AI 资讯索引</span>
     <!-- 复制多份做无缝循环：translateX(-50%) 时第一份完全滑出、下一份顶上；
          复制 3 份确保轨道总宽始终大于常见视口，消除中间空白期 -->
-    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.virxact.com)</span>
+    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.news)</span>
     <span class="ticker-item" aria-hidden="true">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
     <span class="ticker-item" aria-hidden="true">本站为个人非盈利 AI 资讯索引</span>
-    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.virxact.com)</span>
+    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.news)</span>
     <span class="ticker-item" aria-hidden="true">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
     <span class="ticker-item" aria-hidden="true">本站为个人非盈利 AI 资讯索引</span>
-    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.virxact.com)</span>
+    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.news)</span>
     <span class="ticker-item" aria-hidden="true">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
     <span class="ticker-item" aria-hidden="true">本站为个人非盈利 AI 资讯索引</span>
   </div>
@@ -1642,16 +1649,16 @@
     <div class="hero-grid">
       <div class="hero-date-col">
         <div class="hero-date">
-          <span class="big">08</span>
+          <span class="big">09</span>
           <span class="dot">/</span>
-          <span class="big">31</span>
+          <span class="big">14</span>
           <span class="small">/ 2026</span>
         </div>
       </div>
       <div class="hero-info-col">
-        
+        <div class="hero-meta">送达时间：<span class="accent">2026年9月14日 周一</span></div>
         <div class="hero-lead">
-          覆盖窗口（北京时间，UTC+8）—— 每日滚动更新。<br>以下 <span class="lead-strong">2</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>
+          覆盖窗口（北京时间，UTC+8）—— 每日滚动更新。<br>以下 <span class="lead-strong">3</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>
         </div>
       </div>
     </div>
@@ -1662,7 +1669,7 @@
 <nav class="nav">
   <div class="nav-inner">
     <a class="nav-chip" href="#industry" data-slug="industry"><span class="nav-roman">Ⅰ</span><span class="nav-label">动态</span><span class="nav-n">1<span class="count-unit">条</span></span></a>
-<a class="nav-chip" href="#tips" data-slug="tips"><span class="nav-roman">Ⅱ</span><span class="nav-label">观点</span><span class="nav-n">1<span class="count-unit">条</span></span></a>
+<a class="nav-chip" href="#tips" data-slug="tips"><span class="nav-roman">Ⅱ</span><span class="nav-label">观点</span><span class="nav-n">2<span class="count-unit">条</span></span></a>
     <div class="nav-actions">
   
   <div class="report-morph" id="reportDropdown" aria-label="报告范围">
@@ -1682,7 +1689,21 @@
       历史日报
     </button>
     <div class="dropdown-menu" role="menu">
-      <a class="dropdown-item" href="./daily/2026-08-30.html">2026-08-30</a>
+      <a class="dropdown-item" href="./daily/2026-09-13.html">2026-09-13</a>
+<a class="dropdown-item" href="./daily/2026-09-12.html">2026-09-12</a>
+<a class="dropdown-item" href="./daily/2026-09-11.html">2026-09-11</a>
+<a class="dropdown-item" href="./daily/2026-09-10.html">2026-09-10</a>
+<a class="dropdown-item" href="./daily/2026-09-09.html">2026-09-09</a>
+<a class="dropdown-item" href="./daily/2026-09-08.html">2026-09-08</a>
+<a class="dropdown-item" href="./daily/2026-09-07.html">2026-09-07</a>
+<a class="dropdown-item" href="./daily/2026-09-06.html">2026-09-06</a>
+<a class="dropdown-item" href="./daily/2026-09-05.html">2026-09-05</a>
+<a class="dropdown-item" href="./daily/2026-09-04.html">2026-09-04</a>
+<a class="dropdown-item" href="./daily/2026-09-03.html">2026-09-03</a>
+<a class="dropdown-item" href="./daily/2026-09-02.html">2026-09-02</a>
+<a class="dropdown-item" href="./daily/2026-09-01.html">2026-09-01</a>
+<a class="dropdown-item" href="./daily/2026-08-31.html">2026-08-31</a>
+<a class="dropdown-item" href="./daily/2026-08-30.html">2026-08-30</a>
 <a class="dropdown-item" href="./daily/2026-08-29.html">2026-08-29</a>
 <a class="dropdown-item" href="./daily/2026-08-28.html">2026-08-28</a>
 <a class="dropdown-item" href="./daily/2026-08-27.html">2026-08-27</a>
@@ -1697,20 +1718,6 @@
 <a class="dropdown-item" href="./daily/2026-08-18.html">2026-08-18</a>
 <a class="dropdown-item" href="./daily/2026-08-17.html">2026-08-17</a>
 <a class="dropdown-item" href="./daily/2026-08-16.html">2026-08-16</a>
-<a class="dropdown-item" href="./daily/2026-08-15.html">2026-08-15</a>
-<a class="dropdown-item" href="./daily/2026-08-14.html">2026-08-14</a>
-<a class="dropdown-item" href="./daily/2026-08-13.html">2026-08-13</a>
-<a class="dropdown-item" href="./daily/2026-08-12.html">2026-08-12</a>
-<a class="dropdown-item" href="./daily/2026-08-11.html">2026-08-11</a>
-<a class="dropdown-item" href="./daily/2026-08-10.html">2026-08-10</a>
-<a class="dropdown-item" href="./daily/2026-08-09.html">2026-08-09</a>
-<a class="dropdown-item" href="./daily/2026-08-08.html">2026-08-08</a>
-<a class="dropdown-item" href="./daily/2026-08-07.html">2026-08-07</a>
-<a class="dropdown-item" href="./daily/2026-08-06.html">2026-08-06</a>
-<a class="dropdown-item" href="./daily/2026-08-05.html">2026-08-05</a>
-<a class="dropdown-item" href="./daily/2026-08-04.html">2026-08-04</a>
-<a class="dropdown-item" href="./daily/2026-08-03.html">2026-08-03</a>
-<a class="dropdown-item" href="./daily/2026-08-02.html">2026-08-02</a>
     </div>
   </div>
   <div class="dropdown" id="exportDropdown">
@@ -1733,7 +1740,7 @@
     </div>
   </div>
 </div>
-    <div class="nav-total-count">共<span class="num">2</span>条</div>
+    <div class="nav-total-count">共<span class="num">3</span>条</div>
   </div>
 </nav>
 
@@ -1747,12 +1754,12 @@
     <div class="sec-count">1<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://the-decoder.com/sony-and-warner-sue-anthropic-over-one-of-the-largest-and-most-blatant-ongoing-thefts-of-intellectual-property-in-history" target="_blank" rel="noopener noreferrer" style="--d:0">
+<a class="card" href="https://clashreport.com/world/articles/houthis-used-claude-code-to-develop-missile-guidance-software-anthropic-s52mnx4pwpo" target="_blank" rel="noopener noreferrer" style="--d:0">
   <div class="card-num">01</div>
   <div class="card-body">
-    <span class="chip">The Decoder：AI News（RSS）</span>
-    <h3 class="card-title">索尼与华纳起诉Anthropic，指控其大规模盗用版权音乐训练Claude</h3>
-    <p class="card-summary">索尼音乐、华纳音乐等唱片公司起诉Anthropic及其CEO Dario Amodei和联合创始人Benjamin Mann，指控其未经许可使用数万首受版权保护的音乐作品（主要是歌词）训练Claude模型。原告称Amodei明确指示并促成侵权行为，每件侵权作品索赔最高15万美元。此前Anthropic已于2025年9月就盗版书籍训练达成15亿美元和解。</p>
+    <span class="chip">Hacker News：AI 热帖</span>
+    <h3 class="card-title">Anthropic 报告称胡塞组织用 Claude Code 开发导弹制导软件</h3>
+    <p class="card-summary">Anthropic 9 月威胁报告披露，据评估极可能关联胡塞组织的也门小组使用 Claude Code 开发制导火箭、射程超 2,000 公里弹道导弹及名为 R2000 的高超声速滑翔载具概念的相关软件。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
@@ -1763,15 +1770,24 @@
     <div class="sec-mark">Ⅱ</div>
     <h2 class="sec-title">观点</h2>
     <div class="sec-line"></div>
-    <div class="sec-count">1<span class="count-unit">条</span></div>
+    <div class="sec-count">2<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://x.com/AYi_AInotes/status/2093864816079208512" target="_blank" rel="noopener noreferrer" style="--d:0">
+<a class="card" href="https://www.marktechpost.com/2026/09/12/context-engineering-inside-the-harness-4-mechanisms-that-beat-context-overflow-and-goal-loss-on-long-horizon-tasks" target="_blank" rel="noopener noreferrer" style="--d:0">
   <div class="card-num">02</div>
   <div class="card-body">
-    <span class="chip">X：阿易 AI Notes (@AYi_AInotes)</span>
-    <h3 class="card-title">Uber 用 Agent 接管 70% 代码 PR，AI 账单零增长</h3>
-    <p class="card-summary">Uber 技术长文显示，全公司 70% 的代码 PR 已由 AI Agent 接管，调用量半年增长近 10 倍，但总 AI 账单未涨，单次会话成本降低 52%。</p>
+    <span class="chip">MarkTechPost（RSS）</span>
+    <h3 class="card-title">Agent 长任务上下文工程解析：用预算控制、压缩、todo-state 和记忆对抗上下文溢出与目标丢失</h3>
+    <p class="card-summary">文章解析 Agent harness 层应对长任务中上下文溢出与目标丢失的四类机制：上下文预算与卸载、压缩、todo-state 复述和跨会话记忆。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://garymarcus.substack.com/p/two-cheers-out-of-three-for-dario" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">03</div>
+  <div class="card-body">
+    <span class="chip">Gary Marcus：The Road to AI We Can Trust（RSS）</span>
+    <h3 class="card-title">Gary Marcus 评 Dario Amodei 的放慢 AI 发展提议：三份赞誉加两分怀疑</h3>
+    <p class="card-summary">Gary Marcus 评析 Dario Amodei 倡导放慢 AI 发展并支持透明度的文章，Sam Altman 与 Elon Musk 迅速表示认同。Marcus 肯定其透明度承诺，但列举多方质疑：METR 与 AI 公司关系过近、Anthropic 借对华威胁维持加速、以及该提议可能意在抢先于真正的监管。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
@@ -1783,11 +1799,11 @@
   <footer class="footer">
     <!-- 1 本期共 -->
     <div class="footer-meta">
-      本期共 <span class="num">2</span> 条 · 2 个版块 · 2026-08-31
+      本期共 <span class="num">3</span> 条 · 2 个版块 · 2026-09-14
     </div>
     <!-- 2 数据源 -->
     <div class="footer-source">
-      数据源：<a href="https://aihot.virxact.com" target="_blank" rel="noopener noreferrer">aihot.virxact.com</a> · AI HOT 日报
+      数据源：<a href="https://aihot.news" target="_blank" rel="noopener noreferrer">aihot.news</a> · AI HOT 日报
     </div>
     <!-- 3 分割线 -->
     <div class="footer-line-bold"></div>
@@ -2165,7 +2181,7 @@
       const startY = window.scrollY;
       const delta = top - startY;
       if (Math.abs(delta) < 2) { landFlash(sec); return; }   // 已在目标附近，直接脉冲
-      const dur = 340;                                          // 极速：~340ms
+      const dur = 170;                                          // v1.11.0：再快一倍（340ms → 170ms）
       const t0 = performance.now();
       if (scrollAnim) cancelAnimationFrame(scrollAnim);
       (function step(now) {

@@ -35,7 +35,8 @@ DAILY_DIR.mkdir(exist_ok=True)
 FONTS_CSS = DIST / "fonts.css"  # 由 build_fonts_css.py 生成，引用 dist/fonts/*.woff2（不内嵌）
 
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-AIHOT_BASE = "https://aihot.virxact.com"
+AIHOT_HOME = "aihot.news"   # v1.11.0：信息源已改名（原 aihot.virxact.com，旧域仍可解析）
+AIHOT_BASE = f"https://{AIHOT_HOME}"
 
 BEIJING = timezone(timedelta(hours=8))
 
@@ -53,7 +54,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.37"
+VERSION = "1.11.0"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -127,6 +128,12 @@ def to_beijing(iso_str):
 def fmt_full(dt):
     weekdays = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
     return f"{dt.year}年{dt.month}月{dt.day}日 {weekdays[dt.weekday()]} {dt.hour:02d}:{dt.minute:02d}"
+
+
+def fmt_date_weekday(dt):
+    """v1.11.0：只给日期 + 星期。页面已有实时刷新（60s 轮询到点自 reload），时分对读者无意义。"""
+    weekdays = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+    return f"{dt.year}年{dt.month}月{dt.day}日 {weekdays[dt.weekday()]}"
 
 
 def fmt_short(dt):
@@ -226,6 +233,7 @@ def parse_data(data):
 
 def export_markdown(info):
     lines = [f"# 深南AI日报 Daily AI Brief · {info['date_str']}", ""]
+    lines.append(f"**送达时间：** {fmt_date_weekday(info['gen_dt'])}  ")
     lines.append("**覆盖窗口：** 每日滚动更新（北京时间，UTC+8）  ")
     lines.append(f"**共计：** {info['total']} 条")
     lines.append("")
@@ -238,7 +246,7 @@ def export_markdown(info):
                 lines.append(f"   > {it['summary']}")
         lines.append("")
     lines.append("---")
-    lines.append("*数据来源：aihot.virxact.com · AI HOT 日报*")
+    lines.append(f"*数据来源：{AIHOT_HOME} · AI HOT 日报*")
     return "\n".join(lines)
 
 
@@ -547,7 +555,7 @@ def render_html(info, page_info):
           <span class="big">{hero_dd}</span>
           <span class="small">/ {hero_year}</span>
         </div>'''
-        hero_meta_block = ''
+        hero_meta_block = f'''<div class="hero-meta">送达时间：<span class="accent">{fmt_date_weekday(gen_dt)}</span></div>'''
         hero_lead_text = f'覆盖窗口（北京时间，UTC+8）—— 每日滚动更新。<br>以下 <span class="lead-strong">{total}</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>'
 
     return f"""<!DOCTYPE html>
@@ -1080,7 +1088,13 @@ def render_html(info, page_info):
     from {{ opacity: 0; transform: translateY(14px); }}
     to   {{ opacity: 1; transform: translateY(0); }}
   }}
-  .hero > * {{ animation: riseIn .7s cubic-bezier(.2,.7,.3,1) both; }}
+  /* v1.11.0：hero 入场改纯淡入。原 riseIn 的 translateY(14px) 使首屏内容整体比跑马灯低 14px 再上滑，
+     用户感知为"每次进页面整体下移约 15px"（实测 hero-top: 56px → 70px）。section 的 riseIn 保留。 */
+  @keyframes heroFadeIn {{
+    from {{ opacity: 0; }}
+    to   {{ opacity: 1; }}
+  }}
+  .hero > * {{ animation: heroFadeIn .55s cubic-bezier(.2,.7,.3,1) both; }}
   .hero > *:nth-child(2) {{ animation-delay: .08s; }}
   .hero > *:nth-child(3) {{ animation-delay: .16s; }}
   .reveal-sec {{ opacity: 0; }}
@@ -1572,7 +1586,8 @@ def render_html(info, page_info):
     /* 只过渡 max-height 和阴影/边框/背景，不动 transform（避免上移）
      * _fix_vision_010 v3：撤回 box-shadow/border/background 慢化（1.4s/1.8s）
      * —— 卡顿反馈的关键是描边立即变化，慢了反而压低 hover 强度。max-height 保留 3.4s 收起节奏（呼应 title/summary 渐显）。 */
-    transition: max-height 3.4s cubic-bezier(.4, 0, .2, 1),
+    /* v1.11.0：回收延时放慢一倍——max-height 3.4s → 6.8s（鼠标离开后展开态保持更久） */
+    transition: max-height 6.8s cubic-bezier(.4, 0, .2, 1),
                 box-shadow 1.4s ease, border-color 1.4s ease, background 1.4s ease,
                 z-index 0s 0s;
     z-index: 1;
@@ -1637,7 +1652,7 @@ def render_html(info, page_info):
     /* _fix_vision_010 v2：让 title 文字也参与过渡——基类稍暗（.92），hover 时全亮，
      * 配 .85s 展开节奏，让内容"逐渐出现"而不是瞬切 */
     opacity: 0.92;
-    transition: opacity .85s ease, -webkit-line-clamp 0s, display 0s;
+    transition: opacity 1.7s ease, -webkit-line-clamp 0s, display 0s;
   }}
   .card:hover .card-title {{
     display: block;
@@ -1658,7 +1673,7 @@ def render_html(info, page_info):
     padding: 2px 0 2px 12px;
     /* _fix_vision_010 v2：summary 同理——基类稍暗，hover 时全亮，撑起节奏感 */
     opacity: 0.85;
-    transition: opacity 1s ease, -webkit-line-clamp 0s, display 0s;
+    transition: opacity 2s ease, -webkit-line-clamp 0s, display 0s;
   }}
   .card:hover .card-summary {{
     display: block;
@@ -2104,18 +2119,18 @@ def render_html(info, page_info):
 <!-- 顶部 ticker：随页面滚动上移；topbar 保持固定 -->
 <div class="ticker" aria-label="站点说明">
   <div class="ticker-track">
-    <span class="ticker-item">📡 数据来源：AIHOT (aihot.virxact.com)</span>
+    <span class="ticker-item">📡 数据来源：AIHOT ({AIHOT_HOME})</span>
     <span class="ticker-item">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
     <span class="ticker-item">本站为个人非盈利 AI 资讯索引</span>
     <!-- 复制多份做无缝循环：translateX(-50%) 时第一份完全滑出、下一份顶上；
          复制 3 份确保轨道总宽始终大于常见视口，消除中间空白期 -->
-    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.virxact.com)</span>
+    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT ({AIHOT_HOME})</span>
     <span class="ticker-item" aria-hidden="true">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
     <span class="ticker-item" aria-hidden="true">本站为个人非盈利 AI 资讯索引</span>
-    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.virxact.com)</span>
+    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT ({AIHOT_HOME})</span>
     <span class="ticker-item" aria-hidden="true">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
     <span class="ticker-item" aria-hidden="true">本站为个人非盈利 AI 资讯索引</span>
-    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.virxact.com)</span>
+    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT ({AIHOT_HOME})</span>
     <span class="ticker-item" aria-hidden="true">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
     <span class="ticker-item" aria-hidden="true">本站为个人非盈利 AI 资讯索引</span>
   </div>
@@ -2174,7 +2189,7 @@ def render_html(info, page_info):
     </div>
     <!-- 2 数据源 -->
     <div class="footer-source">
-      数据源：<a href="https://aihot.virxact.com" target="_blank" rel="noopener noreferrer">aihot.virxact.com</a> · AI HOT 日报
+      数据源：<a href="https://{AIHOT_HOME}" target="_blank" rel="noopener noreferrer">{AIHOT_HOME}</a> · AI HOT 日报
     </div>
     <!-- 3 分割线 -->
     <div class="footer-line-bold"></div>
@@ -2552,7 +2567,7 @@ def render_html(info, page_info):
       const startY = window.scrollY;
       const delta = top - startY;
       if (Math.abs(delta) < 2) {{ landFlash(sec); return; }}   // 已在目标附近，直接脉冲
-      const dur = 340;                                          // 极速：~340ms
+      const dur = 170;                                          // v1.11.0：再快一倍（340ms → 170ms）
       const t0 = performance.now();
       if (scrollAnim) cancelAnimationFrame(scrollAnim);
       (function step(now) {{

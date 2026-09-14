@@ -577,7 +577,13 @@
     from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .hero > * { animation: riseIn .7s cubic-bezier(.2,.7,.3,1) both; }
+  /* v1.11.0：hero 入场改纯淡入。原 riseIn 的 translateY(14px) 使首屏内容整体比跑马灯低 14px 再上滑，
+     用户感知为"每次进页面整体下移约 15px"（实测 hero-top: 56px → 70px）。section 的 riseIn 保留。 */
+  @keyframes heroFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .hero > * { animation: heroFadeIn .55s cubic-bezier(.2,.7,.3,1) both; }
   .hero > *:nth-child(2) { animation-delay: .08s; }
   .hero > *:nth-child(3) { animation-delay: .16s; }
   .reveal-sec { opacity: 0; }
@@ -1069,7 +1075,8 @@
     /* 只过渡 max-height 和阴影/边框/背景，不动 transform（避免上移）
      * _fix_vision_010 v3：撤回 box-shadow/border/background 慢化（1.4s/1.8s）
      * —— 卡顿反馈的关键是描边立即变化，慢了反而压低 hover 强度。max-height 保留 3.4s 收起节奏（呼应 title/summary 渐显）。 */
-    transition: max-height 3.4s cubic-bezier(.4, 0, .2, 1),
+    /* v1.11.0：回收延时放慢一倍——max-height 3.4s → 6.8s（鼠标离开后展开态保持更久） */
+    transition: max-height 6.8s cubic-bezier(.4, 0, .2, 1),
                 box-shadow 1.4s ease, border-color 1.4s ease, background 1.4s ease,
                 z-index 0s 0s;
     z-index: 1;
@@ -1134,7 +1141,7 @@
     /* _fix_vision_010 v2：让 title 文字也参与过渡——基类稍暗（.92），hover 时全亮，
      * 配 .85s 展开节奏，让内容"逐渐出现"而不是瞬切 */
     opacity: 0.92;
-    transition: opacity .85s ease, -webkit-line-clamp 0s, display 0s;
+    transition: opacity 1.7s ease, -webkit-line-clamp 0s, display 0s;
   }
   .card:hover .card-title {
     display: block;
@@ -1155,7 +1162,7 @@
     padding: 2px 0 2px 12px;
     /* _fix_vision_010 v2：summary 同理——基类稍暗，hover 时全亮，撑起节奏感 */
     opacity: 0.85;
-    transition: opacity 1s ease, -webkit-line-clamp 0s, display 0s;
+    transition: opacity 2s ease, -webkit-line-clamp 0s, display 0s;
   }
   .card:hover .card-summary {
     display: block;
@@ -1601,18 +1608,18 @@
 <!-- 顶部 ticker：随页面滚动上移；topbar 保持固定 -->
 <div class="ticker" aria-label="站点说明">
   <div class="ticker-track">
-    <span class="ticker-item">📡 数据来源：AIHOT (aihot.virxact.com)</span>
+    <span class="ticker-item">📡 数据来源：AIHOT (aihot.news)</span>
     <span class="ticker-item">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
     <span class="ticker-item">本站为个人非盈利 AI 资讯索引</span>
     <!-- 复制多份做无缝循环：translateX(-50%) 时第一份完全滑出、下一份顶上；
          复制 3 份确保轨道总宽始终大于常见视口，消除中间空白期 -->
-    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.virxact.com)</span>
+    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.news)</span>
     <span class="ticker-item" aria-hidden="true">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
     <span class="ticker-item" aria-hidden="true">本站为个人非盈利 AI 资讯索引</span>
-    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.virxact.com)</span>
+    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.news)</span>
     <span class="ticker-item" aria-hidden="true">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
     <span class="ticker-item" aria-hidden="true">本站为个人非盈利 AI 资讯索引</span>
-    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.virxact.com)</span>
+    <span class="ticker-item" aria-hidden="true">📡 数据来源：AIHOT (aihot.news)</span>
     <span class="ticker-item" aria-hidden="true">更多 AI 内容请关注公众号<strong class="ticker-brand">「深南Ai视界」</strong></span>
     <span class="ticker-item" aria-hidden="true">本站为个人非盈利 AI 资讯索引</span>
   </div>
@@ -1649,7 +1656,7 @@
         </div>
       </div>
       <div class="hero-info-col">
-        
+        <div class="hero-meta">送达时间：<span class="accent">2026年8月19日 周三</span></div>
         <div class="hero-lead">
           覆盖窗口（北京时间，UTC+8）—— 每日滚动更新。<br>以下 <span class="lead-strong">16</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>
         </div>
@@ -1687,7 +1694,21 @@
       历史日报
     </button>
     <div class="dropdown-menu" role="menu">
-      <a class="dropdown-item" href="./2026-08-31.html">2026-08-31</a>
+      <a class="dropdown-item" href="./2026-09-14.html">2026-09-14</a>
+<a class="dropdown-item" href="./2026-09-13.html">2026-09-13</a>
+<a class="dropdown-item" href="./2026-09-12.html">2026-09-12</a>
+<a class="dropdown-item" href="./2026-09-11.html">2026-09-11</a>
+<a class="dropdown-item" href="./2026-09-10.html">2026-09-10</a>
+<a class="dropdown-item" href="./2026-09-09.html">2026-09-09</a>
+<a class="dropdown-item" href="./2026-09-08.html">2026-09-08</a>
+<a class="dropdown-item" href="./2026-09-07.html">2026-09-07</a>
+<a class="dropdown-item" href="./2026-09-06.html">2026-09-06</a>
+<a class="dropdown-item" href="./2026-09-05.html">2026-09-05</a>
+<a class="dropdown-item" href="./2026-09-04.html">2026-09-04</a>
+<a class="dropdown-item" href="./2026-09-03.html">2026-09-03</a>
+<a class="dropdown-item" href="./2026-09-02.html">2026-09-02</a>
+<a class="dropdown-item" href="./2026-09-01.html">2026-09-01</a>
+<a class="dropdown-item" href="./2026-08-31.html">2026-08-31</a>
 <a class="dropdown-item" href="./2026-08-30.html">2026-08-30</a>
 <a class="dropdown-item" href="./2026-08-29.html">2026-08-29</a>
 <a class="dropdown-item" href="./2026-08-28.html">2026-08-28</a>
@@ -1702,20 +1723,6 @@
 <a class="dropdown-item" href="./2026-08-18.html">2026-08-18</a>
 <a class="dropdown-item" href="./2026-08-17.html">2026-08-17</a>
 <a class="dropdown-item" href="./2026-08-16.html">2026-08-16</a>
-<a class="dropdown-item" href="./2026-08-15.html">2026-08-15</a>
-<a class="dropdown-item" href="./2026-08-14.html">2026-08-14</a>
-<a class="dropdown-item" href="./2026-08-13.html">2026-08-13</a>
-<a class="dropdown-item" href="./2026-08-12.html">2026-08-12</a>
-<a class="dropdown-item" href="./2026-08-11.html">2026-08-11</a>
-<a class="dropdown-item" href="./2026-08-10.html">2026-08-10</a>
-<a class="dropdown-item" href="./2026-08-09.html">2026-08-09</a>
-<a class="dropdown-item" href="./2026-08-08.html">2026-08-08</a>
-<a class="dropdown-item" href="./2026-08-07.html">2026-08-07</a>
-<a class="dropdown-item" href="./2026-08-06.html">2026-08-06</a>
-<a class="dropdown-item" href="./2026-08-05.html">2026-08-05</a>
-<a class="dropdown-item" href="./2026-08-04.html">2026-08-04</a>
-<a class="dropdown-item" href="./2026-08-03.html">2026-08-03</a>
-<a class="dropdown-item" href="./2026-08-02.html">2026-08-02</a>
     </div>
   </div>
   <div class="dropdown" id="exportDropdown">
@@ -1938,7 +1945,7 @@
     </div>
     <!-- 2 数据源 -->
     <div class="footer-source">
-      数据源：<a href="https://aihot.virxact.com" target="_blank" rel="noopener noreferrer">aihot.virxact.com</a> · AI HOT 日报
+      数据源：<a href="https://aihot.news" target="_blank" rel="noopener noreferrer">aihot.news</a> · AI HOT 日报
     </div>
     <!-- 3 分割线 -->
     <div class="footer-line-bold"></div>
@@ -2316,7 +2323,7 @@
       const startY = window.scrollY;
       const delta = top - startY;
       if (Math.abs(delta) < 2) { landFlash(sec); return; }   // 已在目标附近，直接脉冲
-      const dur = 340;                                          // 极速：~340ms
+      const dur = 170;                                          // v1.11.0：再快一倍（340ms → 170ms）
       const t0 = performance.now();
       if (scrollAnim) cancelAnimationFrame(scrollAnim);
       (function step(now) {

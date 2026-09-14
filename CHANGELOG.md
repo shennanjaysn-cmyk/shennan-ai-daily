@@ -12,6 +12,18 @@
 
 ---
 
+## v1.11.0_260914 — 首屏 14px 下移修复 + 交互节奏调速 + 信息源更名 aihot.news（_fix_021）
+
+**类型**：次版本 +1（向下兼容的新一轮打磨）
+**日期**：2026-09-14
+
+- **修复"每次进页面整体从跑马灯下移约 15px"**（根因实测）：`.hero > *` 复用了 `@keyframes riseIn`，其 `from { transform: translateY(14px) }` 让首屏所有直接子元素（hero-top / hero-sub / hero-title / hero-grid）在入场瞬间整体下移 14px 再上滑。headless 实测 `hero-top` 静态应为 `32(ticker) + 24(hero padding-top) = 56px`，实际 `70px`——差值 14px，与用户体感"约 15px"吻合。改法：hero 入场拆出独立 `@keyframes heroFadeIn`（纯 opacity，无位移），`.hero > *` 改用它；section 的 `riseIn`（`.reveal-sec.in-view`）保留不动
+- **送达时间改日期 + 星期**：首页 hero 恢复 `送达时间` 一行，但新增 `fmt_date_weekday()`，只输出 `2026年9月14日 周一`，**去掉时分**。理由：页面已有 60s 实时刷新（到点自动 reload），具体时分对读者无信息量。`export_markdown` 同步补回该行
+- **信息源更名 `aihot.news`**：新增单一真相常量 `AIHOT_HOME = "aihot.news"`，`AIHOT_BASE` 由它派生；ticker（4 处）、footer 数据源链接、Markdown 导出数据源行全部改为引用常量，后续再改名只动一行。旧域 `aihot.virxact.com` 仍可解析，但 API 返回的 `attribution.canonical` 已指向新域
+- **nav 胶囊跳跃速度 ×2**：`goToSection()` 的 `dur` 常数 `340ms → 170ms`（rAF 自写 `easeOutExpo`，比原生 smooth 更快更可控）
+- **卡片回收延时 ×2**：鼠标离开卡片后的收起节奏整体放慢一倍——`.card` 基类 `max-height 3.4s → 6.8s`；配套 `.card-title` 淡出 `opacity .85s → 1.7s`、`.card-summary` 淡出 `opacity 1s → 2s`（三者同属"收起"这一个动作，只慢 max-height 会导致文字比盒子先消失，观感断裂）
+- **上云**：v1.10.37 已合并 main 并 push（`71c2a84..4e61782`）
+
 ## v1.10.37_260831 — 跑马灯行高兜底 + 移除"送达时间"/"覆盖窗口"具体时段 + 文档化自动刷新（fix_gundong）
 
 **类型**：修订 +1（细节优化 + 文档）
