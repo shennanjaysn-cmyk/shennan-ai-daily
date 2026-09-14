@@ -102,6 +102,21 @@
   .doc-body a { color:var(--brand-cn); }
   .doc-pre { background:rgba(20,28,50,.6); border:1px solid rgba(46,58,124,.4); border-radius:8px; padding:16px 18px; overflow-x:auto; font-family:'SF Mono','Fira Code',Consolas,monospace; font-size:13px; color:var(--text-code); white-space:pre-wrap; word-break:break-word; }
   .doc-foot { margin-top:48px; padding-top:20px; border-top:1px solid var(--line-gold); text-align:center; font-size:12px; color:var(--mist-faint); letter-spacing:.08em; }
+  /* v1.11.1：子页面（LICENSE / 免责声明 / 关于项目 / 聚合报告）移动端字号与主页同步收小，
+     避免"主页变小、子页没变"的割裂感 */
+  @media (max-width: 880px) {
+    .doc-wrap { padding: 28px 20px 44px; }
+    .doc-home { font-size: 12px; margin-bottom: 20px; }
+    .doc-brand { gap: 10px; }
+    .doc-brand .sn-logo { width: 38px; height: 38px; }
+    .doc-brand h1 { font-size: 24px; }
+    .doc-body { margin-top: 20px; }
+    .doc-body h2 { font-size: 17px; margin: 22px 0 10px; padding-left: 10px; }
+    .doc-body h3 { font-size: 15px; }
+    .doc-body p, .doc-body li { font-size: 13px; }
+    .doc-pre { font-size: 11px; padding: 12px 14px; }
+    .doc-foot { font-size: 10px; margin-top: 34px; }
+  }
 </style>
 </head>
 <body>

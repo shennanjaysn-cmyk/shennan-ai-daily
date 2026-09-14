@@ -12,6 +12,92 @@
 
 ---
 
+## v1.11.2_260914 — 周报 / 月报页新增「导出」（_fix_mob_nav）
+
+**类型**：次版本（新增向下兼容功能）
+**日期**：2026-09-14
+
+### 一、报告页补上导出入口，位置在「返回今日」右侧
+- 报告页工具排由 `周报 | 月报 | 返回今日` 扩展为 **`周报 | 月报 | 返回今日 | 导出`**，三段用 `.nav-actions-sep` 细线分隔，与主页三工具胶囊（报告 / 历史日报 / 导出）同一套视觉与交互
+- **导出下拉改为单处真相**：原本 HTML 内联在主页 `nav_actions_html` 里，现在抽成 `export_dropdown_html` 变量，主页与报告页共用 —— 避免以后改一处漏一处
+- 复用现有全部能力：PNG / HTML / Markdown / CSV / PDF 五种格式、`.dropdown` 的 `isolation` 层级隔离与 `overscroll-behavior` 边界处理、移动端 `navigator.share()` 存相册
+- 报告页工具排被 `placeActions()` 一起搬运：桌面端静止时整组在 hero 右上角（与 logo 同排），吸顶后搬回 nav 行内 —— 新增的「导出」随之同步，无需额外逻辑
+
+### 二、报告页的导出范围收敛为「这份报告本身」
+- 主页/历史页保留「今天 / 近一周 / 近一月」三范围选择器；**报告页不显示范围选择器**（在周报页里选"今天"是语义错位），下拉只列格式，表头显示「导出本周报 / 导出本月报」
+- 载荷映射：`body[data-page-report]` → `week` / `month`。`exports.js` 里 `week` 就是滚动 7 天聚合、`month` 就是上月自然月聚合，**与周报/月报页展示内容逐字一致**，因此不需要为报告页另生成一份导出数据（`exports.js` 体积零增长）
+- 实测比对：周报页 `hero-meta「周报周期：2026-09-08~2026-09-14」` ↔ `SN_EXPORT.week.date = 2026-09-08 ~ 2026-09-14`；月报页 `2026-08-01~2026-08-31` ↔ `SN_EXPORT.month.date = 2026-08-01 ~ 2026-08-31`（均一致）
+
+### 三、移动端兜底
+- ≤880px 的 `.nav-actions` 增加 `flex-wrap: wrap`：报告页工具排从 3 项变 4 项，极窄机型（≤360px）万一行宽不足时换行而非撑出视口。实测 500 / 820px 均单行不换行（行宽约 277px）
+- 移动端导出依旧只保留 PNG（`#exportDropdown [data-export]:not([data-export="png"])` 隐藏），报告页的新下拉自动继承该规则；实测 ≤880px 时 `fmt = {png: block, 其余 none}`
+
+### 四、验收（headless 探针实测）
+| 项 | 1435px | 900px | 820px | 500px |
+|---|---|---|---|---|
+| 报告页工具排 | 单行 6 子元素（含 2 分隔线） | 单行 | 单行 | 单行，行宽 277px |
+| 横向溢出 | 0 | 0 | 0 | 0 |
+| 导出菜单右缘 | 1317（贴合按钮右缘） | — | — | 388（视口内） |
+| JS 报错 | 0 | — | — | 0 |
+
+- 主页 / 历史页回归：仍是「报告 / 历史日报 / 导出」三工具 + 三范围选择器，`SN_EXPORT` 仍为 `today / week / month`，未受影响
+
+## v1.11.1_260914 — 移动端/iPad nav 与 web 对齐 + 移动端布局/字号/bug 批量修复（_fix_mob_nav）
+
+**类型**：修订 +1（移动端体验 + 一致性）
+**日期**：2026-09-14
+
+### 一、nav 行为与 web 端统一（核心）
+- **删除"下滑隐藏 nav、上滑再出现"**：`.nav.hide` / `.topbar.hide`（`translateY(-160%)`）与对应的滚动切换 JS 整体移除。原逻辑让移动端在首次下滑时 nav 立刻上跳并消失（用户观感"刚滑就跳一下，还遮了一下引用块"）。现在移动端与 web 共用同一套 sticky：**随页面整体上移 → 到顶吸顶 → 下沿渐显金线（`.is-stuck` 同款）**
+- **取消移动端"玻璃胶囊条"**：`.nav-inner` 的 `border-radius:999px` + `backdrop-filter: blur` + 左右 margin 全部撤掉，改为整条透明底 → 吸顶时整条显色 + 下沿金线，与 web 完全同构
+- **胶囊行 → 单行横排 + 左右滑动**（本节原写「改为换行」，已由**补丁 5** 回改：换行会白占首屏高度）：给胶囊单独包一层 `.nav-chips`，`flex-wrap: nowrap` + `overflow-x: auto`，左右滑动选导航
+- **工具组另起一行居中**：`.nav-actions { flex: 0 0 100%; justify-content: center }`——报告 / 历史日报 / 导出（报告页为 周报 | 月报 + 返回今日）独占第二行居中，字号收小。"共X条"在移动端隐藏（原本 <768 已隐藏，现统一到 ≤880）
+- **报告胶囊改点击展开**：触屏 `@media (hover:none)` 下不再默认摊开成"周报|月报"（摊开后吃掉整行宽度），改为点击 `.open` 展开、点外部收起；桌面 hover 变形保留
+- **移动端导出仅 PNG**：`#exportDropdown` 在 ≤880px 只保留"PNG 图片"，隐藏 导出范围 / HTML / Markdown / CSV / PDF；PNG 优先走 `navigator.share()` 系统分享面板（iOS/Android 的"存储图像"才真正进相册），不支持则回退下载
+
+### 二、字号收小（≤880px，子页面同步）
+- 跑马灯 `.ticker-item` 11px → **9px**；引用块 `.hero-lead` 14px → **12px**（480px 档再降 11px）
+- nav：`.nav-chip` 13px → **12px**、`.nav-roman`/`.nav-n` 12px → **11px**
+- 版权 `.footer-copyright` 12px → **10px**；底部文档链排 `.footer-docs a` 13px → **11px**（480px 档 10px）
+- 子页面（LICENSE / 免责声明 / 关于项目 / 聚合报告）新增同断点媒体查询，`doc-brand h1` / `h2` / `h3` / 正文 / 页脚同步收小
+
+### 三、移动端 hero 布局
+- **logo 移到右端**，与「深南AI日报」同排顶对齐（`.hero-top { justify-content: flex-end }` + `.hero-sub { margin-top: -38px; padding-right: 46px }`）
+- 整排上提：`.hero { padding: 36px 0 24px → 18px 0 20px }`、`.hero-top { padding: 10px 0 4px → 0 }`（原上方留白过多）
+- 跑马灯纵向内边距 `8px → 6px`
+
+### 四、Bug 修复
+- **（补丁 2）`.report-morph` 移动端塌成 0 宽**：它内部两个子元素（`.report-face` / `.report-choices`）都是 `position:absolute`，自身宽度完全靠 `min-width` 撑。移动端原写成 `min-width: 0` → 探针实测 `[180.2, 180.2]` 宽度 0，"报告"整颗胶囊消失。改收起态 `min-width:72px` / 展开态 `.report-morph.open { min-width:132px }`，实测 `72x28` 归位
+- **（补丁 3）删除旧 `@media (max-width:767.98px)` 内的 `.nav-actions` 规则**：它给工具组铺了一块 `var(--ink-card)` 底色（为旧的"chips 横滑、工具组贴滑条右侧"设计服务）。新布局下这层底色变成一条突兀横向色带，且 iPad（820px > 767.98）不触发 → 手机与 iPad 观感不一致
+- **（补丁 4）`updateStuck` 去掉 rAF 节流**：改为 scroll 事件里直接计算。rAF 在"无帧环境"（后台标签页 / headless / 部分省电模式）下不触发，`is-stuck` 迟迟不上线，表现是"吸顶了但金线与底色没出来"。`updateStuck` 只读一次 `getBoundingClientRect`，代价可忽略
+- **移动端 FAB 不再被 nav 压住**：`.fab-group` / `.fab-contact` 的 `z-index` 180 → **260**（原 180 低于 nav 196 / ticker 195）
+- **点按不再保持高亮**：`.fab:hover` / `.fab-contact:hover` 系列规则收进 `@media (hover: hover)`——触屏浏览器会把 `:hover` 粘住导致高亮不散；触屏改为 `:active` 瞬时反馈 + `-webkit-tap-highlight-color: transparent`
+- **报告页移除金色大字日期**：`.hero-sub` 已有"周报/月报"、`.hero-meta` 又有"周报周期"，第三个日期纯重复；且与后者重叠。`hero_date_block` 在报告页置空
+- **修报告页移动端日期重叠根因**：`.hero-info-col` 基类 `margin-top: -60px`（为桌面右栏底对齐而设）在移动端 `hero-grid` 已改 `block` 后失去对齐意义，反把信息栏上拉 60px 造成重叠 → 移动端显式 `margin-top: 0`
+
+### 五、补丁 5：胶囊行改「单行横排 + 左右滑动」
+- **回改 v1.11.1 的「chips 换行」决定**：多胶囊时不再换行堆两排（两排白占首屏高度），改为单行横排 + 左右滑动选导航
+- **为什么必须新加一层 `.nav-chips`**：工具组（报告 / 历史日报 / 导出）也是 `.nav-inner` 的子元素，若直接把 `.nav-inner` 做成滚动容器，工具组会被一起卷进滑动区 —— 得滑到最右才看得到。包一层之后：胶囊行自己滑，工具组留在滑动区之外、独占一行居中
+- 移动端 `.nav-inner` 随之改 `display: block`（原 `flex-wrap: wrap` 已失去意义），左右 padding 归零，改由 `.nav-chips` 自己留 `20px` 内边距 —— 胶囊可以贴到屏幕边滑动，静止时又与 `.wrap` 内容列对齐
+- **边缘渐隐代替滚动条**：某一侧还有没露出来的胶囊时，那侧加 24px 渐隐（JS 维护 `can-left` / `can-right`），滑到头即消失。另加 `overscroll-behavior-x: contain`，滑到两端不会把页面纵滑 / 浏览器前进后退手势抢走
+- **点选后自动滚进可视区**：`revealChip()` 负责把"被右缘裁掉一半"的胶囊滚进来。刻意**不做**"跟随页面纵滑自动横移"—— 页面在滚、胶囊行自己在动，会晕
+- **桌面端保持 `wrap` 不变**：宽屏放得下，不强行给鼠标用户造一条要 Shift+滚轮才能拖的滑条
+- 清掉旧的 `@media (max-width: 767.98px)` 横滑块（它滚的是 `.nav-inner` 整条，正是上面要避开的坑）
+- **顺手修掉一处既有横向溢出**：≤880px 下 `.hero-tip::after`（引用块末尾「?」的 220px 提示气泡）改为「向右锚定、向左生长」
+
+**验收（headless 探针实测，500×880 移动视口 + 1440×900 桌面回归）**
+- `innerWidth == scrollWidth == 500` → 无横向溢出
+- `hero-top.top == hero-sub.top == 50` → logo 右端与「深南AI日报」同排顶对齐
+- 吸顶态：`is-stuck = true` + 下沿金线 `1px solid rgba(131,126,101,.55)` + 整条底色 `rgb(20,28,50)`（与 web 同款）
+- 工具行居中偏差 `0px`，子项 3 个（报告页 4 个：周报/月报/分隔/返回今日）
+- 生效字号：跑马灯 `9px` / 引用块 `12px` / nav `12px` / 版权 `10px` / 文档链排 `11px`
+- 控制台无 JS 错误
+- 胶囊行（取报告页 5 颗 Ⅰ–Ⅴ，最挤的一页）：`.nav-chips` `clientWidth 485 / scrollWidth 611` → 溢出 126px 可横滑；5 颗 `top` 全为 `282` → **确认单行、未换行**；`firstLeft 20` 与内容列对齐；`can-right = true` → 右缘渐隐生效
+- 点选第 5 颗胶囊后 `scrollLeft 0 → 126`、右缘落到 `465`（= 可视区右界）→ **自动滚进可视区**；同时 `can-left` 转真（左侧渐隐出现）
+- 主页只 2 颗胶囊（`scrollWidth == clientWidth`）→ 无溢出、无渐隐，普通排版不受影响
+- **修掉一处既有横向溢出**：报告页原 `docSW 511 / clientW 485`（气泡越界），主页也被撑出 4px → 修正后两页均 `docSW == clientW == 485`，**零横向溢出**
+- 桌面端（1440×900）回归：`.nav-chips` 仍 `flex-wrap: wrap` / `overflow-x: visible`（不生成滑条）；吸顶时工具组搬回 nav 行、与胶囊同排、`docSW == clientW == 1409`；静止 → 吸顶 → 回顶三态切换正常，无 JS 报错
+
 ## v1.11.0_260914 — 首屏 14px 下移修复 + 交互节奏调速 + 信息源更名 aihot.news（_fix_021）
 
 **类型**：次版本 +1（向下兼容的新一轮打磨）

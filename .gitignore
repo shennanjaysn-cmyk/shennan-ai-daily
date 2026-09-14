@@ -46,3 +46,7 @@ _verify*/
 # 覆盖上方 ai-daily-*.html 的忽略规则，仅对 releases/ 放行
 !releases/
 !releases/ai-daily-*.html
+
+# v1.11.1：仓库根一切下划线开头的文件/目录都视为临时诊断产物（探针/截图/profile/日志/html 副本）。
+# 起因：把 git log 输出写进 _gitlog.txt，随后 git add -A 把它一起提交进了 e1a812e。
+_*

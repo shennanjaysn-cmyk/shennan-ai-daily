@@ -480,6 +480,9 @@
     transform: translateY(0);
     pointer-events: auto;
   }
+  /* v1.11.1：点击展开态（触屏靠 JS 切 .open；桌面 hover 变形不受影响） */
+  .report-morph.open .report-face { opacity: 0; transform: translateY(-12px); pointer-events: none; }
+  .report-morph.open .report-choices { opacity: 1; transform: translateY(0); pointer-events: auto; }
   .report-choice {
     color: var(--mist-body);
     font-size: 10px;
@@ -848,9 +851,10 @@
   [data-theme="light"] .nav.is-stuck {
     border-bottom-color: rgba(131, 126, 101, 0.55);  /* 深浅统一金线（不再换浅色） */
   }
-  /* 移动端滚动时自动隐藏顶栏/导航，上滑时恢复（由 JS 切换 .hide）；鼠标悬停时临时显示 */
-  .nav.hide, .topbar.hide { transform: translateY(-160%); }
-  .nav.hide:hover, .topbar.hide:hover { transform: translateY(0); }
+  /* v1.11.1：删除"下滑隐藏 nav、上滑再出现"整套逻辑。
+   * 移动端改为与 web 端完全一致：nav 始终随页面整体上移 → 到顶吸顶 → .is-stuck 渐显下沿金线。
+   * 旧 .hide 的 translateY(-160%) 会让 nav 在首次下滑时立刻上跳并消失（用户观感"刚滑就跳一下，
+   * 还遮了一下引用块"），是移动端最违和的一处交互。JS 侧切换逻辑已同步删除。 */
   .nav-inner {
     /* fix_nav_001：与 .wrap(max-width:1280px; margin:0 auto; padding:0 28px) 同网格对齐
        —— 宽屏下导航胶囊左边缘与新闻模块左边缘严格对齐（此前全宽 28px 导致宽屏左偏一个 (100vw-1280)/2 偏移） */
@@ -865,18 +869,18 @@
     overflow-x: visible;
     scrollbar-width: none;
   }
-  /* 移动端（< 768px）：5 分类胶囊可水平滚动，避免被压缩换行变窄难看 */
-  @media (max-width: 767.98px) {
-    .nav-inner {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      overflow-y: hidden;
-      -webkit-overflow-scrolling: touch;
-      padding-right: 14px;
-    }
-    .nav-inner::-webkit-scrollbar { display: none; }
-    /* scroll-snap 让滑动有"卡位"感 */
-    .nav-inner .nav-chip { scroll-snap-align: start; }
+  /* v1.11.2：分类胶囊单独包一层 .nav-chips。
+   * 为什么不能直接让 .nav-inner 横滑：工具组（报告/历史日报/导出）也是 .nav-inner 的
+   * 子元素，一旦父级变成滚动容器，工具组会被一起卷进滑动区，滑到右侧才能看到。
+   * 包一层之后：胶囊行自己滑，工具组在滑动区之外、独占一行居中。
+   * 桌面端仍走 wrap 排布（宽屏放得下，不强行给鼠标用户制造一条要 Shift+滚轮才能拖的滑条）；
+   * 移动端见 ≤880px 断点：nowrap + overflow-x: auto，左右滑动选导航。 */
+  .nav-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
   }
   .nav-actions {
     /* fix_nav_01：fixed -> static，5 胶囊组用 margin-left:auto 把 3 个工具胶囊推到行尾；垂直居中 */
@@ -941,11 +945,12 @@
     transition: opacity .35s ease, transform .35s ease,
                 visibility 0s .35s;
   }
-  /* 移动端：5 胶囊已可横滑，3 工具胶囊继续在右（不参与滑动条） */
-  @media (max-width: 767.98px) {
-    .nav-actions { flex-shrink: 0; padding-left: 8px; background: var(--ink-card); }
-    .nav-total-count { display: none; }
-  }
+  /* [v1.11.1 删除] 原 @media (max-width: 767.98px) 的 .nav-actions 规则（为旧"chips 横滑、
+   * 工具组贴在滑条右侧"的设计服务）：它给工具组铺了一块 var(--ink-card) 底色，在手机视口下
+   * 会留下一条突兀的横向色带，而 iPad（820px > 767.98）不触发 —— 同一套布局两种观感。
+   * 工具组现在整行居中，底色统一由 .nav.is-stuck 负责，这条规则整体作废。
+   * .nav-total-count 的隐藏已合并进 ≤880px 主断点。
+   */
   /* fix_report_01（v1.10.10）：首页三工具胶囊已合并进 nav-actions（与 5 分类同一行），topbar 在首页隐藏 */
   [data-page-period] .topbar { display: none; }
   /* fix_report_01（v1.10.10）：首页 nav 吸顶到页面最顶（safe-area），置顶后 .is-stuck 渐显金边做视觉分割 */
@@ -1197,14 +1202,19 @@
     line-height: 1;
   }
 
-  /* 触屏设备（无 hover）：新闻卡片默认全部展开；报告胶囊直接显示周报/月报 */
+  /* 触屏设备（无 hover）：新闻卡片默认全部展开（触摸只能点，展开态才有意义） */
   @media (hover: none) {
     .card { max-height: none; }
     .card-title { -webkit-line-clamp: unset; display: block; overflow: visible; }
     .card-summary { -webkit-line-clamp: unset; display: block; overflow: visible; }
-    .report-morph { min-width: 120px; }
-    .report-face { opacity: 0; transform: translateY(-12px); pointer-events: none; }
-    .report-choices { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    /* v1.11.1：报告胶囊不再"默认摊开成 周报|月报"（摊开后吃掉整行宽度，把同行其他工具挤出去），
+     * 改为与 web 一致的「点一下才展开」，由 .open 类控制。 */
+    /* v1.11.1 fix：.report-morph 的两个子元素都是 position:absolute，自身宽度完全靠 min-width 撑；
+     * 给 0 会塌成 0 宽（.open 后又装不下「周报 | 月报」）。展开态给足 132px。 */
+    .report-morph { min-width: 72px; }
+    .report-morph.open { min-width: 132px; }
+    .report-morph:not(.open) .report-choices { opacity: 0; transform: translateY(12px); pointer-events: none; }
+    .report-morph:not(.open) .report-face { opacity: 1; transform: translateY(0); pointer-events: auto; }
   }
 
   /* ===== FOOTER ===== */
@@ -1415,7 +1425,9 @@
     position: fixed;
     right: 24px;
     bottom: 92px;
-    z-index: 180;
+    /* v1.11.1：置顶——原 180 低于 nav(196)/ticker(195)，移动端会被 nav 压住，点不到 */
+    z-index: 260;
+    -webkit-tap-highlight-color: transparent;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -1446,20 +1458,27 @@
     background: rgba(255, 255, 255, 0.42);
     box-shadow: 0 6px 18px -8px rgba(46, 58, 124, 0.18);
   }
-  .fab:hover {
-    color: var(--text-primary);
-    background: rgba(79, 92, 199, 0.28);
-    border-color: rgba(79, 92, 199, 0.55);
-    backdrop-filter: blur(14px) saturate(180%);
-    -webkit-backdrop-filter: blur(14px) saturate(180%);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 26px -8px rgba(0,0,0,.55);
+  /* v1.11.1：hover 态只在真正有指针的设备生效。
+   * 触屏浏览器会在按下后把 :hover 粘住 → 点了"上/下"按钮，高亮一直不散。
+   * 收进 @media (hover: hover) 后，触屏根本没有 hover 态，只剩 :active 的即时反馈。 */
+  @media (hover: hover) {
+    .fab:hover {
+      color: var(--text-primary);
+      background: rgba(79, 92, 199, 0.28);
+      border-color: rgba(79, 92, 199, 0.55);
+      backdrop-filter: blur(14px) saturate(180%);
+      -webkit-backdrop-filter: blur(14px) saturate(180%);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px -8px rgba(0,0,0,.55);
+    }
+    [data-theme="light"] .fab:hover {
+      background: rgba(74, 91, 196, 0.18);
+      border-color: rgba(74, 91, 196, 0.55);
+      box-shadow: 0 10px 26px -8px rgba(46, 58, 124, 0.25);
+    }
   }
-  [data-theme="light"] .fab:hover {
-    background: rgba(74, 91, 196, 0.18);
-    border-color: rgba(74, 91, 196, 0.55);
-    box-shadow: 0 10px 26px -8px rgba(46, 58, 124, 0.25);
-  }
+  /* 触屏按下反馈（瞬时，不残留） */
+  .fab:active { transform: scale(0.94); }
   .fab-icon { width: 18px; height: 18px; }
 
   /* 留言/反馈 FAB（v1.10.1 上移，换 chat-circle-dots 图标）
@@ -1470,7 +1489,8 @@
     position: fixed;
     right: 24px;
     bottom: 42px;            /* 上移，与 .fab-group 间距 = 10px */
-    z-index: 180;
+    z-index: 260;            /* v1.11.1：与 .fab-group 一起置顶（原 180 会被 nav 压住） */
+    -webkit-tap-highlight-color: transparent;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -1507,23 +1527,26 @@
     border-color: rgba(0,0,0,0.08);
     box-shadow: 0 6px 18px -8px rgba(46, 58, 124, 0.18);
   }
-  .fab-contact:hover {
-    width: 132px;
-    border-radius: 999px;
-    justify-content: flex-start;
-    color: var(--text-primary);
-    background: rgba(79, 92, 199, 0.28);
-    border-color: rgba(79, 92, 199, 0.55);
-    backdrop-filter: blur(14px) saturate(180%);
-    -webkit-backdrop-filter: blur(14px) saturate(180%);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 26px -8px rgba(0,0,0,.55);
-    padding: 0 14px 0 12px;
-  }
-  [data-theme="light"] .fab-contact:hover {
-    background: rgba(74, 91, 196, 0.18);
-    border-color: rgba(74, 91, 196, 0.55);
-    box-shadow: 0 10px 26px -8px rgba(46, 58, 124, 0.25);
+  /* v1.11.1：同上，触屏收起 hover 展开（避免点完一直保持展开高亮） */
+  @media (hover: hover) {
+    .fab-contact:hover {
+      width: 132px;
+      border-radius: 999px;
+      justify-content: flex-start;
+      color: var(--text-primary);
+      background: rgba(79, 92, 199, 0.28);
+      border-color: rgba(79, 92, 199, 0.55);
+      backdrop-filter: blur(14px) saturate(180%);
+      -webkit-backdrop-filter: blur(14px) saturate(180%);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px -8px rgba(0,0,0,.55);
+      padding: 0 14px 0 12px;
+    }
+    [data-theme="light"] .fab-contact:hover {
+      background: rgba(74, 91, 196, 0.18);
+      border-color: rgba(74, 91, 196, 0.55);
+      box-shadow: 0 10px 26px -8px rgba(46, 58, 124, 0.25);
+    }
   }
   /* _fix_message：icon 视觉居中——chat-circle-dots 尾巴偏下，靠 transform 上移 2px 对冲 */
   .fab-contact .fab-icon { flex-shrink: 0; transform: translate(5px, -1.5px); }
@@ -1538,47 +1561,126 @@
       color .2s ease;
     color: var(--text-primary);
   }
-  .fab-contact:hover .fab-label {
-    opacity: 1;
-    max-width: 90px;
-    transform: translateX(0);
+  @media (hover: hover) {
+    .fab-contact:hover .fab-label {
+      opacity: 1;
+      max-width: 90px;
+      transform: translateX(0);
+    }
   }
 
   /* ===== RESPONSIVE ===== */
   @media (max-width: 880px) {
+    /* ============ v1.11.1：移动端 nav 与 web 端同构 ============
+     * 旧版把 .nav-inner 做成"悬浮玻璃胶囊条"（999px 圆角 + blur + 左右 margin），
+     * chips 横向滚动、工具组硬塞同一行 —— 等于移动端自造了一套视觉/交互语言，
+     * 且在 iPad 上 5 胶囊 + 共X条 + 3 工具共 9 个元素挤一行必然溢出。
+     * 现在：nav 整条默认透明 → 到顶吸顶时整条显底色 + 下沿金线（与 web 完全一致）；
+     *       chips 一行（放不下就换行，不再横滑），工具组另起一行居中。
+     */
     .topbar { padding: 8px 14px; }
     .top-btn { padding: 5px 9px; font-size: 10px; gap: 4px; }
     .top-btn svg { width: 12px; height: 12px; }
     .time-chip { font-size: 11px; min-width: 26px; height: 22px; padding: 0 6px; }
-    .ticker { margin-top: 0; }
-    /* 移动端：header 已为正常流，nav 直接吸顶，无需额外预留 */
-    .nav { padding-top: 0; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: none; }
-    .nav-inner { background: var(--surface-float); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); border: 1px solid var(--line-faint); border-radius: 999px; margin: 0 14px; padding: 8px 14px; }
-    .hero { padding: 36px 0 24px; }
+    /* 跑马灯字号 -2（11px → 9px），左右内边距同步收紧 */
+    .ticker { margin-top: 0; padding: 6px 0; }
+    .ticker-item { font-size: 9px; padding: 0 20px; line-height: 1.5; }
+    .nav { padding-top: 0; }
+    /* v1.11.2：nav-inner 改块级堆叠 —— 第一行是可横滑的胶囊行，第二行是工具组。
+     * 左右 padding 归零，改由 .nav-chips 自己留内边距，滑动时胶囊能贴到屏幕边。 */
+    .nav-inner {
+      background: transparent;
+      backdrop-filter: none; -webkit-backdrop-filter: none;
+      border: none; border-radius: 0;
+      margin: 0; padding: 8px 0 12px;
+      display: block; overflow: visible;
+    }
+    /* 分类胶囊：单行横排 + 左右滑动（多胶囊时不换行堆两排，省首屏高度） */
+    .nav-chips {
+      display: flex; flex-wrap: nowrap; gap: 8px;
+      overflow-x: auto; overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;     /* 滑到两端不把纵滑/浏览器前进后退手势抢走 */
+      scrollbar-width: none;
+      padding: 2px 20px 4px;              /* 与 .wrap 的 20px 对齐 */
+      scroll-padding-left: 20px;
+    }
+    .nav-chips::-webkit-scrollbar { display: none; }
+    /* 边缘渐隐：只在"那一侧还有没露出来的胶囊"时淡出（JS 打 can-left / can-right），
+     * 用来代替滚动条做"还能滑"的提示 */
+    .nav-chips.can-left {
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 24px);
+      mask-image: linear-gradient(90deg, transparent 0, #000 24px);
+    }
+    .nav-chips.can-right {
+      -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 24px), transparent 100%);
+      mask-image: linear-gradient(90deg, #000 calc(100% - 24px), transparent 100%);
+    }
+    .nav-chips.can-left.can-right {
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+    }
+    /* nav 字号 -1（chip 13→12 / 序号 12→11 / 计数 12→11） */
+    .nav-chip { flex-shrink: 0; font-size: 12px; padding: 6px 12px; gap: 8px; }
+    .nav-roman { font-size: 11px; }
+    .nav-n { font-size: 11px; padding-left: 6px; }
+    .nav-n .count-unit { font-size: 10px; }
+    /* "共X条"移动端让位：第二行只放三个工具，居中才好看 */
+    .nav-total-count { display: none; }
+    /* 工具组：整行独占、居中、字号收小 —— 报告 / 历史日报 / 导出
+       （报告页为 周报 | 月报 + 返回今日，同一机制） */
+    .nav-actions {
+      position: static; flex-shrink: 0;
+      display: flex; justify-content: center;
+      /* [v1.11.2] 报告页工具排多一颗「导出」（周报|月报|返回今日|导出），
+       * 极窄机型允许换行兜底，不至于撑出视口 */
+      flex-wrap: wrap;
+      margin: 10px 20px 0; gap: 8px;
+    }
+    .report-morph { min-width: 72px; height: 28px; }
+    .report-morph.open { min-width: 132px; }
+    .report-face { font-size: 11px; }
+    .report-choice { font-size: 10px; }
+    /* ---- hero：logo 移到右端，与「深南AI日报」同排顶对齐；整排上提 ---- */
+    .hero { padding: 18px 0 20px; }
     .hero-title { font-size: 34px; word-break: break-word; }
     .hero-date .big { font-size: 110px; }
     .hero-date .dot { font-size: 72px; }
     .hero-date .small { font-size: 32px; }
     .card-grid { grid-template-columns: 1fr; }
     .wrap { padding: 0 20px; }
-    .hero-top { padding: 10px 0 4px; }
+    .hero-top { padding: 0; margin-bottom: 0; justify-content: flex-end; }
     .brand-logo .sn-logo { width: 38px; height: 38px; object-fit: contain; }
+    /* 负 margin 把「深南AI日报」提到 logo 那一行顶对齐；右侧留出 logo 宽度避免压字 */
+    .hero-sub { margin-top: -38px; padding-right: 46px; }
     /* 移动端 hero-grid 改回上下堆叠（去掉 200px 间距） */
     .hero-grid { display: block; gap: 0; }
     .hero-date-col { margin-bottom: 16px; }
-    .hero-info-col { width: 100%; }
+    /* v1.11.1 bugfix：报告页 .hero-info-col 基类 margin-top:-60px 在移动端（hero-grid 已改 block）
+     * 不再有对齐意义，反而把信息栏上拉 60px 与上方日期/标题重叠 */
+    .hero-info-col { width: 100%; margin-top: 0; }
     .hero-meta { margin-top: 0; }
-    .hero-lead { margin-top: 14px; max-width: 100%; }
-    /* 移动端：导航条横向滚动，避免 8 胶囊换行错位 */
-    .nav-inner { flex-wrap: nowrap; overflow-x: auto; padding: 10px 14px; gap: 6px; position: relative; }
-    .nav-chip { flex-shrink: 0; }
-    .nav-actions { position: static; flex-shrink: 0; margin-left: 0; order: 99; }
+    /* 引用块（.hero-lead）字号 -2（14px → 12px），内边距同步收小 */
+    .hero-lead { margin-top: 12px; max-width: 100%; font-size: 12px; line-height: 1.7; padding: 12px 14px; }
+    /* v1.11.2 bugfix：引用块末尾「?」的提示气泡（宽 220px、居中于问号）会越出视口右边界，
+     * 把整个文档撑出横向滚动条 —— 实测报告页 docSW 511 / clientW 485，主页也被撑出 4px。
+     * 气泡是 opacity:0 + visibility:hidden，但仍参与可滚动溢出区域的计算。
+     * 移动端没有 hover，气泡本来就看不到，直接改成"向右锚定、向左生长"，从根上不越界。 */
+    .hero-tip::after { left: auto; right: -6px; transform: none; }
     /* 移动端：新闻模块直接显示，不依赖 IntersectionObserver 入场动画 */
     .reveal-sec { opacity: 1 !important; animation: none !important; transform: none !important; }
     .footer-bottom { padding: 32px 20px; }
-    /* 底部文档链排：保持一排，窄屏可横向滚动 */
-    .footer-docs { flex-wrap: nowrap; overflow-x: auto; gap: 12px; }
-    .footer-docs a { font-size: 12px; white-space: nowrap; }
+    /* 版权字号 -2（12px → 10px） */
+    .footer-copyright { font-size: 10px; }
+    /* 底部「聚合报告 / LICENSE / 免责声明…」整排字号 -2（13px → 11px），窄屏允许换行 */
+    .footer-docs { flex-wrap: wrap; gap: 10px 12px; justify-content: center; }
+    .footer-docs a { font-size: 11px; white-space: nowrap; }
+    /* 移动端导出：只保留 PNG（走系统分享面板可"存储到照片"），
+     * 文件型格式（HTML/Markdown/CSV/PDF）在手机上取用成本太高，直接隐藏 */
+    #exportDropdown .scope-head,
+    #exportDropdown .dropdown-divider,
+    #exportDropdown [data-export-scope],
+    #exportDropdown [data-export]:not([data-export="png"]) { display: none; }
   }
   @media (max-width: 480px) {
     .top-btn { padding: 5px 9px; font-size: 10px; }
@@ -1589,8 +1691,9 @@
     .sec-title { font-size: 22px; }
     .sec-mark { font-size: 26px; }
     .card-summary { margin-left: 0; padding-left: 10px; }
-    .footer-docs { gap: 10px; }
-    .footer-docs a { font-size: 11px; }
+    .footer-docs { gap: 8px 10px; }
+    .footer-docs a { font-size: 10px; }
+    .hero-lead { font-size: 11px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1668,7 +1771,9 @@
 <!-- STICKY NAV：首页右侧合并报告/历史日报/导出，8 个胶囊同一行对齐 -->
 <nav class="nav">
   <div class="nav-inner">
+    <div class="nav-chips">
     <a class="nav-chip" href="#industry" data-slug="industry"><span class="nav-roman">Ⅰ</span><span class="nav-label">动态</span><span class="nav-n">1<span class="count-unit">条</span></span></a>
+    </div>
     <div class="nav-actions">
   <a class="top-btn back-today" href="../index.html" title="返回今日日报">
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/></svg>
@@ -1728,7 +1833,7 @@
       导出
     </button>
     <div class="dropdown-menu" role="menu">
-      <div class="dropdown-section">导出范围</div>
+      <div class="dropdown-section scope-head">导出范围</div>
       <a class="dropdown-item scope-item active" href="#" data-export-scope="today">今天</a>
       <a class="dropdown-item scope-item" href="#" data-export-scope="week">近一周</a>
       <a class="dropdown-item scope-item" href="#" data-export-scope="month">近一月</a>
@@ -1901,7 +2006,11 @@
       downloadBlob(new Blob([text], {type: type || 'text/plain;charset=utf-8'}), filename);
     }
 
-    let currentScope = 'today';
+    /* [v1.11.2] 报告页没有"范围"概念：body[data-page-report=week|month] 直接映射到对应载荷。
+     * exports.js 里 week = 滚动7天聚合、month = 上个月自然月聚合，与周报/月报页展示内容逐字一致，
+     * 因此无需为报告页单独生成一份导出数据。 */
+    const __reportRange = document.body.dataset.pageReport;
+    let currentScope = __reportRange === 'week' ? 'week' : (__reportRange === 'month' ? 'month' : 'today');
     const scopeItems = document.querySelectorAll('[data-export-scope]');
     scopeItems.forEach(el => {
       el.addEventListener('click', (e) => {
@@ -1928,7 +2037,20 @@
           downloadText(payload.csv, `shennan-ai-daily-${date}.csv`, 'text/csv;charset=utf-8');
         } else if (fmt === 'png') {
           html2canvas(document.body, {backgroundColor: '#0A0E1A', scale: 2}).then(canvas => {
-            canvas.toBlob(blob => downloadBlob(blob, `shennan-ai-daily-${date}.png`));
+            canvas.toBlob(blob => {
+              const name = `shennan-ai-daily-${date}.png`;
+              /* v1.11.1：移动端优先调系统分享面板——iOS/Android 的"存储图像"才会真正进相册；
+               * 直接 downloadBlob 在手机上只落到"文件"，取用成本高。不支持分享则回退下载。 */
+              try {
+                const file = (typeof File !== 'undefined') ? new File([blob], name, {type: 'image/png'}) : null;
+                if (file && navigator.canShare && navigator.canShare({files: [file]})) {
+                  navigator.share({files: [file], title: '深南AI日报'})
+                    .catch(() => downloadBlob(blob, name));
+                  return;
+                }
+              } catch (err) { /* 落回下载 */ }
+              downloadBlob(blob, name);
+            });
           });
         } else if (fmt === 'pdf') {
           const opt = {
@@ -1947,6 +2069,23 @@
   // 2) [v1.10.12 删除] 原“锚点导航高亮”脚本已并入下方 NAV 单一实现（见 2175 段）。
   //    之前此处与 2175 段各有一套 nav-chip 高亮逻辑，互相撤销 class 导致
   //    “打开无默认高亮 / 点选不持久”——典型的双实现冲突。现在只保留一份真相。
+
+  // 2.5) v1.11.1：报告胶囊（"报告" → "周报 | 月报"）点击展开。
+  //      旧版触屏（@media hover:none）默认摊开，占掉整行宽度把其他工具挤出去；
+  //      现在统一由 .open 类控制：点一下展开 / 点外部收起。桌面 hover 变形照旧保留。
+  (function() {
+    const rp = document.getElementById('reportDropdown');
+    if (!rp) return;
+    rp.addEventListener('click', (e) => {
+      if (e.target.closest('.report-choice')) return;   // 点到 周报/月报 链接：放行跳转
+      e.preventDefault();
+      e.stopPropagation();
+      rp.classList.toggle('open');
+    });
+    document.addEventListener('click', (e) => {
+      if (!rp.contains(e.target)) rp.classList.remove('open');
+    });
+  })();
 
   // 3) 滚动入场动效
   (function() {
@@ -1969,29 +2108,8 @@
     }, 3000);
   })();
 
-  // 移动端滚动时隐藏顶栏/导航（向下滑隐藏，向上滑恢复），避免与内容争空间
-  (function() {
-    const nav = document.querySelector('.nav');
-    const bar = document.querySelector('.topbar');
-    let lastY = window.scrollY || 0;
-    let ticking = false;
-    function apply() {
-      const y = window.scrollY || 0;
-      const isMobile = window.innerWidth <= 880;
-      const goingDown = y > lastY && y > 120;
-      if (isMobile && goingDown) {
-        nav && nav.classList.add('hide');
-      } else {
-        nav && nav.classList.remove('hide');
-      }
-      lastY = y;
-      ticking = false;
-    }
-    window.addEventListener('scroll', function() {
-      if (!ticking) { requestAnimationFrame(apply); ticking = true; }
-    }, { passive: true });
-    window.addEventListener('resize', apply);
-  })();
+  // [v1.11.1 删除] 原"移动端滚动时隐藏顶栏/导航（向下滑隐藏、向上滑恢复）"逻辑整体移除。
+  //   移动端与 web 端从此共用同一套 sticky 行为：随页面整体上移 → 到顶固定 → 下沿金线。
 
   // 4) 早中晚时段检测、主题切换、悬浮按钮
   (function() {
@@ -2178,6 +2296,7 @@
       chip.addEventListener('click', (e) => {
         e.preventDefault();                       // 拦截原生锚点跳变，改用特效位移
         manualIdx = i; paint(i);
+        revealChip(chip);                         // v1.11.2：被边缘裁掉的胶囊先滚进可视区
         const sec = document.querySelector(chip.getAttribute('href'));
         goToSection(sec, chip);
       });
@@ -2199,6 +2318,42 @@
       sections.forEach(s => io.observe(s));
       // 兜底：首屏若 IO 未及时触发，确保首颗仍亮
       window.addEventListener('load', () => { if (manualIdx < 0) paint(0); });
+    }
+
+    // ============================================================
+    // 2.5 移动端「胶囊行横滑」（v1.11.2）
+    //   需求：分类胶囊多起来时，移动端改为单行横排 —— 左右滑动来选导航，
+    //        不再换行堆成两排（两排会白占掉首屏高度）。
+    //   这里只做两件事：
+    //     ① 点选某颗胶囊后，把它滚进可视区（含被边缘裁掉一半的情况）
+    //     ② 某一侧还有没露出来的胶囊时，给那侧加渐隐，提示"还能滑"
+    //   注：刻意不跟随页面纵滑自动横移 —— 页面在滚、胶囊行自己在动，晕。
+    // ============================================================
+    const chipsWrap = document.querySelector('.nav-chips');
+    function updateChipsEdge() {
+      if (!chipsWrap) return;
+      const max = chipsWrap.scrollWidth - chipsWrap.clientWidth;
+      chipsWrap.classList.toggle('can-left', chipsWrap.scrollLeft > 2);
+      chipsWrap.classList.toggle('can-right', max > 2 && chipsWrap.scrollLeft < max - 2);
+    }
+    function revealChip(chip) {
+      if (!chipsWrap || !chip) return;
+      const max = chipsWrap.scrollWidth - chipsWrap.clientWidth;
+      if (max <= 2) return;                       // 没溢出，无需横移
+      const box = chipsWrap.getBoundingClientRect();
+      const pad = 20;                             // 与 CSS 的左右内边距保持一致
+      const left = box.left + pad, right = box.right - pad;
+      const r = chip.getBoundingClientRect();
+      if (r.left < left) { chipsWrap.scrollLeft -= (left - r.left); }
+      else if (r.right > right) { chipsWrap.scrollLeft += (r.right - right); }
+    }
+    if (chipsWrap) {
+      chipsWrap.addEventListener('scroll', updateChipsEdge, { passive: true });
+      window.addEventListener('resize', updateChipsEdge);
+      window.addEventListener('load', updateChipsEdge);
+      // 字体（ZCOOL XiaoWei 等）晚于首帧加载会把胶囊撑宽，量一次校准
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(updateChipsEdge);
+      updateChipsEdge();
     }
 
     // 3. nav sticky 监听 + 三工具胶囊在「hero 右上角(静止) / nav 行内(吸顶)」间搬运
@@ -2235,10 +2390,11 @@
       navEl.classList.toggle('fading', fading);
       placeActions();
     }
-        let stuckTicking = false;
-    window.addEventListener('scroll', () => {
-      if (!stuckTicking) { requestAnimationFrame(updateStuck); stuckTicking = true; setTimeout(() => stuckTicking = false, 0); }
-    }, { passive: true });
+    // v1.11.1：去掉 rAF 节流 —— scroll 里直接算。
+    //   原因：rAF 在"无帧环境"（后台标签页、headless、部分省电模式）下不触发，
+    //   is-stuck 就迟迟不上，表现是"吸顶了但金线和底色没出来"。
+    //   updateStuck 只读一次 getBoundingClientRect + 两次 classList.toggle，代价极低。
+    window.addEventListener('scroll', updateStuck, { passive: true });
     updateStuck();   // 初始定位（桌面静止 scrollY=0 → nav.top > 0 → 不吸顶 → 胶囊到 hero 右上角）
     window.addEventListener('resize', placeActions);
   })();
