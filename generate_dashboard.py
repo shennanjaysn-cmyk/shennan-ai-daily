@@ -53,7 +53,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.10.36"
+VERSION = "1.10.37"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -226,8 +226,7 @@ def parse_data(data):
 
 def export_markdown(info):
     lines = [f"# 深南AI日报 Daily AI Brief · {info['date_str']}", ""]
-    lines.append(f"**送达时间：** {fmt_full(info['gen_dt'])}  ")
-    lines.append(f"**覆盖窗口：** {fmt_short(info['ws_dt'])} — {fmt_short(info['we_dt'])}（北京时间，UTC+8）  ")
+    lines.append("**覆盖窗口：** 每日滚动更新（北京时间，UTC+8）  ")
     lines.append(f"**共计：** {info['total']} 条")
     lines.append("")
     for sec in info["cards_by_section"]:
@@ -548,10 +547,8 @@ def render_html(info, page_info):
           <span class="big">{hero_dd}</span>
           <span class="small">/ {hero_year}</span>
         </div>'''
-        hero_meta_block = f'''<div class="hero-meta">
-          送达时间：<span class="accent">{fmt_full(gen_dt)}</span>
-        </div>'''
-        hero_lead_text = f'覆盖窗口 <span class="lead-strong">{fmt_short(ws_dt)} — {fmt_short(we_dt)}</span>（北京时间，UTC+8）。<br>以下 <span class="lead-strong">{total}</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>'
+        hero_meta_block = ''
+        hero_lead_text = f'覆盖窗口（北京时间，UTC+8）—— 每日滚动更新。<br>以下 <span class="lead-strong">{total}</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>'
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -1896,6 +1893,7 @@ def render_html(info, page_info):
     flex-shrink: 0;
     padding: 0 28px;
     font-size: 11px;
+    line-height: 1.3;         /* v1.10.37：防 OFL 字体行高偏大致纵向裁切 */
     letter-spacing: 0.06em;
     color: var(--mist-dim);
     white-space: nowrap;

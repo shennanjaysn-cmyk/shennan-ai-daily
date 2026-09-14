@@ -28,10 +28,10 @@ ai-daily-*.html
 # 教训（2026-08-31）：`git add -A` 会把 headless Chrome/Edge 的 --user-data-dir
 # 整目录（Cache / Local Storage / Session Storage，含登录态）卷进 commit，
 # 推到公开仓库即隐私泄露。凡 _ 开头的临时目录一律忽略。
-_*_profile/
+_*_profile*
 _*_temp/
 _verify_tmp/
-_diag*/
+_diag*
 _shot*/
 _real*/
 _occl*/
