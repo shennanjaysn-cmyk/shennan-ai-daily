@@ -54,7 +54,7 @@ BEIJING = timezone(timedelta(hours=8))
 # v1.2.0：①换用 SN_logo-2.png 新 logo；②副标题破折号改为两个字符宽横线；
 #         ③金色分割线拉长并与内容区对齐；④早中晚改为代码块样式并高亮当前时段；
 #         ⑤右上角增加最近一个月日报历史入口；⑥增加导出功能（PNG/HTML/Markdown/CSV/PDF）
-VERSION = "1.11.2"
+VERSION = "1.11.3"
 
 # 项目仓库地址（GitHub Pages 上线后生效；footer 的 LICENSE / 仓库地址 / README 链接依赖此值）
 REPO_URL = "https://github.com/shennanjaysn-cmyk/shennan-ai-daily"
@@ -553,11 +553,11 @@ def render_html(info, page_info):
         if report_range == "week":
             hero_headline = '<h1 class="hero-title"><span class="title-white">周报</span> <span class="title-brief">Weekly AI Brief</span></h1>'
             hero_meta_block = f'''<div class="hero-meta">周报周期：<span class="accent">{html.escape(date_str)}</span></div>'''
-            hero_lead_text = f'以下 <span class="lead-strong">{total}</span> 条动态来自本周自然7天（截止昨天）。周报为滚动7天，跨月自然连续，不锁周首日。按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>'
+            hero_lead_text = f'以下 <span class="lead-strong">{total}</span> 条动态来自最近 7 天（滚动窗口，截止昨天，跨月自然连续）。按版块归类，点卡片直达原文。<span class="hero-tip">?</span>'
         else:
             hero_headline = '<h1 class="hero-title"><span class="title-white">月报</span> <span class="title-brief">Monthly AI Brief</span></h1>'
             hero_meta_block = f'''<div class="hero-meta">月报周期：<span class="accent">{html.escape(date_str)}</span></div>'''
-            hero_lead_text = f'以下 <span class="lead-strong">{total}</span> 条动态来自上个月整月（自然月，无论今天是几号）。月报固定总结上月 1 日至月末，跨年自动衔接。按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>'
+            hero_lead_text = f'以下 <span class="lead-strong">{total}</span> 条动态来自上月整月（固定 1 日至月末，跨年自动衔接）。按版块归类，点卡片直达原文。<span class="hero-tip">?</span>'
         # v1.11.1：报告页不再输出金色大字日期——上方 .hero-sub 已有「周报/月报」，
         # 紧接着 .hero-meta 又有「周报周期：…」，第三个日期纯属重复；
         # 且基类 .hero-info-col 的 margin-top:-60px 会让它与小字周期叠在一起。
@@ -571,7 +571,7 @@ def render_html(info, page_info):
           <span class="small">/ {hero_year}</span>
         </div>'''
         hero_meta_block = f'''<div class="hero-meta">送达时间：<span class="accent">{fmt_date_weekday(gen_dt)}</span></div>'''
-        hero_lead_text = f'覆盖窗口（北京时间，UTC+8）—— 每日滚动更新。<br>以下 <span class="lead-strong">{total}</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>'
+        hero_lead_text = f'覆盖窗口（北京时间，UTC+8）每日滚动更新。<br>以下 <span class="lead-strong">{total}</span> 条动态按版块归类，点卡片直达原文。<span class="hero-tip">?</span>'
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -1313,7 +1313,7 @@ def render_html(info, page_info):
     margin-top: 14px;
     /* fix_report_01（v1.10.11）：max-width 恢复 none——hero-grid 已放开 max-width，hero-lead 自然填满 hero-info-col（与右端对齐新闻模块） */
     max-width: none;
-    line-height: 1.85;
+    line-height: 1.72;   /* fix_light_02（v1.11.3）：1.85 → 1.72，长句观感更紧凑 */
     padding: 16px 18px;
     border-left: 2px solid var(--brand-cn);
     background: rgba(205, 200, 255, 0.05);
@@ -1338,8 +1338,13 @@ def render_html(info, page_info):
   .hero-tip::after {{
     content: "部分海外源链接需特殊网络环境访问";
     position: absolute;
-    bottom: 120%; left: 50%;
-    transform: translateX(-50%);
+    bottom: 120%;
+    /* fix_light_02（v1.11.3）：气泡改为"右缘锚定问号右缘、向左生长"。
+     * 原来 left:50% + translateX(-50%) 居中：问号落在行尾时（报告页周报实测 L1148），
+     * 220px 气泡的右缘伸到 1266，超出视口 1227 —— 把文档撑出实测 30px 横向滚动条。
+     * opacity:0 + visibility:hidden 并不豁免元素参与可滚动溢出区域的计算。
+     * 右缘锚定后右边界恒等于问号右缘，从根上不越界。 */
+    right: -6px;
     width: max-content; max-width: 220px;
     padding: 8px 12px;
     background: rgba(20, 28, 50, 0.96);
@@ -1495,6 +1500,18 @@ def render_html(info, page_info):
   /* _fix_report_002：报告页所有工具胶囊都在 nav-actions 里，topbar 完全留空并隐藏；同时 nav 提到 ticker 之下、紧贴可视顶部 */
   [data-page-report] .topbar {{ display: none; }}
   [data-page-report] .nav {{ top: env(safe-area-inset-top, 0); }}
+  /* fix_light_02（v1.11.3）：报告页 hero 归位。
+   * 症状（实测 980~1440px 全部复现）：
+   *   ① 周期行 + 引用块与 .hero-title 文字带重叠 48px；
+   *   ② 引用块左边缘被推离内容列 200px，与标题左边缘错位（看着像"越界"）。
+   * 根因：v1.11.1 去掉金色大字日期后，.hero-date-col 变成空节点但仍占一个 flex 位，
+   *   grid 的 gap:200px 就把整个信息栏右推 200px；同时基类 .hero-info-col 的
+   *   margin-top:-60px（原意是与大号日期顶对齐）失去参照物，把信息栏上拉 60px 压进标题。
+   * 报告页本就无分栏必要 —— 直接收成单列：日期列下线、间距归零、不再上拉。
+   * 主页由 [data-page-period] 单独接管两栏，不受影响。 */
+  [data-page-report] .hero-date-col {{ display: none; }}
+  [data-page-report] .hero-grid {{ display: block; gap: 0; }}
+  [data-page-report] .hero-info-col {{ margin-top: 0; width: 100%; }}
   /* _fix_report_002：返回今日按钮在 nav 行内 (与 .time-chip 同一行)，样式紧凑——胶囊风格统一 */
   .back-today-nav {{
     display: inline-flex;
@@ -2188,11 +2205,8 @@ def render_html(info, page_info):
     .hero-meta {{ margin-top: 0; }}
     /* 引用块（.hero-lead）字号 -2（14px → 12px），内边距同步收小 */
     .hero-lead {{ margin-top: 12px; max-width: 100%; font-size: 12px; line-height: 1.7; padding: 12px 14px; }}
-    /* v1.11.2 bugfix：引用块末尾「?」的提示气泡（宽 220px、居中于问号）会越出视口右边界，
-     * 把整个文档撑出横向滚动条 —— 实测报告页 docSW 511 / clientW 485，主页也被撑出 4px。
-     * 气泡是 opacity:0 + visibility:hidden，但仍参与可滚动溢出区域的计算。
-     * 移动端没有 hover，气泡本来就看不到，直接改成"向右锚定、向左生长"，从根上不越界。 */
-    .hero-tip::after {{ left: auto; right: -6px; transform: none; }}
+    /* fix_light_02（v1.11.3）：气泡越界已在基类 .hero-tip::after 统一修复（右缘锚定），
+     * 这里不再需要单独的移动端覆盖。 */
     /* 移动端：新闻模块直接显示，不依赖 IntersectionObserver 入场动画 */
     .reveal-sec {{ opacity: 1 !important; animation: none !important; transform: none !important; }}
     .footer-bottom {{ padding: 32px 20px; }}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>深南AI日报 Daily AI Brief · 2026-09-14</title>
+<title>深南AI日报 Daily AI Brief · 2026-09-15</title>
 <script>
   // 早期初始化 + 全局 FAB 主题切换函数（必须最先定义，inline onclick 直接调用）
   (function(){
@@ -787,7 +787,7 @@
     margin-top: 14px;
     /* fix_report_01（v1.10.11）：max-width 恢复 none——hero-grid 已放开 max-width，hero-lead 自然填满 hero-info-col（与右端对齐新闻模块） */
     max-width: none;
-    line-height: 1.85;
+    line-height: 1.72;   /* fix_light_02（v1.11.3）：1.85 → 1.72，长句观感更紧凑 */
     padding: 16px 18px;
     border-left: 2px solid var(--brand-cn);
     background: rgba(205, 200, 255, 0.05);
@@ -812,8 +812,13 @@
   .hero-tip::after {
     content: "部分海外源链接需特殊网络环境访问";
     position: absolute;
-    bottom: 120%; left: 50%;
-    transform: translateX(-50%);
+    bottom: 120%;
+    /* fix_light_02（v1.11.3）：气泡改为"右缘锚定问号右缘、向左生长"。
+     * 原来 left:50% + translateX(-50%) 居中：问号落在行尾时（报告页周报实测 L1148），
+     * 220px 气泡的右缘伸到 1266，超出视口 1227 —— 把文档撑出实测 30px 横向滚动条。
+     * opacity:0 + visibility:hidden 并不豁免元素参与可滚动溢出区域的计算。
+     * 右缘锚定后右边界恒等于问号右缘，从根上不越界。 */
+    right: -6px;
     width: max-content; max-width: 220px;
     padding: 8px 12px;
     background: rgba(20, 28, 50, 0.96);
@@ -969,6 +974,18 @@
   /* _fix_report_002：报告页所有工具胶囊都在 nav-actions 里，topbar 完全留空并隐藏；同时 nav 提到 ticker 之下、紧贴可视顶部 */
   [data-page-report] .topbar { display: none; }
   [data-page-report] .nav { top: env(safe-area-inset-top, 0); }
+  /* fix_light_02（v1.11.3）：报告页 hero 归位。
+   * 症状（实测 980~1440px 全部复现）：
+   *   ① 周期行 + 引用块与 .hero-title 文字带重叠 48px；
+   *   ② 引用块左边缘被推离内容列 200px，与标题左边缘错位（看着像"越界"）。
+   * 根因：v1.11.1 去掉金色大字日期后，.hero-date-col 变成空节点但仍占一个 flex 位，
+   *   grid 的 gap:200px 就把整个信息栏右推 200px；同时基类 .hero-info-col 的
+   *   margin-top:-60px（原意是与大号日期顶对齐）失去参照物，把信息栏上拉 60px 压进标题。
+   * 报告页本就无分栏必要 —— 直接收成单列：日期列下线、间距归零、不再上拉。
+   * 主页由 [data-page-period] 单独接管两栏，不受影响。 */
+  [data-page-report] .hero-date-col { display: none; }
+  [data-page-report] .hero-grid { display: block; gap: 0; }
+  [data-page-report] .hero-info-col { margin-top: 0; width: 100%; }
   /* _fix_report_002：返回今日按钮在 nav 行内 (与 .time-chip 同一行)，样式紧凑——胶囊风格统一 */
   .back-today-nav {
     display: inline-flex;
@@ -1662,11 +1679,8 @@
     .hero-meta { margin-top: 0; }
     /* 引用块（.hero-lead）字号 -2（14px → 12px），内边距同步收小 */
     .hero-lead { margin-top: 12px; max-width: 100%; font-size: 12px; line-height: 1.7; padding: 12px 14px; }
-    /* v1.11.2 bugfix：引用块末尾「?」的提示气泡（宽 220px、居中于问号）会越出视口右边界，
-     * 把整个文档撑出横向滚动条 —— 实测报告页 docSW 511 / clientW 485，主页也被撑出 4px。
-     * 气泡是 opacity:0 + visibility:hidden，但仍参与可滚动溢出区域的计算。
-     * 移动端没有 hover，气泡本来就看不到，直接改成"向右锚定、向左生长"，从根上不越界。 */
-    .hero-tip::after { left: auto; right: -6px; transform: none; }
+    /* fix_light_02（v1.11.3）：气泡越界已在基类 .hero-tip::after 统一修复（右缘锚定），
+     * 这里不再需要单独的移动端覆盖。 */
     /* 移动端：新闻模块直接显示，不依赖 IntersectionObserver 入场动画 */
     .reveal-sec { opacity: 1 !important; animation: none !important; transform: none !important; }
     .footer-bottom { padding: 32px 20px; }
@@ -1706,7 +1720,7 @@
   }
 </style>
 </head>
-<body data-page-period="morning" data-page-date="2026-09-14">
+<body data-page-period="morning" data-page-date="2026-09-15">
 
 <!-- 顶部 ticker：随页面滚动上移；topbar 保持固定 -->
 <div class="ticker" aria-label="站点说明">
@@ -1754,14 +1768,14 @@
         <div class="hero-date">
           <span class="big">09</span>
           <span class="dot">/</span>
-          <span class="big">14</span>
+          <span class="big">15</span>
           <span class="small">/ 2026</span>
         </div>
       </div>
       <div class="hero-info-col">
-        <div class="hero-meta">送达时间：<span class="accent">2026年9月14日 周一</span></div>
+        <div class="hero-meta">送达时间：<span class="accent">2026年9月15日 周二</span></div>
         <div class="hero-lead">
-          覆盖窗口（北京时间，UTC+8）—— 每日滚动更新。<br>以下 <span class="lead-strong">3</span> 条动态按版块归类，全局连续编号，点击卡片直达原文。<span class="hero-tip">?</span>
+          覆盖窗口（北京时间，UTC+8）每日滚动更新。<br>以下 <span class="lead-strong">9</span> 条动态按版块归类，点卡片直达原文。<span class="hero-tip">?</span>
         </div>
       </div>
     </div>
@@ -1772,8 +1786,11 @@
 <nav class="nav">
   <div class="nav-inner">
     <div class="nav-chips">
-    <a class="nav-chip" href="#industry" data-slug="industry"><span class="nav-roman">Ⅰ</span><span class="nav-label">动态</span><span class="nav-n">1<span class="count-unit">条</span></span></a>
-<a class="nav-chip" href="#tips" data-slug="tips"><span class="nav-roman">Ⅱ</span><span class="nav-label">观点</span><span class="nav-n">2<span class="count-unit">条</span></span></a>
+    <a class="nav-chip" href="#models" data-slug="models"><span class="nav-roman">Ⅰ</span><span class="nav-label">模型</span><span class="nav-n">2<span class="count-unit">条</span></span></a>
+<a class="nav-chip" href="#products" data-slug="products"><span class="nav-roman">Ⅱ</span><span class="nav-label">产品</span><span class="nav-n">1<span class="count-unit">条</span></span></a>
+<a class="nav-chip" href="#industry" data-slug="industry"><span class="nav-roman">Ⅲ</span><span class="nav-label">动态</span><span class="nav-n">1<span class="count-unit">条</span></span></a>
+<a class="nav-chip" href="#papers" data-slug="papers"><span class="nav-roman">Ⅳ</span><span class="nav-label">研究</span><span class="nav-n">1<span class="count-unit">条</span></span></a>
+<a class="nav-chip" href="#tips" data-slug="tips"><span class="nav-roman">Ⅴ</span><span class="nav-label">观点</span><span class="nav-n">4<span class="count-unit">条</span></span></a>
     </div>
     <div class="nav-actions">
   
@@ -1794,7 +1811,8 @@
       历史日报
     </button>
     <div class="dropdown-menu" role="menu">
-      <a class="dropdown-item" href="./daily/2026-09-13.html">2026-09-13</a>
+      <a class="dropdown-item" href="./daily/2026-09-14.html">2026-09-14</a>
+<a class="dropdown-item" href="./daily/2026-09-13.html">2026-09-13</a>
 <a class="dropdown-item" href="./daily/2026-09-12.html">2026-09-12</a>
 <a class="dropdown-item" href="./daily/2026-09-11.html">2026-09-11</a>
 <a class="dropdown-item" href="./daily/2026-09-10.html">2026-09-10</a>
@@ -1822,7 +1840,6 @@
 <a class="dropdown-item" href="./daily/2026-08-19.html">2026-08-19</a>
 <a class="dropdown-item" href="./daily/2026-08-18.html">2026-08-18</a>
 <a class="dropdown-item" href="./daily/2026-08-17.html">2026-08-17</a>
-<a class="dropdown-item" href="./daily/2026-08-16.html">2026-08-16</a>
     </div>
   </div>
   <div class="dropdown" id="exportDropdown">
@@ -1845,54 +1862,138 @@
     </div>
   </div>
 </div>
-    <div class="nav-total-count">共<span class="num">3</span>条</div>
+    <div class="nav-total-count">共<span class="num">9</span>条</div>
   </div>
 </nav>
 
 <div class="wrap">
   <main class="main">
-    <section class="section reveal-sec" id="industry" style="--d:0">
+    <section class="section reveal-sec" id="models" style="--d:0">
   <div class="sec-head">
     <div class="sec-mark">Ⅰ</div>
-    <h2 class="sec-title">动态</h2>
+    <h2 class="sec-title">模型</h2>
     <div class="sec-line"></div>
-    <div class="sec-count">1<span class="count-unit">条</span></div>
+    <div class="sec-count">2<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://clashreport.com/world/articles/houthis-used-claude-code-to-develop-missile-guidance-software-anthropic-s52mnx4pwpo" target="_blank" rel="noopener noreferrer" style="--d:0">
+<a class="card" href="https://mp.weixin.qq.com/s?__biz=Mzg4OTc2MzczNg%3D%3D&mid=2247496383&idx=1&sn=2db8607f797615a3647d9fec7e54f448" target="_blank" rel="noopener noreferrer" style="--d:0">
   <div class="card-num">01</div>
   <div class="card-body">
-    <span class="chip">Hacker News：AI 热帖</span>
-    <h3 class="card-title">Anthropic 报告称胡塞组织用 Claude Code 开发导弹制导软件</h3>
-    <p class="card-summary">Anthropic 9 月威胁报告披露，据评估极可能关联胡塞组织的也门小组使用 Claude Code 开发制导火箭、射程超 2,000 公里弹道导弹及名为 R2000 的高超声速滑翔载具概念的相关软件。</p>
+    <span class="chip">公众号：小红书技术（dots.llm）</span>
+    <h3 class="card-title">小红书 AllSpark 开源 Search Agent 模型 Iris，35B 与 397B 版本同量级成绩领先</h3>
+    <p class="card-summary">小红书 AllSpark 团队发布并开源 Search Agent 模型 Iris，权重和评测代码已公开，数据与训练配方将陆续公布。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://x.com/SiliconFlowAI/status/2099536759168352634" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">02</div>
+  <div class="card-body">
+    <span class="chip">X：硅基流动 SiliconFlow (@SiliconFlowAI)</span>
+    <h3 class="card-title">硅基流动上线开源模型 Hy4 preview，770B 总参数、1M 上下文</h3>
+    <p class="card-summary">硅基流动（SiliconFlow）宣布开源模型 Hy4 preview 上线其平台。该模型总参数 770B、每 token 激活 49B、支持 1M 上下文，采用 Apache 2.0 协议，面向编码、分析、研究和复杂实际工作。用户可将其接入 Claude Code、Codex、Cursor 等已有工具；图片显示定价为每 1M tokens 输入 $0.834、输出 $2.501、缓存 $0.042。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
   </div>
 </section>
-<section class="section reveal-sec" id="tips" style="--d:1">
+<section class="section reveal-sec" id="products" style="--d:1">
   <div class="sec-head">
     <div class="sec-mark">Ⅱ</div>
-    <h2 class="sec-title">观点</h2>
+    <h2 class="sec-title">产品</h2>
     <div class="sec-line"></div>
-    <div class="sec-count">2<span class="count-unit">条</span></div>
+    <div class="sec-count">1<span class="count-unit">条</span></div>
   </div>
   <div class="card-grid">
-<a class="card" href="https://www.marktechpost.com/2026/09/12/context-engineering-inside-the-harness-4-mechanisms-that-beat-context-overflow-and-goal-loss-on-long-horizon-tasks" target="_blank" rel="noopener noreferrer" style="--d:0">
-  <div class="card-num">02</div>
+<a class="card" href="https://www.apple.com/newsroom/2026/09/siri-ai-a-profoundly-more-capable-and-personal-assistant-is-here" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">03</div>
   <div class="card-body">
-    <span class="chip">MarkTechPost（RSS）</span>
-    <h3 class="card-title">Agent 长任务上下文工程解析：用预算控制、压缩、todo-state 和记忆对抗上下文溢出与目标丢失</h3>
-    <p class="card-summary">文章解析 Agent harness 层应对长任务中上下文溢出与目标丢失的四类机制：上下文预算与卸载、压缩、todo-state 复述和跨会话记忆。</p>
+    <span class="chip">Apple：Newsroom（RSS）</span>
+    <h3 class="card-title">Apple 发布新一代 Apple Intelligence，Siri AI 正式以测试版上线</h3>
+    <p class="card-summary">Apple 发布新一代 Apple Intelligence，推出全面重构的 Siri AI，支持个人语境理解、屏幕感知、系统级应用操作和跨设备对话，今日起以英文测试版随 2027 系统更新推出，下月扩展至法语、日语、韩语、葡萄牙语和西班牙语。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
-<a class="card" href="https://garymarcus.substack.com/p/two-cheers-out-of-three-for-dario" target="_blank" rel="noopener noreferrer" style="--d:1">
-  <div class="card-num">03</div>
+  </div>
+</section>
+<section class="section reveal-sec" id="industry" style="--d:2">
+  <div class="sec-head">
+    <div class="sec-mark">Ⅲ</div>
+    <h2 class="sec-title">动态</h2>
+    <div class="sec-line"></div>
+    <div class="sec-count">1<span class="count-unit">条</span></div>
+  </div>
+  <div class="card-grid">
+<a class="card" href="https://the-decoder.com/anthropic-eyes-nasdaq-listing-as-a-second-profitable-quarter-aims-to-win-over-investors-ahead-of-a-mega-ipo" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">04</div>
   <div class="card-body">
-    <span class="chip">Gary Marcus：The Road to AI We Can Trust（RSS）</span>
-    <h3 class="card-title">Gary Marcus 评 Dario Amodei 的放慢 AI 发展提议：三份赞誉加两分怀疑</h3>
-    <p class="card-summary">Gary Marcus 评析 Dario Amodei 倡导放慢 AI 发展并支持透明度的文章，Sam Altman 与 Elon Musk 迅速表示认同。Marcus 肯定其透明度承诺，但列举多方质疑：METR 与 AI 公司关系过近、Anthropic 借对华威胁维持加速、以及该提议可能意在抢先于真正的监管。</p>
+    <span class="chip">The Decoder：AI News（RSS）</span>
+    <h3 class="card-title">Anthropic 计划登陆纳斯达克，连续第二季度盈利瞄准 2 万亿美元估值</h3>
+    <p class="card-summary">Anthropic 告知投资者将实现连续第二个季度盈利，但该说法基于剔除股权激励等成本的调整后指标；据 Financial Times，毛利率超过 80%，尚未计入对 Amazon 等伙伴的分成和模型训练成本。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+  </div>
+</section>
+<section class="section reveal-sec" id="papers" style="--d:3">
+  <div class="sec-head">
+    <div class="sec-mark">Ⅳ</div>
+    <h2 class="sec-title">研究</h2>
+    <div class="sec-line"></div>
+    <div class="sec-count">1<span class="count-unit">条</span></div>
+  </div>
+  <div class="card-grid">
+<a class="card" href="https://x.com/arena/status/2099549108013006958" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">05</div>
+  <div class="card-body">
+    <span class="chip">X：Arena (@arena)</span>
+    <h3 class="card-title">DeepSeek-V4.1-Flash (Max) 进入 Agent Arena 开源模型第 3 名</h3>
+    <p class="card-summary">DeepSeek-V4.1-Flash (Max) 进入 Agent Arena 开源模型第 3 名，净提升 +4.87%，每任务中位成本 $0.07，重塑 Pareto 前沿。其成本比第 2 名 Hy4 preview 低 68%、成绩仅差 0.09 个百分点；总榜排名第 12，Confirmed Success 信号排名 第 4（+13.75%）。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+  </div>
+</section>
+<section class="section reveal-sec" id="tips" style="--d:4">
+  <div class="sec-head">
+    <div class="sec-mark">Ⅴ</div>
+    <h2 class="sec-title">观点</h2>
+    <div class="sec-line"></div>
+    <div class="sec-count">4<span class="count-unit">条</span></div>
+  </div>
+  <div class="card-grid">
+<a class="card" href="https://www.theverge.com/ai-artificial-intelligence/995186/is-big-techs-ai-slowdown-a-safety-pact-or-a-cartel" target="_blank" rel="noopener noreferrer" style="--d:0">
+  <div class="card-num">06</div>
+  <div class="card-body">
+    <span class="chip">The Verge：AI（RSS）</span>
+    <h3 class="card-title">科技巨头放缓 AI 开发的口头协议是安全共识还是卡特尔</h3>
+    <p class="card-summary">Sam Altman、Dario Amodei、Demis Hassabis 和 Elon Musk 周末粗略同意放慢 AI 开发，提出引入第三方审计、监管国内实验室并达成全球放缓协议，批评者则称其为压制竞争者和开源运动的“卡特尔”。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://entelligence.ai/blogs/gpt-5.6-luna-vs-gpt-6-astra-is-a-1.20-model-good-enough-for-code-review" target="_blank" rel="noopener noreferrer" style="--d:1">
+  <div class="card-num">07</div>
+  <div class="card-body">
+    <span class="chip">Hacker News：AI 热帖</span>
+    <h3 class="card-title">GPT-5.6 Luna 对比 GPT-6 Astra：$1.20 的模型做代码评审够用吗</h3>
+    <p class="card-summary">Entelligence 在 50 个公开基准 PR 上用相同提示词对比 GPT-5.6 Luna 和 GPT-6 Astra 的代码评审能力，Luna 找到 69 个经验证 bug（Astra 92 个），总成本 $0.20 对 $5.66，精度 74% 对 96%。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://tomtunguz.com/what-does-the-pause-mean" target="_blank" rel="noopener noreferrer" style="--d:2">
+  <div class="card-num">08</div>
+  <div class="card-body">
+    <span class="chip">Tomer Tunguz 博客（VC 分析）</span>
+    <h3 class="card-title">Tomer Tunguz 解析 Amodei 放缓前沿提议背后的五派立场与算力监管难题</h3>
+    <p class="card-summary">Tomer Tunguz 分析 Dario Amodei 提出的放缓前沿 AI 发展号召，梳理出可解释性、劳工、经济、地缘政治和监管俘获五派立场，并指出没有任何一派给出具体速度。</p>
+  </div>
+  <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
+</a>
+<a class="card" href="https://claude.com/blog/agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic" target="_blank" rel="noopener noreferrer" style="--d:3">
+  <div class="card-num">09</div>
+  <div class="card-body">
+    <span class="chip">Claude：Blog（网页）</span>
+    <h3 class="card-title">Anthropic 如何重构测试影响分析服务以应对智能体编码带来的 CI 压力</h3>
+    <p class="card-summary">Anthropic 工程师每季度交付的代码量是 2021-2025 年均值的 8 倍，其中 80% 由 Claude 编写，六个月内 CI 任务增长 25 倍。</p>
   </div>
   <div class="card-cta"><span>阅读原文</span><span class="arrow">→</span></div>
 </a>
@@ -1904,7 +2005,7 @@
   <footer class="footer">
     <!-- 1 本期共 -->
     <div class="footer-meta">
-      本期共 <span class="num">3</span> 条 · 2 个版块 · 2026-09-14
+      本期共 <span class="num">9</span> 条 · 5 个版块 · 2026-09-15
     </div>
     <!-- 2 数据源 -->
     <div class="footer-source">
