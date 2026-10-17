@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+# 深南AI日报 Daily AI Brief — 个人非盈利 AI 资讯索引
